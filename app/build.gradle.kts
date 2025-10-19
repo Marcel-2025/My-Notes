@@ -57,6 +57,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("com.google.android.gms:play-services-ads:23.1.0")
     implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
     implementation("androidx.datastore:datastore-preferences:1.1.1") // Oder die neueste Version
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2") // Für lifecycleScope
