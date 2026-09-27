@@ -1,4 +1,4 @@
-package com.example.myapplication
+package dev.flondy.mynotes
 
 import org.junit.Test
 

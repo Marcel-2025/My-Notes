@@ -6,15 +6,15 @@ plugins {
 }
 
 android {
-    namespace = "com.example.myapplication"
+    namespace = "dev.flondy.mynotes"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.myapplication"
+        applicationId = "dev.flondy.mynotes"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,6 +37,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -62,6 +63,12 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1") // Oder die neueste Version
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2") // Für lifecycleScope
     implementation("androidx.compose.animation:animation")
+
+    // Google Play Billing (für In-App Käufe)
+    implementation("com.android.billingclient:billing-ktx:6.1.0")
+
+    // Google Mobile Ads (für die Werbung)
+    implementation("com.google.android.gms:play-services-ads:23.0.0")
 
     // Room Dependencies (NEU)
     val room_version = "2.6.1" // Überprüfe die neueste stabile Version

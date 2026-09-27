@@ -1,4 +1,4 @@
-package com.example.myapplication // Dein Paketname
+package dev.flondy.mynotes // Dein Paketname
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

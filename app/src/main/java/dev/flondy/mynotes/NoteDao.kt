@@ -1,4 +1,4 @@
-package com.example.myapplication // Dein Paketname
+package dev.flondy.mynotes // Dein Paketname
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

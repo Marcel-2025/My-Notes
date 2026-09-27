@@ -1,4 +1,4 @@
-package com.example.myapplication // Dein Paketname
+package dev.flondy.mynotes // Dein Paketname
 
 import android.content.Context
 import androidx.room.Database
