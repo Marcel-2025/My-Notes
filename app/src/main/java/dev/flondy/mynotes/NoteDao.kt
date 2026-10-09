@@ -1,42 +1,101 @@
-package dev.flondy.mynotes // Dein Paketname
+package dev.flondy.mynotes
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
 
-    // Wichtig: onConflict hier auf REPLACE setzen, falls wir beim Sortieren IDs mitgeben
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(note: Note)
+    @Insert
+    suspend fun insert(note: Note): Long
+
+    @Insert
+    suspend fun insertAll(notes: List<Note>): List<Long>
 
     @Update
     suspend fun update(note: Note)
 
-    // NEU: Eine Liste von Notizen aktualisieren (nützlich für das Speichern der neuen Reihenfolge)
     @Update
     suspend fun updateNotes(notes: List<Note>)
 
     @Delete
     suspend fun delete(note: Note)
 
-    // GEÄNDERT: Sortierung nach displayOrder ASC (kleinste zuerst oben)
-    @Query("SELECT * FROM notes_table ORDER BY displayOrder ASC, timestamp DESC") // Sekundäre Sortierung nach Zeitstempel
-    fun getAllNotes(): Flow<List<Note>>
+    /** Aktive Notizen in manueller Reihenfolge (angeheftete zuerst). */
+    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL ORDER BY isPinned DESC, displayOrder ASC, timestamp DESC")
+    fun observeActiveNotes(): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL ORDER BY isPinned DESC, displayOrder ASC, timestamp DESC")
+    suspend fun getActiveNotes(): List<Note>
+
+    @Query("SELECT * FROM notes_table WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC")
+    fun observeTrash(): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes_table ORDER BY displayOrder ASC")
+    suspend fun getAllIncludingTrash(): List<Note>
 
     @Query("SELECT * FROM notes_table WHERE id = :noteId")
-    fun getNoteById(noteId: Int): Flow<Note?>
+    suspend fun getNoteById(noteId: Int): Note?
 
-    @Query("DELETE FROM notes_table")
-    suspend fun deleteAllNotes()
+    @Query("SELECT * FROM notes_table WHERE id = :noteId")
+    fun observeNoteById(noteId: Int): Flow<Note?>
 
-    // NEU: Die höchste displayOrder bekommen, um neuen Notizen eine Position zu geben
+    @Query("SELECT MIN(displayOrder) FROM notes_table WHERE deletedAt IS NULL")
+    suspend fun getMinDisplayOrder(): Int?
+
     @Query("SELECT MAX(displayOrder) FROM notes_table")
     suspend fun getMaxDisplayOrder(): Int?
 
-    @Query("SELECT COUNT(id) FROM notes_table") // "notes_table" ist dein Tabellenname
+    @Query("SELECT COUNT(id) FROM notes_table")
     suspend fun getNoteCount(): Int
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE) // Oder eine andere Strategie
-    suspend fun insertAll(notes: List<Note>)
+    @Query("UPDATE notes_table SET displayOrder = :order WHERE id = :id")
+    suspend fun setDisplayOrder(id: Int, order: Int)
+
+    /** Speichert nur die Reihenfolge – andere Felder (z. B. parallel bearbeiteter Text) bleiben unberührt. */
+    @Transaction
+    suspend fun applyDisplayOrder(orderById: Map<Int, Int>) {
+        orderById.forEach { (id, order) -> setDisplayOrder(id, order) }
+    }
+
+    @Query("UPDATE notes_table SET isPinned = :pinned WHERE id = :id")
+    suspend fun setPinned(id: Int, pinned: Boolean)
+
+    @Query("UPDATE notes_table SET isFavorite = :favorite WHERE id = :id")
+    suspend fun setFavorite(id: Int, favorite: Boolean)
+
+    @Query("UPDATE notes_table SET color = :color WHERE id = :id")
+    suspend fun setColor(id: Int, color: Int)
+
+    @Query("UPDATE notes_table SET categoryId = :categoryId WHERE id = :id")
+    suspend fun setCategory(id: Int, categoryId: Int?)
+
+    @Query("UPDATE notes_table SET deletedAt = :time WHERE id = :id")
+    suspend fun moveToTrash(id: Int, time: Long)
+
+    @Query("UPDATE notes_table SET deletedAt = :time WHERE deletedAt IS NULL")
+    suspend fun moveAllToTrash(time: Long)
+
+    @Query("UPDATE notes_table SET deletedAt = NULL WHERE id = :id")
+    suspend fun restoreFromTrash(id: Int)
+
+    @Query("DELETE FROM notes_table WHERE id = :id AND deletedAt IS NOT NULL")
+    suspend fun deleteFromTrash(id: Int)
+
+    @Query("DELETE FROM notes_table WHERE deletedAt IS NOT NULL")
+    suspend fun emptyTrash(): Int
+
+    @Query("DELETE FROM notes_table WHERE deletedAt IS NOT NULL AND deletedAt < :cutoff")
+    suspend fun purgeTrashOlderThan(cutoff: Long): Int
+
+    @Query("UPDATE notes_table SET categoryId = NULL WHERE categoryId = :categoryId")
+    suspend fun clearCategory(categoryId: Int)
+
+    @Query("DELETE FROM notes_table WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.MyApplication" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Fensterhintergrund passend zum App-Design, damit beim Start kein weißer Blitz entsteht. -->
+    <style name="Theme.MyNotes" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/window_background</item>
+    </style>
+    <!-- Alter Name bleibt erhalten, falls er noch irgendwo referenziert wird. -->
+    <style name="Theme.MyApplication" parent="Theme.MyNotes" />
 </resources>

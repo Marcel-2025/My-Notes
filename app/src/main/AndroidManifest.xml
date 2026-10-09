@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- INTERNET/ACCESS_NETWORK_STATE/BILLING/AD_ID werden von den Google-SDKs ergänzt.
+         Die App selbst benötigt keine weiteren Berechtigungen (Dateien laufen über den System-Dateidialog). -->
+
     <application
+        android:name=".MyNotesApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,24 +14,98 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication"
-        tools:targetApi="31">
+        android:enableOnBackInvokedCallback="true"
+        android:theme="@style/Theme.MyNotes"
+        tools:targetApi="36">
+
+        <!-- Die eigentliche Activity. Gestartet wird sie über die Launcher-Aliasse unten. -->
         <activity
+            android:name=".NotesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyNotes"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Standard-Icon: Name bleibt "MainActivity", damit bestehende Verknüpfungen nach dem Update funktionieren. -->
+        <activity-alias
             android:name="dev.flondy.mynotes.MainActivity"
+            android:enabled="true"
             android:exported="true"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MyApplication">
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".NotesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
 
+        <activity-alias
+            android:name="dev.flondy.mynotes.IconDark"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_dark"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_dark"
+            android:targetActivity=".NotesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="dev.flondy.mynotes.IconMinimal"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_minimal"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_minimal"
+            android:targetActivity=".NotesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="dev.flondy.mynotes.IconNeon"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_neon"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_neon"
+            android:targetActivity=".NotesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name="dev.flondy.mynotes.IconGold"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_gold"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_gold"
+            android:targetActivity=".NotesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6130152704553606~7190539313"/>
+            android:value="ca-app-pub-6130152704553606~7190539313" />
+        <!-- Mobile Ads SDK im Hintergrund initialisieren und Anzeigen-Rendering optimieren -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_INITIALIZATION"
+            android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.OPTIMIZE_AD_LOADING"
+            android:value="true" />
     </application>
 
 </manifest>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meine Notizen &amp; Listen</string>
+    <string name="home_title">Meine Notizen</string>
+    <string name="untitled_note">Unbenannte Notiz</string>
+    <string name="time_just_now">Gerade eben</string>
+
+    <!-- Aktionen -->
+    <string name="action_add">Hinzufügen</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_back_save">Speichern und zurück</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_close">Schließen</string>
+    <string name="action_delete">Löschen</string>
+    <string name="action_delete_forever">Endgültig löschen</string>
+    <string name="action_discard">Änderungen verwerfen</string>
+    <string name="action_edit">Bearbeiten</string>
+    <string name="action_export_txt">Als TXT exportieren</string>
+    <string name="action_favorite">Zu Favoriten</string>
+    <string name="action_unfavorite">Aus Favoriten entfernen</string>
+    <string name="action_pin">Anheften</string>
+    <string name="action_unpin">Lösen</string>
+    <string name="action_move_up">Nach oben verschieben</string>
+    <string name="action_move_down">Nach unten verschieben</string>
+    <string name="action_move_to_trash">In den Papierkorb</string>
+    <string name="action_restore">Wiederherstellen</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_share">Teilen</string>
+    <string name="action_to_checklist">In Checkliste umwandeln</string>
+    <string name="action_to_text">In Textnotiz umwandeln</string>
+    <string name="action_undo">Rückgängig</string>
+
+    <!-- Barrierefreiheit -->
+    <string name="a11y_more">Weitere Optionen</string>
+    <string name="a11y_note_options">Optionen für Notiz</string>
+    <string name="a11y_remove_item">Eintrag entfernen</string>
+    <string name="a11y_reorder_item">Eintrag verschieben</string>
+    <string name="a11y_theme_dark">Dunkles Design aktivieren</string>
+    <string name="a11y_theme_light">Helles Design aktivieren</string>
+    <string name="state_pinned">Angeheftet</string>
+    <string name="state_favorite">Favorit</string>
+
+    <!-- Startseite -->
+    <string name="search_hint">Notizen durchsuchen…</string>
+    <string name="search_clear">Suche leeren</string>
+    <string name="new_note">Neue Notiz</string>
+    <string name="new_checklist">Neue Checkliste</string>
+    <string name="empty_title">Noch keine Notizen</string>
+    <string name="empty_subtitle">Tippe auf „Neue Notiz“, um deinen ersten Gedanken festzuhalten.</string>
+    <string name="empty_search_title">Keine Treffer für „%1$s“</string>
+    <string name="empty_search_subtitle">Versuch es mit einem anderen Suchbegriff.</string>
+    <string name="empty_filter_title">Keine passenden Notizen</string>
+    <string name="empty_filter_subtitle">Für die gewählten Filter gibt es keine Notizen.</string>
+    <string name="moved_to_trash">In den Papierkorb verschoben</string>
+    <string name="all_moved_to_trash">Alle Notizen wurden in den Papierkorb verschoben</string>
+    <string name="ad_free_thanks">Werbefrei dank Premium ✨ Danke!</string>
+
+    <!-- Filter und Sortierung -->
+    <string name="filter_all">Alle</string>
+    <string name="filter_favorites">Favoriten</string>
+    <string name="filter_pinned">Angeheftet</string>
+    <string name="filter_checklists">Listen</string>
+    <string name="filter_sort_title">Sortieren &amp; filtern</string>
+    <string name="filter_reset">Zurücksetzen</string>
+    <string name="filter_period">Zeitraum (zuletzt bearbeitet)</string>
+    <string name="filter_any_time">Beliebig</string>
+    <string name="filter_today">Heute</string>
+    <string name="filter_7_days">Letzte 7 Tage</string>
+    <string name="filter_30_days">Letzte 30 Tage</string>
+    <string name="filter_only_content">Nur Notizen mit Inhalt</string>
+    <string name="sort_title">Sortierung</string>
+    <string name="sort_manual">Manuell (verschieben)</string>
+    <string name="sort_updated">Zuletzt bearbeitet</string>
+    <string name="sort_newest">Neueste zuerst</string>
+    <string name="sort_oldest">Älteste zuerst</string>
+    <string name="sort_title_az">Titel A–Z</string>
+    <string name="sort_title_za">Titel Z–A</string>
+    <string name="sort_favorites_first">Favoriten zuerst</string>
+    <string name="sort_manual_hint">Notizen lassen sich nur bei „Manuell“ ohne „Favoriten zuerst“ per Drag &amp; Drop verschieben.</string>
+
+    <!-- Editor -->
+    <string name="editor_title_hint">Titel</string>
+    <string name="editor_content_hint">Notiz schreiben…</string>
+    <string name="editor_saved">Gespeichert</string>
+    <string name="editor_saving">Speichert…</string>
+    <string name="meta_edited">Bearbeitet %1$s</string>
+    <string name="meta_created">Erstellt %1$s</string>
+    <plurals name="word_count">
+        <item quantity="one">%d Wort</item>
+        <item quantity="other">%d Wörter</item>
+    </plurals>
+    <string name="label_color">Farbe</string>
+    <string name="label_category">Kategorie</string>
+    <string name="label_color_category">Farbe &amp; Kategorie</string>
+    <string name="discard_title">Änderungen verwerfen?</string>
+    <string name="discard_text">Alle Änderungen seit dem Öffnen werden rückgängig gemacht. Eine neue Notiz wird dabei nicht gespeichert.</string>
+    <string name="trash_confirm_title">In den Papierkorb verschieben?</string>
+    <string name="trash_confirm_text">Du kannst die Notiz im Papierkorb jederzeit wiederherstellen.</string>
+
+    <!-- Checklisten -->
+    <string name="checklist_add_item">Eintrag hinzufügen</string>
+    <string name="checklist_item_hint">Eintrag</string>
+    <string name="checklist_progress">%1$d/%2$d erledigt</string>
+    <string name="checklist_more">+%1$d weitere</string>
+    <string name="checklist_hidden_done">%1$d erledigte Einträge ausgeblendet</string>
+
+    <!-- Farben -->
+    <string name="color_default">Standard</string>
+    <string name="color_yellow">Gelb</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_coral">Koralle</string>
+    <string name="color_pink">Rosa</string>
+    <string name="color_lavender">Lavendel</string>
+    <string name="color_blue">Blau</string>
+    <string name="color_mint">Mint</string>
+    <string name="color_gray">Grau</string>
+
+    <!-- Kategorien -->
+    <string name="categories_title">Kategorien</string>
+    <string name="categories_empty_title">Keine Kategorien</string>
+    <string name="categories_empty_subtitle">Lege Kategorien an, um deine Notizen zu ordnen.</string>
+    <string name="category_add">Neue Kategorie</string>
+    <string name="category_rename">Umbenennen</string>
+    <string name="category_delete">Kategorie löschen</string>
+    <string name="category_delete_confirm">„%1$s“ löschen? Die Notizen bleiben erhalten und verlieren nur diese Zuordnung.</string>
+    <string name="category_none">Keine</string>
+    <string name="category_private">Privat</string>
+    <string name="category_work">Arbeit</string>
+    <string name="category_school">Schule</string>
+    <string name="category_ideas">Ideen</string>
+    <string name="category_shopping">Einkaufen</string>
+    <string name="category_tasks">Aufgaben</string>
+    <string name="category_other">Sonstiges</string>
+
+    <!-- Papierkorb -->
+    <string name="trash_title">Papierkorb</string>
+    <string name="trash_empty">Leeren</string>
+    <string name="trash_empty_title">Der Papierkorb ist leer</string>
+    <string name="trash_info">Notizen im Papierkorb werden nach %1$d Tagen automatisch gelöscht.</string>
+    <string name="trash_summary">%1$d Notiz(en) · automatische Löschung nach %2$d Tagen</string>
+    <string name="trash_deleted_at">Gelöscht %1$s</string>
+    <string name="trash_empty_confirm">%1$d Notiz(en) endgültig löschen? Das kann nicht rückgängig gemacht werden.</string>
+    <string name="trash_emptied">%1$d Notiz(en) endgültig gelöscht</string>
+    <string name="delete_forever_confirm">Diese Notiz wird endgültig gelöscht. Das kann nicht rückgängig gemacht werden.</string>
+
+    <!-- Einstellungen -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="section_appearance">Darstellung</string>
+    <string name="section_notes">Notizen</string>
+    <string name="section_backup">Sicherung &amp; Export</string>
+    <string name="section_premium">Premium</string>
+    <string name="section_privacy">Datenschutz</string>
+    <string name="section_about">Über die App</string>
+    <string name="setting_theme">Design</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="setting_accent">Akzentfarbe</string>
+    <string name="accent_yellow">Gelb</string>
+    <string name="accent_mint">Mint</string>
+    <string name="accent_lavender">Lavendel</string>
+    <string name="accent_coral">Koralle</string>
+    <string name="setting_compact">Kompakte Karten</string>
+    <string name="setting_compact_desc">Mehr Notizen auf einen Blick</string>
+    <string name="setting_animations">Animationen</string>
+    <string name="setting_animations_desc">Übergänge und Bewegungen anzeigen</string>
+    <string name="setting_immersive">Vollbildmodus</string>
+    <string name="setting_immersive_desc">Status- und Navigationsleiste ausblenden</string>
+    <string name="setting_ad_free_badge">Werbefrei-Hinweis anzeigen</string>
+    <string name="setting_ad_free_badge_desc">Kleine Leiste am unteren Rand</string>
+    <string name="setting_app_icon">App-Icon</string>
+    <string name="setting_app_icon_hint">Das neue Icon wird aktiv, sobald du die App verlässt. Je nach Startbildschirm kann es einen Moment dauern; Verknüpfungen auf dem Startbildschirm musst du ggf. neu anlegen.</string>
+    <string name="icon_default">Standard</string>
+    <string name="icon_dark">Dark Premium</string>
+    <string name="icon_minimal">Minimal</string>
+    <string name="icon_neon">Neon</string>
+    <string name="icon_gold">Gold Edition</string>
+    <string name="setting_default_sort">Standardsortierung</string>
+    <string name="setting_hide_checked">Erledigte Einträge ausblenden</string>
+    <string name="setting_hide_checked_desc">In Checklisten nur Offenes zeigen</string>
+    <string name="backup_export">Backup erstellen</string>
+    <string name="backup_export_desc">Alle Notizen als JSON-Datei speichern</string>
+    <string name="backup_import">Backup importieren</string>
+    <string name="backup_import_desc">Notizen aus einer Backup-Datei hinzufügen</string>
+    <string name="backup_export_done">Backup gespeichert</string>
+    <string name="backup_import_preview_title">Backup importieren?</string>
+    <string name="backup_import_preview_text">Die Datei enthält %1$d Notizen.\n\nNeu: %2$d\nBereits vorhanden (werden übersprungen): %3$d\nNeue Kategorien: %4$d\n\nDeine bestehenden Notizen werden nicht verändert.</string>
+    <string name="backup_import_confirm">%1$d importieren</string>
+    <string name="backup_import_done">%1$d Notiz(en) importiert</string>
+    <string name="backup_error_invalid">Die Datei ist kein gültiges My-Notes-Backup.</string>
+    <string name="backup_error_too_new">Dieses Backup stammt aus einer neueren App-Version. Bitte aktualisiere die App.</string>
+    <string name="export_txt_done">Notiz exportiert</string>
+    <string name="error_file_write">Die Datei konnte nicht gespeichert werden.</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="privacy_consent">Werbeeinwilligung verwalten</string>
+    <string name="privacy_consent_desc">Deine Auswahl zu personalisierter Werbung ändern</string>
+    <string name="delete_all_notes">Alle Notizen löschen</string>
+    <string name="delete_all_notes_desc">Verschiebt alle Notizen in den Papierkorb</string>
+    <string name="delete_all_confirm">Alle Notizen werden in den Papierkorb verschoben. Dort kannst du sie wiederherstellen oder endgültig löschen.</string>
+    <string name="about_version">Version</string>
+    <string name="about_rate">Im Play Store bewerten</string>
+    <string name="about_rate_desc">Dein Feedback hilft sehr</string>
+    <string name="about_feedback">Feedback senden</string>
+    <string name="about_feedback_desc">Ideen, Fehler oder Wünsche per E-Mail</string>
+    <string name="about_website">Website</string>
+    <string name="about_licenses">Open-Source-Lizenzen</string>
+    <string name="about_developer">Entwickelt von Flondy · Deine Notizen bleiben lokal auf deinem Gerät.</string>
+    <string name="feedback_subject">Feedback zu Meine Notizen &amp; Listen</string>
+    <string name="licenses_text">Diese App verwendet:\n\n• AndroidX (Jetpack Compose, Room, DataStore, Lifecycle, Activity) – Apache License 2.0\n• Material Icons – Apache License 2.0\n• Kotlin &amp; kotlinx.coroutines – Apache License 2.0\n• Google Mobile Ads SDK, User Messaging Platform und Google Play Billing Library – Google-Nutzungsbedingungen\n\nVollständige Lizenztexte: https://www.apache.org/licenses/LICENSE-2.0</string>
+
+    <!-- Premium -->
+    <string name="premium_open">Premium</string>
+    <string name="premium_title">Werbefrei schreiben</string>
+    <string name="premium_subtitle">Volle Konzentration auf deine Gedanken – ohne Banner und Ablenkung.</string>
+    <string name="premium_thanks_title">Danke für deine Unterstützung!</string>
+    <string name="premium_thanks_subtitle">Die App ist für dich dauerhaft werbefrei.</string>
+    <string name="premium_benefit_no_ads">Keine Werbung</string>
+    <string name="premium_benefit_no_ads_desc">Alle Werbebanner verschwinden sofort.</string>
+    <string name="premium_benefit_focus">Mehr Platz &amp; Ruhe</string>
+    <string name="premium_benefit_focus_desc">Mehr Raum für deine Notizen.</string>
+    <string name="premium_benefit_forever">Für immer</string>
+    <string name="premium_benefit_forever_desc">Ein Kauf – auch auf neuen Geräten mit deinem Google-Konto.</string>
+    <string name="premium_benefit_support">Unterstützt die Entwicklung</string>
+    <string name="premium_benefit_support_desc">Hilft, die App weiter zu verbessern.</string>
+    <string name="premium_buy_with_price">Jetzt freischalten · %1$s</string>
+    <string name="premium_loading_price">Preis wird geladen…</string>
+    <string name="premium_one_time">Einmal bezahlen – dauerhaft werbefrei. Kein Abonnement.</string>
+    <string name="premium_one_time_short">Einmalkauf, kein Abo</string>
+    <string name="premium_restore">Käufe wiederherstellen</string>
+    <string name="premium_restore_desc">Bereits gekauft? Hier erneut aktivieren.</string>
+    <string name="premium_unlock">Werbefrei freischalten</string>
+    <string name="premium_status_active">Werbefrei aktiv</string>
+    <string name="premium_status_active_desc">Danke! Du siehst keine Werbung mehr.</string>
+    <string name="premium_card_title">Werbefrei mit Premium</string>
+    <string name="premium_card_subtitle">Einmal bezahlen – kein Abo</string>
+    <string name="premium_pending">Deine Zahlung wird noch verarbeitet. Sobald Google Play sie bestätigt, wird die App automatisch werbefrei.</string>
+    <string name="premium_legal">Die Zahlung erfolgt über Google Play. Der Kauf ist an dein Google-Konto gebunden und kann auf anderen Geräten wiederhergestellt werden. Der angezeigte Preis stammt direkt von Google Play.</string>
+    <string name="billing_success">Danke! Die App ist jetzt werbefrei. ✨</string>
+    <string name="billing_canceled">Kauf abgebrochen</string>
+    <string name="billing_already_owned">Du besitzt den Kauf bereits – er wird wiederhergestellt.</string>
+    <string name="billing_restored">Kauf wiederhergestellt – die App ist werbefrei.</string>
+    <string name="billing_nothing_to_restore">Für dieses Google-Konto wurde kein Kauf gefunden.</string>
+    <string name="billing_error">Google Play ist gerade nicht erreichbar. Bitte versuch es später erneut.</string>
+
+    <!-- Beispielnotizen (nur bei Erstinstallation) -->
+    <string name="sample_welcome_title">Willkommen! 👋</string>
+    <string name="sample_welcome_body">Tippe auf eine Notiz, um sie zu bearbeiten. Halte sie gedrückt, um sie zu verschieben. Über ⋮ kannst du anheften, als Favorit markieren, Farben und Kategorien vergeben oder teilen.</string>
+    <string name="sample_shopping_title">Einkaufsliste</string>
+    <string name="sample_shopping_body">[ ] Milch\n[x] Brot\n[ ] Eier</string>
+    <string name="sample_ideas_title">Ideen fürs Wochenende</string>
+    <string name="sample_ideas_body">Wandern gehen oder ein gutes Buch lesen.</string>
+</resources>

@@ -2,31 +2,42 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt") // NEU: Für Room Annotation Processor
+    id("kotlin-kapt") // Room Annotation Processor
 }
 
 android {
     namespace = "dev.flondy.mynotes"
-    compileSdk = 35
+    // Google Play verlangt für Updates seit 31.08.2026 targetSdk 36 (Android 16).
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "dev.flondy.mynotes"
+        applicationId = "dev.flondy.mynotes" // NIEMALS ändern – Play-Store-Identität
         minSdk = 24
-        targetSdk = 35
-        versionCode = 2
-        versionName = "1.2"
+        targetSdk = 36
+        versionCode = 3
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    kapt { arguments { arg("room.schemaLocation", "$projectDir/schemas") } }
+
+    // Room exportiert jedes Datenbankschema nach app/schemas (Migrationshistorie, Migrationstests).
+    kapt {
+        arguments { arg("room.schemaLocation", "$projectDir/schemas") }
+    }
 
     buildTypes {
+        debug {
+            // Offizielle Google-Testanzeigen – während der Entwicklung niemals echte Anzeigen anklicken.
+            buildConfigField("String", "BANNER_AD_UNIT_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "BANNER_AD_UNIT_ID", "\"ca-app-pub-6130152704553606/6365675325\"")
         }
     }
     compileOptions {
@@ -40,10 +51,17 @@ android {
         compose = true
         buildConfig = true
     }
+    sourceSets {
+        // Exportierte Schemas als Test-Assets für MigrationTestHelper
+        getByName("test").assets.srcDir("$projectDir/schemas")
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
+    }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -52,28 +70,40 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.compose.animation:animation")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Google Play Billing – Version 8 ist für App-Updates seit 31.08.2026 Pflicht.
+    // Kern-Bibliothek ohne -ktx: billing-ktx 8.1+ erzwingt Kotlin-Stdlib 2.2 (inkompatibel mit Kotlin 2.0 + Room-kapt)
+    implementation("com.android.billingclient:billing:8.3.0")
+
+    // Google Mobile Ads + User Messaging Platform (DSGVO-Einwilligung)
+    implementation("com.google.android.gms:play-services-ads:24.9.0")
+    implementation("com.google.android.ump:user-messaging-platform:3.2.0")
+
+    // Room
+    val roomVersion = "2.7.2" // 2.6.1 kann die Kotlin-2.1-Metadaten neuer Google-SDKs nicht lesen
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    // Tests
     testImplementation(libs.junit)
+    testImplementation("org.robolectric:robolectric:4.16")
+    testImplementation("androidx.test:core-ktx:1.6.1")
+    testImplementation("androidx.test.ext:junit-ktx:1.2.1")
+    testImplementation("androidx.room:room-testing:$roomVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation("androidx.room:room-testing:$roomVersion")
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.google.android.gms:play-services-ads:23.1.0")
-    implementation("androidx.compose.material:material-icons-extended-android:1.6.8")
-    implementation("androidx.datastore:datastore-preferences:1.1.1") // Oder die neueste Version
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.2") // Für lifecycleScope
-    implementation("androidx.compose.animation:animation")
-
-    // Google Play Billing (für In-App Käufe)
-    implementation("com.android.billingclient:billing-ktx:6.1.0")
-
-    // Google Mobile Ads (für die Werbung)
-    implementation("com.google.android.gms:play-services-ads:23.0.0")
-
-    // Room Dependencies (NEU)
-    val room_version = "2.6.1" // Überprüfe die neueste stabile Version
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version") // Annotation processor
-    implementation("androidx.room:room-ktx:$room_version") // Kotlin Extensions and Coroutines support for Room
 }

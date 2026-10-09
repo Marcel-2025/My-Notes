@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fallback für Android 7.x (alternative Icons werden dort nicht angeboten). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_launcher_gold_background" />
+    <item android:drawable="@drawable/ic_launcher_gold_foreground" />
+</layer-list>
