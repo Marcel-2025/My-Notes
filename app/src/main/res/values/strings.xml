@@ -213,6 +213,7 @@
     <string name="premium_benefit_support">Supports development</string>
     <string name="premium_benefit_support_desc">Helps keep improving the app.</string>
     <string name="premium_buy_with_price">Unlock now · %1$s</string>
+    <string name="premium_unavailable">Currently unavailable – please try again later</string>
     <string name="premium_loading_price">Loading price…</string>
     <string name="premium_one_time">Pay once – ad-free forever. No subscription.</string>
     <string name="premium_one_time_short">One-time purchase, no subscription</string>

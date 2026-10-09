@@ -79,8 +79,11 @@ fun PremiumScreen(
     onBack: () -> Unit,
     onPurchase: () -> Unit,
     onRestore: () -> Unit,
+    onRefresh: () -> Unit = {},
 ) {
     BackHandler(onBack = onBack)
+    // Beim Öffnen Verbindung/Preis bei Bedarf neu anfragen
+    androidx.compose.runtime.LaunchedEffect(Unit) { onRefresh() }
     val animate = LocalAppExtras.current.animationsEnabled
     val transition = rememberInfiniteTransition(label = "premium")
     val glow by transition.animateFloat(
@@ -191,7 +194,9 @@ fun PremiumScreen(
                                 shape = RoundedCornerShape(18.dp),
                                 modifier = Modifier.fillMaxWidth().heightIn(min = 58.dp),
                             ) {
-                                if (!state.connected || !state.productAvailable) {
+                                if (state.productQueried && !state.productAvailable) {
+                                    Text(stringResource(R.string.premium_unavailable))
+                                } else if (!state.connected || !state.productAvailable) {
                                     CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = Color(0xFF1A1806))
                                     Spacer(Modifier.width(10.dp))
                                     Text(stringResource(R.string.premium_loading_price))

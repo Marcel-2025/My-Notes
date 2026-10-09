@@ -233,6 +233,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     onBack = ::back,
                     onPurchase = { settingsVm.purchaseAdFree(activity) },
                     onRestore = settingsVm::restorePurchases,
+                    onRefresh = settingsVm::refreshBilling,
                 )
             }
         }

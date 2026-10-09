@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="brand_yellow">#FDEE51</color>
-    <color name="brand_ink">#0C0F1C</color>
     <color name="window_background">#F6F7FB</color>
-    <color name="icon_dark_background">#0C0F1C</color>
-    <color name="icon_minimal_background">#F8FAFC</color>
 </resources>

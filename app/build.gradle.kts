@@ -52,8 +52,9 @@ android {
         buildConfig = true
     }
     sourceSets {
-        // Exportierte Schemas als Test-Assets für MigrationTestHelper
-        getByName("test").assets.srcDir("$projectDir/schemas")
+        // Exportierte Schemas für MigrationTestHelper (Robolectric liest die Assets der Debug-Variante).
+        // Nur Debug – im Release-Build sind die Schemas nicht enthalten.
+        getByName("debug").assets.srcDir("$projectDir/schemas")
         getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
     testOptions {

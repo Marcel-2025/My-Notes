@@ -223,6 +223,7 @@
     <string name="premium_benefit_support">Unterstützt die Entwicklung</string>
     <string name="premium_benefit_support_desc">Hilft, die App weiter zu verbessern.</string>
     <string name="premium_buy_with_price">Jetzt freischalten · %1$s</string>
+    <string name="premium_unavailable">Derzeit nicht verfügbar – bitte später erneut versuchen</string>
     <string name="premium_loading_price">Preis wird geladen…</string>
     <string name="premium_one_time">Einmal bezahlen – dauerhaft werbefrei. Kein Abonnement.</string>
     <string name="premium_one_time_short">Einmalkauf, kein Abo</string>

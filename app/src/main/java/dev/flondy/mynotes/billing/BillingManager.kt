@@ -52,6 +52,8 @@ class BillingManager(
         val connected: Boolean = false,
         val formattedPrice: String? = null,
         val productAvailable: Boolean = false,
+        /** true, sobald Google Play auf die Produktabfrage geantwortet hat (auch wenn kein Produkt kam). */
+        val productQueried: Boolean = false,
     )
 
     sealed interface Event {
@@ -105,6 +107,7 @@ class BillingManager(
     fun start() {
         if (billingClient.isReady) {
             refreshPurchases()
+            if (productDetails == null) loadProductDetails()
             return
         }
         billingClient.startConnection(object : BillingClientStateListener {
@@ -164,6 +167,7 @@ class BillingManager(
             productDetails = details
             _state.update {
                 it.copy(
+                    productQueried = true,
                     productAvailable = details != null,
                     formattedPrice = details?.oneTimePurchaseOfferDetails?.formattedPrice,
                 )
