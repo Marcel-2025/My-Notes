@@ -53,6 +53,7 @@ import dev.flondy.mynotes.billing.BillingManager
 import dev.flondy.mynotes.data.NoteRepository
 import dev.flondy.mynotes.ui.editor.EditorActions
 import dev.flondy.mynotes.ui.editor.EditorScreen
+import dev.flondy.mynotes.ui.home.HomeActions
 import dev.flondy.mynotes.ui.home.HomeScreen
 import dev.flondy.mynotes.ui.premium.PremiumScreen
 import dev.flondy.mynotes.ui.settings.CategoriesScreen
@@ -86,6 +87,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
     val privacyRequired by settingsVm.privacyOptionsRequired.collectAsStateWithLifecycle()
     val categories by notesVm.categories.collectAsStateWithLifecycle()
     val trash by notesVm.trash.collectAsStateWithLifecycle()
+    val homeState by notesVm.homeState.collectAsStateWithLifecycle()
     val isDark = isAppInDarkTheme(settings.themeMode)
     val snackbar = remember { SnackbarHostState() }
     val animate = LocalAppExtras.current.animationsEnabled
@@ -140,6 +142,11 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                 }
                 is UiEvent.Message -> scope.launch { snackbar.showSnackbar(context.formatMessage(event.resId, event.arg)) }
                 is UiEvent.ImportPreviewReady -> importPreview = event.preview
+                is UiEvent.Archived -> scope.launch {
+                    val result = snackbar.showSnackbar(context.getString(R.string.archived_message), undoLabel, duration = SnackbarDuration.Short)
+                    if (result == SnackbarResult.ActionPerformed) notesVm.unarchive(event.noteId)
+                }
+                is UiEvent.Duplicated -> scope.launch { snackbar.showSnackbar(context.getString(R.string.duplicated_message)) }
             }
         }
     }
@@ -172,12 +179,16 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     adsReady = adsReady,
                     isDark = isDark,
                     snackbarHostState = snackbar,
-                    onOpenSettings = { navigate(Route.SETTINGS) },
-                    onOpenPremium = { navigate(Route.PREMIUM) },
-                    onToggleTheme = { settingsVm.toggleTheme(isDark) },
-                    onHideAdFreeBadge = { settingsVm.setShowAdFreeBadge(false) },
-                    onShare = ::share,
-                    onExportTxt = ::exportTxt,
+                    actions = HomeActions(
+                        onOpenSettings = { navigate(Route.SETTINGS) },
+                        onOpenPremium = { navigate(Route.PREMIUM) },
+                        onOpenTrash = { navigate(Route.TRASH) },
+                        onOpenCategories = { navigate(Route.CATEGORIES) },
+                        onToggleTheme = { settingsVm.toggleTheme(isDark) },
+                        onHideAdFreeBadge = { settingsVm.setShowAdFreeBadge(false) },
+                        onShare = ::share,
+                        onExportTxt = ::exportTxt,
+                    ),
                 )
                 Route.SETTINGS -> SettingsScreen(
                     settings = settings,
@@ -215,9 +226,10 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                 )
                 Route.CATEGORIES -> CategoriesScreen(
                     categories = categories,
+                    counts = homeState.categoryCounts,
                     onBack = ::back,
-                    onAdd = { notesVm.addCategory(it) },
-                    onRename = { c, name -> notesVm.renameCategory(c, name) },
+                    onAdd = { name, icon -> notesVm.addCategory(name, icon) },
+                    onUpdate = { notesVm.updateCategory(it) },
                     onDelete = { notesVm.deleteCategory(it) },
                 )
                 Route.TRASH -> TrashScreen(
@@ -260,9 +272,12 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     onToggleFavorite = notesVm::onEditorToggleFavorite,
                     onColor = notesVm::onEditorColor,
                     onCategory = notesVm::onEditorCategory,
-                    onToggleType = notesVm::onEditorToggleType,
+                    onToggleArchive = notesVm::onEditorToggleArchived,
+                    onToggleChecklist = notesVm::onEditorToggleChecklist,
+                    onTextToChecklist = notesVm::onEditorTextToChecklist,
                     onShare = { notesVm.editorAsNote()?.let(::share) },
                     onExportTxt = { notesVm.editorAsNote()?.let(::exportTxt) },
+                    onDuplicate = notesVm::duplicateFromEditor,
                     onClose = notesVm::closeEditor,
                     onDiscard = notesVm::discardEditorChanges,
                     onDelete = notesVm::deleteFromEditor,

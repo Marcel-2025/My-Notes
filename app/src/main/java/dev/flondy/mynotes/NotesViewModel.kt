@@ -41,11 +41,20 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
+/** Untere Navigation der Startseite. */
+enum class HomeTab { NOTES, FAVORITES, ARCHIVE }
+
 data class HomeUiState(
+    val tab: HomeTab = HomeTab.NOTES,
     val notes: List<Note> = emptyList(),
     val totalActive: Int = 0,
     val reorderAllowed: Boolean = true,
     val loaded: Boolean = false,
+    /** Für die Übersicht: angeheftete und Favoriten (ohne Filter), Anzahl Notizen je Kategorie. */
+    val pinned: List<Note> = emptyList(),
+    val favorites: List<Note> = emptyList(),
+    val categoryCounts: Map<Int, Int> = emptyMap(),
+    val archivedCount: Int = 0,
 )
 
 enum class SaveStatus { IDLE, PENDING, SAVED }
@@ -55,7 +64,9 @@ data class EditorState(
     val noteId: Int?,
     val type: Int,
     val title: String,
+    /** Notiztext (mit optionaler Formatierung). */
     val content: String,
+    /** Checklisten-Einträge – sichtbar, wenn [showChecklist]. */
     val items: List<ChecklistItem>,
     val isPinned: Boolean,
     val isFavorite: Boolean,
@@ -65,16 +76,20 @@ data class EditorState(
     val updatedAt: Long?,
     val saveStatus: SaveStatus = SaveStatus.IDLE,
     val focusTitle: Boolean = false,
+    val showChecklist: Boolean = false,
+    val isArchived: Boolean = false,
 ) {
     val isChecklist get() = type == Note.TYPE_CHECKLIST
-    val encodedContent: String get() = if (isChecklist) ChecklistCodec.encode(items) else content
-    val isBlank: Boolean get() = title.isBlank() && encodedContent.isBlank()
+    val encodedChecklist: String get() = if (showChecklist) ChecklistCodec.encode(items) else ""
+    val isBlank: Boolean get() = title.isBlank() && content.isBlank() && encodedChecklist.isBlank()
 }
 
 sealed interface UiEvent {
     data class MovedToTrash(val noteId: Int) : UiEvent
     data class Message(val resId: Int, val arg: Any? = null) : UiEvent
     data class ImportPreviewReady(val preview: NoteRepository.ImportPreview) : UiEvent
+    data class Archived(val noteId: Int) : UiEvent
+    data class Duplicated(val newId: Int) : UiEvent
 }
 
 class NotesViewModel(application: Application) : AndroidViewModel(application) {
@@ -99,12 +114,25 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
     private val _query = MutableStateFlow(NoteQuery())
     val query: StateFlow<NoteQuery> = _query.asStateFlow()
 
-    val homeState: StateFlow<HomeUiState> = combine(repo.activeNotes, _query, settings) { all, q, s ->
+    private val _tab = MutableStateFlow(HomeTab.NOTES)
+    val tab: StateFlow<HomeTab> = _tab.asStateFlow()
+
+    val homeState: StateFlow<HomeUiState> = combine(repo.activeNotes, repo.archived, _query, settings, _tab) { all, archived, q, s, tab ->
+        val visible = when (tab) {
+            HomeTab.NOTES -> NoteFilters.apply(all, q, s.sortMode, s.favoritesFirst)
+            HomeTab.FAVORITES -> NoteFilters.apply(all, q.copy(quickFilter = QuickFilter.FAVORITES, categoryId = null), s.sortMode, false)
+            HomeTab.ARCHIVE -> NoteFilters.apply(archived, q.copy(quickFilter = QuickFilter.ALL, categoryId = null), SortMode.UPDATED, false)
+        }
         HomeUiState(
-            notes = NoteFilters.apply(all, q, s.sortMode, s.favoritesFirst),
+            tab = tab,
+            notes = visible,
             totalActive = all.size,
-            reorderAllowed = NoteFilters.isReorderAllowed(q, s.sortMode, s.favoritesFirst),
+            reorderAllowed = tab == HomeTab.NOTES && NoteFilters.isReorderAllowed(q, s.sortMode, s.favoritesFirst),
             loaded = true,
+            pinned = all.filter { it.isPinned },
+            favorites = NoteFilters.sort(all.filter { it.isFavorite && !it.isPinned }, SortMode.UPDATED, false),
+            categoryCounts = all.mapNotNull { it.categoryId }.groupingBy { it }.eachCount(),
+            archivedCount = archived.size,
         )
     }.flowOn(Dispatchers.Default)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeUiState())
@@ -124,7 +152,24 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
      * Beispielnotizen nur bei einer echten Erstinstallation (vorher wurden sie bei jeder leeren DB
      * erneut angelegt – auch nachdem der Nutzer alles gelöscht hatte).
      */
+    private suspend fun seedCategoriesIfNeeded() {
+        val ctx = getApplication<Application>()
+        if (!settingsStore.isCategoriesSeeded()) {
+            repo.seedCategories(
+                listOf(
+                    R.string.category_private to "heart", R.string.category_work to "work",
+                    R.string.category_school to "school", R.string.category_ideas to "idea",
+                    R.string.category_shopping to "shopping", R.string.category_travel to "travel",
+                    R.string.category_tasks to "tasks", R.string.category_other to "folder",
+                ).map { (res, icon) -> ctx.getString(res) to icon }
+            )
+            settingsStore.markCategoriesSeeded()
+        }
+    }
+
+    /** Ordnung: zuerst Kategorien anlegen, dann Beispielnotizen – damit diese zugeordnet werden können. */
     private suspend fun seedFirstRun() {
+        seedCategoriesIfNeeded()
         val ctx = getApplication<Application>()
         val samplesKey = booleanPreferencesKey("sample_notes_seeded")
         val prefs = ctx.dataStore.data.first()
@@ -132,35 +177,32 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
             if (repo.noteCount() == 0) addSampleNotes()
             ctx.dataStore.edit { it[samplesKey] = true }
         }
-        if (!settingsStore.isCategoriesSeeded()) {
-            repo.seedCategories(
-                listOf(
-                    R.string.category_private, R.string.category_work, R.string.category_school,
-                    R.string.category_ideas, R.string.category_shopping, R.string.category_tasks,
-                    R.string.category_other,
-                ).map(ctx::getString)
-            )
-            settingsStore.markCategoriesSeeded()
-        }
     }
 
     private suspend fun addSampleNotes() {
         val ctx = getApplication<Application>()
         val now = System.currentTimeMillis()
         val day = 86_400_000L
+        val cats = repo.getCategories()
+        fun cat(res: Int) = cats.firstOrNull { it.name == ctx.getString(res) }?.id
         val samples = listOf(
             Note(title = ctx.getString(R.string.sample_welcome_title), content = ctx.getString(R.string.sample_welcome_body),
-                createdAt = now - 2 * day, updatedAt = now - 2 * day, isPinned = true),
-            Note(title = ctx.getString(R.string.sample_shopping_title), content = ctx.getString(R.string.sample_shopping_body),
-                createdAt = now - day, updatedAt = now - day, noteType = Note.TYPE_CHECKLIST, color = 1),
+                createdAt = now - 3 * day, updatedAt = now - 3 * day, isPinned = true),
+            Note(title = ctx.getString(R.string.sample_shopping_title), content = "", checklist = ctx.getString(R.string.sample_shopping_body),
+                createdAt = now - 2 * day, updatedAt = now - 2 * day, noteType = Note.TYPE_CHECKLIST,
+                categoryId = cat(R.string.category_shopping)),
+            Note(title = ctx.getString(R.string.sample_travel_title), checklist = ctx.getString(R.string.sample_travel_list),
+                content = ctx.getString(R.string.sample_travel_body), createdAt = now - day, updatedAt = now - day,
+                noteType = Note.TYPE_CHECKLIST, categoryId = cat(R.string.category_travel), isFavorite = true),
             Note(title = ctx.getString(R.string.sample_ideas_title), content = ctx.getString(R.string.sample_ideas_body),
-                createdAt = now, updatedAt = now),
+                createdAt = now, updatedAt = now, categoryId = cat(R.string.category_ideas)),
         )
-        samples.reversed().forEach { repo.insertNote(it) }
+        samples.forEach { repo.insertNote(it) }
     }
 
     // ---------------------------------------------------------------- Suche, Filter, Sortierung
 
+    fun setTab(tab: HomeTab) { _tab.value = tab }
     fun setSearch(text: String) = _query.update { it.copy(search = text) }
     fun setQuickFilter(filter: QuickFilter) = _query.update { it.copy(quickFilter = filter, categoryId = null) }
     fun setCategoryFilter(categoryId: Int?) = _query.update { it.copy(categoryId = categoryId, quickFilter = QuickFilter.ALL) }
@@ -169,6 +211,7 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
     fun resetFilters() = _query.update { NoteQuery(search = it.search) }
     fun setSortMode(mode: SortMode) = viewModelScope.launch { settingsStore.setSortMode(mode) }
     fun setFavoritesFirst(value: Boolean) = viewModelScope.launch { settingsStore.setFavoritesFirst(value) }
+    fun setHomeLayout(value: dev.flondy.mynotes.settings.HomeLayout) = viewModelScope.launch { settingsStore.setHomeLayout(value) }
 
     // ---------------------------------------------------------------- Notiz-Aktionen (bestehende API)
 
@@ -211,6 +254,18 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         reorder(ids)
     }
 
+    fun setArchived(note: Note, archived: Boolean) = viewModelScope.launch(Dispatchers.IO) {
+        repo.setArchived(note.id, archived)
+        if (archived) _events.send(UiEvent.Archived(note.id))
+    }
+
+    fun unarchive(noteId: Int) = viewModelScope.launch(Dispatchers.IO) { repo.setArchived(noteId, false) }
+
+    fun duplicate(noteId: Int) = viewModelScope.launch(Dispatchers.IO) {
+        val copy = repo.duplicate(noteId, getApplication<Application>().getString(R.string.copy_suffix))
+        if (copy != null) _events.send(UiEvent.Duplicated(copy))
+    }
+
     fun togglePinned(note: Note) = viewModelScope.launch(Dispatchers.IO) { repo.setPinned(note.id, !note.isPinned) }
     fun toggleFavorite(note: Note) = viewModelScope.launch(Dispatchers.IO) { repo.setFavorite(note.id, !note.isFavorite) }
     fun setColor(note: Note, color: Int) = viewModelScope.launch(Dispatchers.IO) { repo.setColor(note.id, color) }
@@ -238,8 +293,12 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     // ---------------------------------------------------------------- Kategorien
 
-    fun addCategory(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        if (name.isNotBlank()) repo.addCategory(name)
+    fun addCategory(name: String, icon: String = "", color: Int = 0) = viewModelScope.launch(Dispatchers.IO) {
+        if (name.isNotBlank()) repo.addCategory(name, icon, color)
+    }
+
+    fun updateCategory(category: Category) = viewModelScope.launch(Dispatchers.IO) {
+        if (category.name.isNotBlank()) repo.updateCategory(category)
     }
 
     fun renameCategory(category: Category, name: String) = viewModelScope.launch(Dispatchers.IO) {
@@ -254,8 +313,9 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
     // ---------------------------------------------------------------- Teilen / Export / Backup
 
     fun shareText(note: Note): String {
-        val body = if (note.isChecklist) ChecklistCodec.toShareText(note.content) else note.content
-        return listOf(note.title, body).filter { it.isNotBlank() }.joinToString("\n\n")
+        val list = if (note.checklist.isNotBlank()) ChecklistCodec.toShareText(note.checklist) else ""
+        val text = dev.flondy.mynotes.data.RichText.toPlainText(note.content)
+        return listOf(note.title, list, text).filter { it.isNotBlank() }.joinToString("\n\n")
     }
 
     fun exportNoteAsTxt(note: Note, uri: Uri) = writeToUri(uri, shareText(note), R.string.export_txt_done)
@@ -318,8 +378,9 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         session = EditorSession(note.id, note)
         editor = EditorState(
             noteId = note.id, type = note.noteType, title = note.title,
-            content = if (note.isChecklist) "" else note.content,
-            items = if (note.isChecklist) ChecklistCodec.decode(note.content) else emptyList(),
+            content = note.content,
+            items = ChecklistCodec.decode(note.checklist),
+            showChecklist = note.isChecklist, isArchived = note.isArchived,
             isPinned = note.isPinned, isFavorite = note.isFavorite, color = note.color,
             categoryId = note.categoryId, createdAt = note.createdAt, updatedAt = note.updatedAt,
         )
@@ -335,7 +396,8 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
             isPinned = q.quickFilter == QuickFilter.PINNED,
             isFavorite = q.quickFilter == QuickFilter.FAVORITES,
             color = 0, categoryId = q.categoryId, createdAt = null, updatedAt = null,
-            focusTitle = type == Note.TYPE_TEXT,
+            focusTitle = true,
+            showChecklist = type == Note.TYPE_CHECKLIST,
         )
     }
 
@@ -353,14 +415,29 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
     fun onEditorColor(color: Int) = edit { it.copy(color = color) }
     fun onEditorCategory(categoryId: Int?) = edit { it.copy(categoryId = categoryId) }
 
-    fun onEditorToggleType() = edit {
-        if (it.isChecklist) {
-            it.copy(type = Note.TYPE_TEXT, content = ChecklistCodec.toPlainText(it.items), items = emptyList())
+    fun onEditorToggleArchived() = edit { it.copy(isArchived = !it.isArchived) }
+
+    /** Checkliste hinzufügen (leer) bzw. entfernen – vorhandene Einträge wandern dabei als Aufzählung in den Text. */
+    fun onEditorToggleChecklist() = edit {
+        if (it.showChecklist) {
+            val asText = it.items.filter { i -> i.text.isNotBlank() }.joinToString("\n") { i -> dev.flondy.mynotes.data.RichText.BULLET + i.text }
+            val content = listOf(asText, it.content).filter { t -> t.isNotBlank() }.joinToString("\n")
+            it.copy(type = Note.TYPE_TEXT, showChecklist = false, items = emptyList(), content = content)
         } else {
-            val items = ChecklistCodec.fromPlainText(it.content).ifEmpty { listOf(ChecklistItem(ChecklistCodec.newId(), "", false)) }
-            it.copy(type = Note.TYPE_CHECKLIST, items = items, content = "")
+            it.copy(type = Note.TYPE_CHECKLIST, showChecklist = true,
+                items = it.items.ifEmpty { listOf(ChecklistItem(ChecklistCodec.newId(), "", false)) })
         }
     }
+
+    /** Text → Checkliste: jede Zeile des Notiztexts wird ein Eintrag. */
+    fun onEditorTextToChecklist() = edit {
+        val newItems = ChecklistCodec.fromPlainText(it.content.lines().joinToString("\n") { l -> l.removePrefix(dev.flondy.mynotes.data.RichText.BULLET) })
+        if (newItems.isEmpty()) it else it.copy(type = Note.TYPE_CHECKLIST, showChecklist = true,
+            items = it.items.filter { i -> i.text.isNotBlank() } + newItems, content = "")
+    }
+
+    /** Kompatibilität: Text ↔ Checkliste umschalten. */
+    fun onEditorToggleType() = if (editor?.showChecklist == true) onEditorToggleChecklist() else onEditorTextToChecklist()
 
     /** Automatisches Zwischenspeichern (Debounce), damit beim Tippen nichts verloren geht. */
     private fun scheduleSave() {
@@ -389,7 +466,8 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
                 if (snapshot.isBlank) return@withContext
                 val newId = repo.insertNote(
                     Note(
-                        title = snapshot.title.trim(), content = snapshot.encodedContent,
+                        title = snapshot.title.trim(), content = snapshot.content.trimEnd(),
+                        checklist = snapshot.encodedChecklist, isArchived = snapshot.isArchived,
                         createdAt = now, updatedAt = now, isPinned = snapshot.isPinned,
                         isFavorite = snapshot.isFavorite, color = snapshot.color,
                         categoryId = snapshot.categoryId, noteType = snapshot.type,
@@ -400,10 +478,13 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
             } else {
                 val existing = repo.getNote(id) ?: return@withContext
                 val newTitle = snapshot.title.trim()
-                val newContent = snapshot.encodedContent
-                val textChanged = existing.title != newTitle || existing.content != newContent || existing.noteType != snapshot.type
+                val newContent = snapshot.content.trimEnd()
+                val newList = snapshot.encodedChecklist
+                val textChanged = existing.title != newTitle || existing.content != newContent ||
+                    existing.checklist != newList || existing.noteType != snapshot.type
                 val updated = existing.copy(
-                    title = newTitle, content = newContent, noteType = snapshot.type,
+                    title = newTitle, content = newContent, checklist = newList, noteType = snapshot.type,
+                    isArchived = snapshot.isArchived,
                     isPinned = snapshot.isPinned, isFavorite = snapshot.isFavorite,
                     color = snapshot.color, categoryId = snapshot.categoryId,
                     // Änderungsdatum nur bei echten Inhaltsänderungen – Erstellungsdatum bleibt immer erhalten
@@ -422,7 +503,8 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
             val e = editor ?: return@withContext
             if (session !== s) return@withContext
             // Wurde seit dem Snapshot weitergetippt, bleibt der Status „ausstehend“.
-            val unchanged = e.title == snapshot.title && e.encodedContent == snapshot.encodedContent &&
+            val unchanged = e.title == snapshot.title && e.content == snapshot.content &&
+                e.encodedChecklist == snapshot.encodedChecklist && e.isArchived == snapshot.isArchived &&
                 e.type == snapshot.type && e.isPinned == snapshot.isPinned && e.isFavorite == snapshot.isFavorite &&
                 e.color == snapshot.color && e.categoryId == snapshot.categoryId
             editor = e.copy(
@@ -436,6 +518,23 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         flushPendingSave()
         editor = null
         session = null
+    }
+
+    /** Speichert und legt eine Kopie der aktuellen Notiz an (Editor bleibt geöffnet). */
+    fun duplicateFromEditor() {
+        val snapshot = editor ?: return
+        val s = session ?: return
+        saveJob?.cancel()
+        viewModelScope.launch {
+            withContext(NonCancellable) {
+                persist(snapshot, s)
+                val id = s.noteId ?: return@withContext
+                val copy = withContext(Dispatchers.IO) {
+                    repo.duplicate(id, getApplication<Application>().getString(R.string.copy_suffix))
+                }
+                if (copy != null) _events.send(UiEvent.Duplicated(copy))
+            }
+        }
     }
 
     /** Alle Änderungen dieser Sitzung verwerfen (Originalzustand wiederherstellen). */
@@ -478,7 +577,7 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Aktueller Editor-Inhalt als Note (z. B. zum Teilen oder TXT-Export). */
     fun editorAsNote(): Note? = editor?.let {
-        Note(id = session?.noteId ?: 0, title = it.title, content = it.encodedContent, noteType = it.type)
+        Note(id = session?.noteId ?: 0, title = it.title, content = it.content, checklist = it.encodedChecklist, noteType = it.type)
     }
 
     override fun onCleared() {

@@ -7,8 +7,12 @@ import androidx.room.PrimaryKey
 /**
  * Eine Notiz (Text oder Checkliste).
  *
- * Datenbankversion 4 – alle neuen Spalten wurden per additiver Migration (3 → 4) ergänzt,
- * bestehende Notizen bleiben vollständig erhalten.
+ * Datenbankversion 5 – alle neuen Spalten wurden per additiver Migration ergänzt
+ * (3 → 4, 4 → 5), bestehende Notizen bleiben vollständig erhalten.
+ *
+ * - [content] ist der (optional formatierte) Notiztext, [checklist] die Checkliste
+ *   (Zeilenformat „[ ] …“ / „[x] …“). Seit v5 kann eine Notiz beides enthalten.
+ * - [noteType] = TYPE_CHECKLIST markiert Notizen, die als „Liste“ angelegt wurden.
  *
  * - [updatedAt] liegt aus Kompatibilitätsgründen weiterhin in der Spalte `timestamp`.
  * - [createdAt] wurde bei der Migration mit dem bisherigen `timestamp` befüllt.
@@ -35,10 +39,16 @@ data class Note(
     @ColumnInfo(defaultValue = "0")
     val noteType: Int = TYPE_TEXT,
     val deletedAt: Long? = null,
+    @ColumnInfo(defaultValue = "0")
+    val isArchived: Boolean = false,
+    @ColumnInfo(defaultValue = "''")
+    val checklist: String = "",
 ) {
-    val isChecklist: Boolean get() = noteType == TYPE_CHECKLIST
+    /** „Liste“ – als Checkliste angelegt oder enthält Checklisten-Einträge. */
+    val isChecklist: Boolean get() = noteType == TYPE_CHECKLIST || checklist.isNotBlank()
+    val hasChecklist: Boolean get() = checklist.isNotBlank()
     val isInTrash: Boolean get() = deletedAt != null
-    val hasContent: Boolean get() = content.isNotBlank()
+    val hasContent: Boolean get() = content.isNotBlank() || checklist.isNotBlank()
 
     companion object {
         const val TYPE_TEXT = 0

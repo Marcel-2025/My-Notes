@@ -66,8 +66,8 @@ import dev.flondy.mynotes.billing.BillingManager
 import dev.flondy.mynotes.ui.theme.BrandYellow
 import dev.flondy.mynotes.ui.theme.LocalAppExtras
 
-private val PremiumBg = Color(0xFF0C0F1C)
-private val PremiumSurface = Color(0xFF151B2C)
+private val PremiumBg = Color(0xFF2A1710)
+private val PremiumSurface = Color(0xFF3A241A)
 
 /**
  * Premium-Seite für den bestehenden Einmalkauf „remove_ads“.
@@ -98,7 +98,7 @@ fun PremiumScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFF1A1A10), PremiumBg, PremiumBg)))
+            .background(Brush.verticalGradient(listOf(Color(0xFF5A3426), Color(0xFF3E2219), PremiumBg)))
     ) {
         Column(
             Modifier

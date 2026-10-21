@@ -1,6 +1,5 @@
 package dev.flondy.mynotes.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.scrollBy
@@ -8,19 +7,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
+import androidx.compose.foundation.lazy.grid.LazyGridScope
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,7 +37,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -46,19 +46,22 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-/**
- * Zustand eines laufenden Drag-Vorgangs. Alle Koordinaten beziehen sich auf den Listen-Container.
- */
+/** Zustand eines laufenden Drag-Vorgangs. Koordinaten beziehen sich auf den Listen-Container. */
 @Stable
 class NoteDragState {
     var draggingId by mutableStateOf<Int?>(null)
         internal set
-    /** Oberkante der schwebenden Karte (Overlay). */
     var overlayTop by mutableFloatStateOf(0f)
         internal set
+    var overlayLeft by mutableFloatStateOf(0f)
+        internal set
+    internal var pointerX by mutableFloatStateOf(0f)
     internal var pointerY by mutableFloatStateOf(0f)
-    internal var grabOffset = 0f
+    internal var grabX = 0f
+    internal var grabY = 0f
     internal var itemHeight = 0f
+    internal var itemWidth by mutableIntStateOf(0)
+    internal var startX = 0f
     internal var startY = 0f
     internal var moved = false
     /** Zeitpunkt des letzten Drag-Endes – verhindert, dass das Loslassen als Klick gewertet wird. */
@@ -69,38 +72,38 @@ class NoteDragState {
 }
 
 /**
- * Notizliste mit zuverlässigem Drag & Drop:
+ * Notizliste bzw. -raster mit zuverlässigem Drag & Drop.
  *
  * - Lang drücken hebt die Karte an; sie wird als **Overlay oberhalb der Liste** gezeichnet und folgt
- *   exakt dem Finger. Sie kann dadurch nie hinter anderen Karten verschwinden und wird auch beim
- *   Auto-Scrollen nicht entsorgt.
- * - In der Liste bleibt an der Zielposition ein Platzhalter (Einfügemarkierung); die übrigen Karten
- *   machen animiert Platz.
+ *   exakt dem Finger (auch seitlich im Raster). Sie kann nie hinter anderen Karten verschwinden.
+ * - An der Zielposition bleibt ein Platzhalter (Einfügemarkierung); die übrigen Karten machen animiert Platz.
  * - Am oberen/unteren Rand scrollt die Liste automatisch.
- * - Die Geste liegt auf dem Container und läuft im Initial-Pass: Sobald gezogen wird, bekommen
- *   LazyColumn (Scrollen) und Karte (Klick) keine Ereignisse mehr → keine Konflikte.
- * - Ein normaler Tipp öffnet weiterhin den Editor.
+ * - Die Geste liegt auf dem Container (Initial-Pass): Während des Ziehens bekommen Scrollen und Klick
+ *   keine Ereignisse → keine Konflikte. Ein normaler Tipp öffnet weiterhin den Editor.
  * - Erst beim Loslassen wird die neue Reihenfolge einmalig gespeichert ([onReorder]).
+ *
+ * @param columns z. B. GridCells.Fixed(1) für die Liste, GridCells.Adaptive(160.dp) für das Raster
+ * @param header optionale Elemente oberhalb der Notizen (Schlüssel dürfen keine Int sein)
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReorderableNoteList(
     notes: List<Note>,
     reorderEnabled: Boolean,
-    listState: LazyListState,
+    listState: LazyGridState,
     contentPadding: PaddingValues,
     onReorder: (List<Int>) -> Unit,
     onLongPressWithoutMove: (Note) -> Unit,
     modifier: Modifier = Modifier,
+    columns: GridCells = GridCells.Fixed(1),
     dragState: NoteDragState = remember { NoteDragState() },
+    header: (LazyGridScope.() -> Unit)? = null,
     itemContent: @Composable (note: Note, isPlaceholder: Boolean, isOverlay: Boolean) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val haptics = LocalHapticFeedback.current
     val density = LocalDensity.current
-    val layoutDirection = LocalLayoutDirection.current
 
-    // Lokale Arbeitskopie während des Ziehens; danach die gespeicherte Reihenfolge bis die DB nachzieht.
+    // Lokale Arbeitskopie während des Ziehens; danach die gespeicherte Reihenfolge, bis die DB nachzieht.
     var working by remember { mutableStateOf(notes) }
     var pendingOrder by remember { mutableStateOf<List<Int>?>(null) }
 
@@ -112,7 +115,6 @@ fun ReorderableNoteList(
                 pendingOrder = null
                 notes
             } else {
-                // DB hat die neue Reihenfolge noch nicht geliefert → neue Daten in gemerkter Reihenfolge zeigen
                 val byId = notes.associateBy { it.id }
                 pending.mapNotNull(byId::get)
             }
@@ -123,29 +125,40 @@ fun ReorderableNoteList(
     val currentOnReorder by rememberUpdatedState(onReorder)
     val currentOnLongPress by rememberUpdatedState(onLongPressWithoutMove)
 
-    fun noteIndex(id: Int?) = currentNotes.indexOfFirst { it.id == id }
+    fun noteIndex(id: Any?) = currentNotes.indexOfFirst { it.id == id }
 
-    /** Prüft, ob die schwebende Karte über einer anderen liegt, und verschiebt den Platzhalter. */
+    fun itemAt(x: Float, y: Float): LazyGridItemInfo? = listState.layoutInfo.visibleItemsInfo.firstOrNull {
+        it.key is Int && x >= it.offset.x && x <= it.offset.x + it.size.width && y >= it.offset.y && y <= it.offset.y + it.size.height
+    }
+
+    /** Liegt die Mitte der schwebenden Karte über einer anderen Karte, wandert der Platzhalter dorthin. */
     fun checkForSwap() {
         val id = dragState.draggingId ?: return
-        val layout = listState.layoutInfo
-        val center = dragState.overlayTop + dragState.itemHeight / 2f
-        val target = layout.visibleItemsInfo.firstOrNull { info ->
-            info.key != id && info.key is Int && center >= info.offset && center <= info.offset + info.size
-        } ?: return
+        val cx = dragState.overlayLeft + dragState.itemWidth / 2f
+        val cy = dragState.overlayTop + dragState.itemHeight / 2f
+        val target = itemAt(cx, cy)?.takeIf { it.key != id } ?: return
         val from = noteIndex(id)
-        val to = noteIndex(target.key as Int)
+        val to = noteIndex(target.key)
         if (from < 0 || to < 0 || from == to) return
         // Angeheftete und normale Notizen bleiben jeweils in ihrer Gruppe
         if (currentNotes[from].isPinned != currentNotes[to].isPinned) return
-        val targetCenter = target.offset + target.size / 2f
-        val passed = if (to > from) center > targetCenter else center < targetCenter
+        val dragged = listState.layoutInfo.visibleItemsInfo.firstOrNull { it.key == id }
+        val tx = target.offset.x.toFloat()
+        val ty = target.offset.y.toFloat()
+        // Hysterese: erst wechseln, wenn die schwebende Karte ein gutes Stück über dem Ziel liegt
+        // (nicht exakt die Mitte – am Bildschirmrand kann die Karte die Mitte sonst nie erreichen)
+        val passed = if (dragged != null && dragged.row == target.row) {
+            if (to > from) cx > tx + target.size.width * 0.3f else cx < tx + target.size.width * 0.7f
+        } else {
+            if (to > from) cy > ty + target.size.height * 0.35f else cy < ty + target.size.height * 0.65f
+        }
         if (!passed) return
 
         // Verhindert, dass die Liste beim Verschieben des ersten sichtbaren Elements „wegspringt“
         val firstIndex = listState.firstVisibleItemIndex
         val firstOffset = listState.firstVisibleItemScrollOffset
-        if (from == firstIndex || to == firstIndex) {
+        val firstKey = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.key
+        if (firstKey == id || firstKey == target.key) {
             scope.launch { listState.scrollToItem(firstIndex, firstOffset) }
         }
         working = currentNotes.toMutableList().apply { add(to, removeAt(from)) }
@@ -154,13 +167,14 @@ fun ReorderableNoteList(
 
     fun endDrag(commit: Boolean) {
         val id = dragState.draggingId ?: return
+        val moveDistance = abs(dragState.pointerY - dragState.startY) + abs(dragState.pointerX - dragState.startX)
         if (commit && dragState.moved) {
             val order = currentNotes.map { it.id }
             pendingOrder = order
             currentOnReorder(order)
         } else if (!commit) {
             working = notes
-        } else if (!dragState.moved && abs(dragState.pointerY - dragState.startY) < with(density) { 8.dp.toPx() }) {
+        } else if (!dragState.moved && moveDistance < with(density) { 8.dp.toPx() }) {
             currentNotes.firstOrNull { it.id == id }?.let(currentOnLongPress)
         }
         dragState.draggingId = null
@@ -190,14 +204,15 @@ fun ReorderableNoteList(
     }
 
     BoxWithConstraints(modifier) {
-        val startPad = contentPadding.calculateStartPadding(layoutDirection)
-        val endPad = contentPadding.calculateEndPadding(layoutDirection)
         val viewportPx = with(density) { maxHeight.toPx() }
+        val widthPx = with(density) { maxWidth.toPx() }
 
-        LazyColumn(
+        LazyVerticalGrid(
+            columns = columns,
             state = listState,
             contentPadding = contentPadding,
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
                 .fillMaxSize()
                 .testTag("note_list")
@@ -206,56 +221,59 @@ fun ReorderableNoteList(
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
                         // Auf langes Drücken warten, ohne Scrollen oder Klicks zu stören
-                        val longPress = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
+                        val cancelled = withTimeoutOrNull(viewConfiguration.longPressTimeoutMillis) {
                             while (true) {
                                 val event = awaitPointerEvent(PointerEventPass.Initial)
-                                val change = event.changes.firstOrNull { it.id == down.id } ?: return@withTimeoutOrNull false
-                                if (change.changedToUpIgnoreConsumed() || change.isConsumed) return@withTimeoutOrNull false
+                                val change = event.changes.firstOrNull { it.id == down.id } ?: return@withTimeoutOrNull true
+                                if (change.changedToUpIgnoreConsumed() || change.isConsumed) return@withTimeoutOrNull true
                                 if ((change.position - down.position).getDistance() > viewConfiguration.touchSlop) {
-                                    return@withTimeoutOrNull false
+                                    return@withTimeoutOrNull true
                                 }
                             }
-                            @Suppress("UNREACHABLE_CODE") false
+                            @Suppress("UNREACHABLE_CODE") true
                         }
-                        if (longPress != null) return@awaitEachGesture // abgebrochen → normales Scrollen/Klicken
+                        if (cancelled != null) return@awaitEachGesture
 
-                        val y = down.position.y
-                        val item = listState.layoutInfo.visibleItemsInfo.firstOrNull {
-                            it.key is Int && y >= it.offset && y <= it.offset + it.size
-                        } ?: return@awaitEachGesture
-
+                        val item = itemAt(down.position.x, down.position.y) ?: return@awaitEachGesture
                         haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        dragState.itemHeight = item.size.toFloat()
-                        dragState.grabOffset = y - item.offset
-                        dragState.pointerY = y
-                        dragState.startY = y
-                        dragState.overlayTop = item.offset.toFloat()
+                        dragState.itemHeight = item.size.height.toFloat()
+                        dragState.itemWidth = item.size.width
+                        dragState.grabX = down.position.x - item.offset.x
+                        dragState.grabY = down.position.y - item.offset.y
+                        dragState.pointerX = down.position.x
+                        dragState.pointerY = down.position.y
+                        dragState.startX = down.position.x
+                        dragState.startY = down.position.y
+                        dragState.overlayLeft = item.offset.x.toFloat()
+                        dragState.overlayTop = item.offset.y.toFloat()
                         dragState.moved = false
                         dragState.draggingId = item.key as Int
 
                         var committed = false
                         while (true) {
                             val event = awaitPointerEvent(PointerEventPass.Initial)
-                            val change = event.changes.firstOrNull { it.id == down.id }
-                            if (change == null) break
+                            val change = event.changes.firstOrNull { it.id == down.id } ?: break
                             if (change.changedToUpIgnoreConsumed()) {
                                 change.consume()
                                 committed = true
                                 break
                             }
-                            val dy = change.positionChange().y
+                            val delta = change.positionChange()
                             change.consume()
-                            dragState.pointerY += dy
-                            dragState.overlayTop = (dragState.pointerY - dragState.grabOffset)
+                            dragState.pointerX += delta.x
+                            dragState.pointerY += delta.y
+                            dragState.overlayTop = (dragState.pointerY - dragState.grabY)
                                 .coerceIn(-dragState.itemHeight / 2f, viewportPx - dragState.itemHeight / 2f)
+                            dragState.overlayLeft = (dragState.pointerX - dragState.grabX)
+                                .coerceIn(0f, (widthPx - dragState.itemWidth).coerceAtLeast(0f))
                             checkForSwap()
                         }
                         endDrag(commit = committed)
                     }
                 },
         ) {
-            items(currentNotes, key = { it.id }, contentType = { it.noteType }) { note ->
-                val isPlaceholder = note.id == dragState.draggingId
+            header?.invoke(this)
+            items(currentNotes, key = { it.id }, contentType = { if (it.isChecklist) 1 else 0 }) { note ->
                 Box(
                     Modifier.animateItem(
                         fadeInSpec = Motion.tween(220),
@@ -263,7 +281,7 @@ fun ReorderableNoteList(
                         fadeOutSpec = Motion.tween(180),
                     )
                 ) {
-                    itemContent(note, isPlaceholder, false)
+                    itemContent(note, note.id == dragState.draggingId, false)
                 }
             }
         }
@@ -274,16 +292,22 @@ fun ReorderableNoteList(
             Box(
                 Modifier
                     .zIndex(10f)
-                    .fillMaxWidth()
-                    .padding(start = startPad, end = endPad)
+                    .width(with(density) { dragState.itemWidth.toDp() })
                     .graphicsLayer {
+                        translationX = dragState.overlayLeft
                         translationY = dragState.overlayTop
-                        scaleX = 1.03f
-                        scaleY = 1.03f
+                        scaleX = 1.04f
+                        scaleY = 1.04f
+                        rotationZ = if (dragState.moved) -1.2f else 0f
                     }
             ) {
                 itemContent(draggedNote, false, true)
             }
         }
     }
+}
+
+/** Kopfzeilen-Element über die volle Breite des Rasters. */
+fun LazyGridScope.fullWidthItem(key: String, content: @Composable () -> Unit) {
+    item(key = key, span = { GridItemSpan(maxLineSpan) }, contentType = "header") { content() }
 }

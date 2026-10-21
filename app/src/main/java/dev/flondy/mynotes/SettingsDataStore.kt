@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import dev.flondy.mynotes.settings.AccentColor
 import dev.flondy.mynotes.settings.AppSettings
 import dev.flondy.mynotes.settings.CardDensity
+import dev.flondy.mynotes.settings.HomeLayout
 import dev.flondy.mynotes.settings.SortMode
 import dev.flondy.mynotes.settings.ThemeMode
 import kotlinx.coroutines.flow.Flow
@@ -31,6 +32,7 @@ class SettingsDataStore(private val context: Context) {
         val SORT_MODE = stringPreferencesKey("sort_mode")
         val FAVORITES_FIRST = booleanPreferencesKey("favorites_first")
         val CARD_DENSITY = stringPreferencesKey("card_density")
+        val HOME_LAYOUT = stringPreferencesKey("home_layout")
         val ANIMATIONS = booleanPreferencesKey("animations_enabled")
         val IMMERSIVE = booleanPreferencesKey("immersive_mode")
         val HIDE_CHECKED = booleanPreferencesKey("hide_checked_items")
@@ -58,6 +60,7 @@ class SettingsDataStore(private val context: Context) {
             sortMode = parse(p[SORT_MODE], SortMode.MANUAL),
             favoritesFirst = p[FAVORITES_FIRST] ?: false,
             cardDensity = parse(p[CARD_DENSITY], CardDensity.COMFORTABLE),
+            homeLayout = parse(p[HOME_LAYOUT], HomeLayout.GRID),
             animationsEnabled = p[ANIMATIONS] ?: true,
             immersiveMode = p[IMMERSIVE] ?: false,
             hideCheckedItems = p[HIDE_CHECKED] ?: false,
@@ -78,6 +81,7 @@ class SettingsDataStore(private val context: Context) {
     suspend fun setSortMode(mode: SortMode) = context.dataStore.edit { it[SORT_MODE] = mode.name }
     suspend fun setFavoritesFirst(value: Boolean) = context.dataStore.edit { it[FAVORITES_FIRST] = value }
     suspend fun setCardDensity(value: CardDensity) = context.dataStore.edit { it[CARD_DENSITY] = value.name }
+    suspend fun setHomeLayout(value: HomeLayout) = context.dataStore.edit { it[HOME_LAYOUT] = value.name }
     suspend fun setAnimationsEnabled(value: Boolean) = context.dataStore.edit { it[ANIMATIONS] = value }
     suspend fun setImmersiveMode(value: Boolean) = context.dataStore.edit { it[IMMERSIVE] = value }
     suspend fun setHideCheckedItems(value: Boolean) = context.dataStore.edit { it[HIDE_CHECKED] = value }

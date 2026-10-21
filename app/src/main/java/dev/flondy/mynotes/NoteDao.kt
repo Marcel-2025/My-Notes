@@ -26,12 +26,18 @@ interface NoteDao {
     @Delete
     suspend fun delete(note: Note)
 
-    /** Aktive Notizen in manueller Reihenfolge (angeheftete zuerst). */
-    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL ORDER BY isPinned DESC, displayOrder ASC, timestamp DESC")
+    /** Aktive (nicht archivierte, nicht gelöschte) Notizen in manueller Reihenfolge (angeheftete zuerst). */
+    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL AND isArchived = 0 ORDER BY isPinned DESC, displayOrder ASC, timestamp DESC")
     fun observeActiveNotes(): Flow<List<Note>>
 
-    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL ORDER BY isPinned DESC, displayOrder ASC, timestamp DESC")
+    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL AND isArchived = 0 ORDER BY isPinned DESC, displayOrder ASC, timestamp DESC")
     suspend fun getActiveNotes(): List<Note>
+
+    @Query("SELECT * FROM notes_table WHERE deletedAt IS NULL AND isArchived = 1 ORDER BY timestamp DESC")
+    fun observeArchived(): Flow<List<Note>>
+
+    @Query("UPDATE notes_table SET isArchived = :archived WHERE id = :id")
+    suspend fun setArchived(id: Int, archived: Boolean)
 
     @Query("SELECT * FROM notes_table WHERE deletedAt IS NOT NULL ORDER BY deletedAt DESC")
     fun observeTrash(): Flow<List<Note>>
@@ -78,7 +84,7 @@ interface NoteDao {
     @Query("UPDATE notes_table SET deletedAt = :time WHERE id = :id")
     suspend fun moveToTrash(id: Int, time: Long)
 
-    @Query("UPDATE notes_table SET deletedAt = :time WHERE deletedAt IS NULL")
+    @Query("UPDATE notes_table SET deletedAt = :time WHERE deletedAt IS NULL AND isArchived = 0")
     suspend fun moveAllToTrash(time: Long)
 
     @Query("UPDATE notes_table SET deletedAt = NULL WHERE id = :id")

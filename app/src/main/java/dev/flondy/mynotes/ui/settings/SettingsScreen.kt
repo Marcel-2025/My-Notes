@@ -139,26 +139,15 @@ fun SettingsScreen(
     var showLicenses by rememberSaveable { mutableStateOf(false) }
     var confirmDeleteAll by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.settings_title)) },
-                navigationIcon = {
-                    IconButton(onClick = actions.onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back)) }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
-        },
-    ) { padding ->
-        Box(Modifier.padding(padding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    dev.flondy.mynotes.ui.components.LeatherPage(title = stringResource(R.string.settings_title), onBack = actions.onBack) { _ ->
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             Column(
                 Modifier
                     .widthIn(max = 760.dp)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .navigationBarsPadding()
-                    .padding(bottom = 32.dp),
+                    .padding(top = 8.dp, bottom = 32.dp),
             ) {
                 // ---------------- Premium
                 PremiumCard(premium, actions.onOpenPremium)
@@ -351,7 +340,7 @@ private fun PremiumCard(premium: BillingManager.State, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(24.dp),
-        color = Color(0xFF0C0F1C),
+        color = LocalAppExtras.current.leather,
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Row(
@@ -428,7 +417,8 @@ fun SectionTitle(text: String) {
 fun SettingsGroup(content: @Composable () -> Unit) {
     Surface(
         shape = RoundedCornerShape(22.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = LocalAppExtras.current.card,
+        border = androidx.compose.foundation.BorderStroke(1.dp, LocalAppExtras.current.cardBorder),
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
     ) {
         Column { content() }

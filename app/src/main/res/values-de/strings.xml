@@ -27,7 +27,6 @@
     <string name="action_save">Speichern</string>
     <string name="action_share">Teilen</string>
     <string name="action_to_checklist">In Checkliste umwandeln</string>
-    <string name="action_to_text">In Textnotiz umwandeln</string>
     <string name="action_undo">Rückgängig</string>
 
     <!-- Barrierefreiheit -->
@@ -44,7 +43,6 @@
     <string name="search_hint">Notizen durchsuchen…</string>
     <string name="search_clear">Suche leeren</string>
     <string name="new_note">Neue Notiz</string>
-    <string name="new_checklist">Neue Checkliste</string>
     <string name="empty_title">Noch keine Notizen</string>
     <string name="empty_subtitle">Tippe auf „Neue Notiz“, um deinen ersten Gedanken festzuhalten.</string>
     <string name="empty_search_title">Keine Treffer für „%1$s“</string>
@@ -57,8 +55,6 @@
 
     <!-- Filter und Sortierung -->
     <string name="filter_all">Alle</string>
-    <string name="filter_favorites">Favoriten</string>
-    <string name="filter_pinned">Angeheftet</string>
     <string name="filter_checklists">Listen</string>
     <string name="filter_sort_title">Sortieren &amp; filtern</string>
     <string name="filter_reset">Zurücksetzen</string>
@@ -85,10 +81,6 @@
     <string name="editor_saving">Speichert…</string>
     <string name="meta_edited">Bearbeitet %1$s</string>
     <string name="meta_created">Erstellt %1$s</string>
-    <plurals name="word_count">
-        <item quantity="one">%d Wort</item>
-        <item quantity="other">%d Wörter</item>
-    </plurals>
     <string name="label_color">Farbe</string>
     <string name="label_category">Kategorie</string>
     <string name="label_color_category">Farbe &amp; Kategorie</string>
@@ -120,7 +112,6 @@
     <string name="categories_empty_title">Keine Kategorien</string>
     <string name="categories_empty_subtitle">Lege Kategorien an, um deine Notizen zu ordnen.</string>
     <string name="category_add">Neue Kategorie</string>
-    <string name="category_rename">Umbenennen</string>
     <string name="category_delete">Kategorie löschen</string>
     <string name="category_delete_confirm">„%1$s“ löschen? Die Notizen bleiben erhalten und verlieren nur diese Zuordnung.</string>
     <string name="category_none">Keine</string>
@@ -156,7 +147,7 @@
     <string name="theme_light">Hell</string>
     <string name="theme_dark">Dunkel</string>
     <string name="setting_accent">Akzentfarbe</string>
-    <string name="accent_yellow">Gelb</string>
+    <string name="accent_yellow">Gold</string>
     <string name="accent_mint">Mint</string>
     <string name="accent_lavender">Lavendel</string>
     <string name="accent_coral">Koralle</string>
@@ -206,10 +197,9 @@
     <string name="about_licenses">Open-Source-Lizenzen</string>
     <string name="about_developer">Entwickelt von Flondy · Deine Notizen bleiben lokal auf deinem Gerät.</string>
     <string name="feedback_subject">Feedback zu Meine Notizen &amp; Listen</string>
-    <string name="licenses_text">Diese App verwendet:\n\n• AndroidX (Jetpack Compose, Room, DataStore, Lifecycle, Activity) – Apache License 2.0\n• Material Icons – Apache License 2.0\n• Kotlin &amp; kotlinx.coroutines – Apache License 2.0\n• Google Mobile Ads SDK, User Messaging Platform und Google Play Billing Library – Google-Nutzungsbedingungen\n\nVollständige Lizenztexte: https://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="licenses_text">Diese App verwendet:\n\n• AndroidX (Jetpack Compose, Room, DataStore, Lifecycle, Activity) – Apache License 2.0\n• Material Icons – Apache License 2.0\n• Schrift Nunito – SIL Open Font License 1.1\n• Kotlin &amp; kotlinx.coroutines – Apache License 2.0\n• Google Mobile Ads SDK, User Messaging Platform und Google Play Billing Library – Google-Nutzungsbedingungen\n\nVollständige Lizenztexte: https://www.apache.org/licenses/LICENSE-2.0</string>
 
     <!-- Premium -->
-    <string name="premium_open">Premium</string>
     <string name="premium_title">Werbefrei schreiben</string>
     <string name="premium_subtitle">Volle Konzentration auf deine Gedanken – ohne Banner und Ablenkung.</string>
     <string name="premium_thanks_title">Danke für deine Unterstützung!</string>
@@ -245,9 +235,74 @@
 
     <!-- Beispielnotizen (nur bei Erstinstallation) -->
     <string name="sample_welcome_title">Willkommen! 👋</string>
-    <string name="sample_welcome_body">Tippe auf eine Notiz, um sie zu bearbeiten. Halte sie gedrückt, um sie zu verschieben. Über ⋮ kannst du anheften, als Favorit markieren, Farben und Kategorien vergeben oder teilen.</string>
+    <string name="sample_welcome_body">Tippe auf eine Notiz, um sie zu bearbeiten. Halte sie gedrückt, um sie zu verschieben.\n• Über ⋮ anheften, archivieren, duplizieren oder teilen\n• Im Editor **fett**, *kursiv* und Listen nutzen</string>
     <string name="sample_shopping_title">Einkaufsliste</string>
-    <string name="sample_shopping_body">[ ] Milch\n[x] Brot\n[ ] Eier</string>
-    <string name="sample_ideas_title">Ideen fürs Wochenende</string>
+    <string name="sample_shopping_body">[ ] Milch\n[ ] Eier\n[ ] Bananen\n[x] Vollkornbrot\n[ ] Tomaten</string>
+    <string name="sample_ideas_title">Ideen fürs Wochenende 💡</string>
     <string name="sample_ideas_body">Wandern gehen oder ein gutes Buch lesen.</string>
+
+    <!-- Design 2.1 (Leder & Papier) -->
+    <string name="a11y_open_menu">Menü öffnen</string>
+    <string name="search_open">Suchen</string>
+    <string name="action_archive">Archivieren</string>
+    <string name="action_unarchive">Aus dem Archiv holen</string>
+    <string name="action_duplicate">Duplizieren</string>
+    <string name="archived_message">Notiz archiviert</string>
+    <string name="duplicated_message">Kopie erstellt</string>
+    <string name="copy_suffix">(Kopie)</string>
+    <string name="tab_notes">Notizen</string>
+    <string name="tab_favorites">Favoriten</string>
+    <string name="tab_archive">Archiv</string>
+    <string name="archive_empty_title">Das Archiv ist leer</string>
+    <string name="archive_empty_subtitle">Archivierte Notizen verschwinden aus der Übersicht, bleiben aber erhalten.</string>
+    <string name="favorites_empty_title">Noch keine Favoriten</string>
+    <string name="favorites_empty_subtitle">Tippe bei einer Notiz auf den Stern, um sie hier zu sammeln.</string>
+    <string name="drawer_all_notes">Alle Notizen</string>
+    <string name="drawer_tagline">Notizen, Listen &amp; Ideen stilvoll organisieren</string>
+    <string name="filter_text">Notizen</string>
+    <string name="filter_more">Weitere Filter…</string>
+    <string name="show_all">Alle anzeigen</string>
+    <string name="section_my_notes">Meine Notizen</string>
+    <string name="view_title">Ansicht</string>
+    <string name="view_grid">Raster</string>
+    <string name="view_list">Liste</string>
+    <string name="view_overview">Übersicht</string>
+    <string name="sort_short_manual">Manuell</string>
+    <string name="sort_short_updated">Bearbeitet</string>
+    <string name="sort_short_newest">Neueste</string>
+    <string name="sort_short_oldest">Älteste</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d Ergebnis für „%2$s“</item>
+        <item quantity="other">%1$d Ergebnisse für „%2$s“</item>
+    </plurals>
+    <plurals name="note_count">
+        <item quantity="one">%d Notiz</item>
+        <item quantity="other">%d Notizen</item>
+    </plurals>
+    <plurals name="char_count">
+        <item quantity="one">%d Zeichen</item>
+        <item quantity="other">%d Zeichen</item>
+    </plurals>
+    <string name="date_today_at">Heute, %1$s</string>
+    <string name="date_yesterday_at">Gestern, %1$s</string>
+    <string name="editor_new_title">Neue Notiz</string>
+    <string name="editor_edit_title">Notiz bearbeiten</string>
+    <string name="editor_title_label">Titel</string>
+    <string name="editor_text_label">Notiztext</string>
+    <string name="editor_add_checklist">Checkliste hinzufügen</string>
+    <string name="editor_remove_checklist">Checkliste entfernen</string>
+    <string name="editor_clear_title">Titel löschen</string>
+    <string name="format_bold">Fett</string>
+    <string name="format_italic">Kursiv</string>
+    <string name="format_underline">Unterstrichen</string>
+    <string name="format_bullets">Aufzählung</string>
+    <string name="format_numbers">Nummerierung</string>
+    <string name="format_link">Link einfügen</string>
+    <string name="format_link_title">Link (Webadresse)</string>
+    <string name="category_edit">Kategorie bearbeiten</string>
+    <string name="category_icon">Symbol</string>
+    <string name="category_travel">Reisen</string>
+    <string name="sample_travel_title">Reiseplanung</string>
+    <string name="sample_travel_list">[x] Flüge vergleichen\n[x] Hotel buchen\n[ ] Packliste erstellen\n[ ] Sehenswürdigkeiten notieren</string>
+    <string name="sample_travel_body">Dieses Jahr soll es nach **Italien** gehen. Die Amalfiküste steht ganz oben auf der Liste! ☀️</string>
 </resources>

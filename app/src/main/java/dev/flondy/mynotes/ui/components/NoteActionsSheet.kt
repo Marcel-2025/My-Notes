@@ -13,7 +13,10 @@ import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Archive
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Unarchive
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.StarOutline
@@ -41,6 +44,8 @@ fun NoteActionsSheet(
     onDismiss: () -> Unit,
     onTogglePin: () -> Unit,
     onToggleFavorite: () -> Unit,
+    onToggleArchive: () -> Unit,
+    onDuplicate: () -> Unit,
     onColor: (Int) -> Unit,
     onCategory: (Int?) -> Unit,
     onShare: () -> Unit,
@@ -53,7 +58,7 @@ fun NoteActionsSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = state,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = MaterialTheme.colorScheme.background,
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Column(Modifier.verticalScroll(rememberScrollState()).navigationBarsPadding()) {
@@ -73,6 +78,11 @@ fun NoteActionsSheet(
                 if (note.isFavorite) Icons.Filled.Star else Icons.Outlined.StarOutline,
                 stringResource(if (note.isFavorite) R.string.action_unfavorite else R.string.action_favorite),
             ) { onToggleFavorite(); onDismiss() }
+            SheetActionRow(
+                if (note.isArchived) Icons.Outlined.Unarchive else Icons.Outlined.Archive,
+                stringResource(if (note.isArchived) R.string.action_unarchive else R.string.action_archive),
+            ) { onToggleArchive(); onDismiss() }
+            SheetActionRow(Icons.Outlined.ContentCopy, stringResource(R.string.action_duplicate)) { onDuplicate(); onDismiss() }
             SheetActionRow(Icons.Outlined.Share, stringResource(R.string.action_share)) { onShare(); onDismiss() }
             SheetActionRow(Icons.AutoMirrored.Outlined.InsertDriveFile, stringResource(R.string.action_export_txt)) { onExportTxt(); onDismiss() }
             if (canMove) {

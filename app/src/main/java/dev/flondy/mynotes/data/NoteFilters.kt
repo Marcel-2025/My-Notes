@@ -6,7 +6,8 @@ import java.text.Collator
 import java.util.Calendar
 import java.util.Locale
 
-enum class QuickFilter { ALL, FAVORITES, PINNED, CHECKLISTS }
+/** TEXT = „Notizen“ (ohne Checkliste), CHECKLISTS = „Listen“. */
+enum class QuickFilter { ALL, TEXT, CHECKLISTS, FAVORITES, PINNED }
 
 enum class DateFilter { ANY, TODAY, LAST_7_DAYS, LAST_30_DAYS }
 
@@ -36,9 +37,11 @@ object NoteFilters {
         val needle = query.search.trim().lowercase(locale)
         val minTime = dateCutoff(query.dateFilter, now)
         val filtered = notes.filter { n ->
-            (needle.isEmpty() || n.title.lowercase(locale).contains(needle) || n.content.lowercase(locale).contains(needle)) &&
+            (needle.isEmpty() || n.title.lowercase(locale).contains(needle) || n.content.lowercase(locale).contains(needle) ||
+                n.checklist.lowercase(locale).contains(needle)) &&
                 when (query.quickFilter) {
                     QuickFilter.ALL -> true
+                    QuickFilter.TEXT -> !n.isChecklist
                     QuickFilter.FAVORITES -> n.isFavorite
                     QuickFilter.PINNED -> n.isPinned
                     QuickFilter.CHECKLISTS -> n.isChecklist

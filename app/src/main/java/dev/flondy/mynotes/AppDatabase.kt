@@ -12,11 +12,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * Versionshistorie (Schemas liegen unter app/schemas):
  *  - v2 → v3: Spalte `displayOrder`
  *  - v3 → v4: Favoriten, Anheften, Farben, Kategorien, Checklisten, Papierkorb, Erstellungsdatum
+ *  - v4 → v5: Archiv, Checkliste + Text in einer Notiz, Kategorie-Icon und -Farbe
  *
  * WICHTIG: Kein fallbackToDestructiveMigration() – Nutzerdaten dürfen niemals verloren gehen.
  * Jede künftige Schemaänderung braucht eine eigene, getestete Migration.
  */
-@Database(entities = [Note::class, Category::class], version = 4, exportSchema = true)
+@Database(entities = [Note::class, Category::class], version = 5, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
@@ -64,7 +65,21 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        val ALL_MIGRATIONS = arrayOf(MIGRATION_2_3, MIGRATION_3_4)
+        /**
+         * Additiv: neue Spalten. Einzige Datenübernahme: Bei bisherigen Checklisten-Notizen stand die
+         * Liste im Feld `content` – sie wird in die neue Spalte `checklist` verschoben (nichts wird gelöscht).
+         */
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE notes_table ADD COLUMN isArchived INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE notes_table ADD COLUMN checklist TEXT NOT NULL DEFAULT ''")
+                db.execSQL("UPDATE notes_table SET checklist = content, content = '' WHERE noteType = 1")
+                db.execSQL("ALTER TABLE categories ADD COLUMN icon TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE categories ADD COLUMN color INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
+        val ALL_MIGRATIONS = arrayOf(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {

@@ -62,6 +62,34 @@ class MigrationTest {
     }
 
     @Test
+    fun migrate4To5_movesChecklistsAndKeepsText() {
+        helper.createDatabase(dbName, 4).apply {
+            execSQL("INSERT INTO categories (id, name, position) VALUES (3, 'Einkaufen', 0)")
+            execSQL("INSERT INTO notes_table (id, title, content, timestamp, displayOrder, createdAt, isPinned, isFavorite, color, categoryId, noteType, deletedAt) " +
+                "VALUES (1, 'Liste', '[ ] Milch\n[x] Brot', 2000, 0, 1500, 1, 1, 2, 3, 1, NULL)")
+            execSQL("INSERT INTO notes_table (id, title, content, timestamp, displayOrder, createdAt, isPinned, isFavorite, color, categoryId, noteType, deletedAt) " +
+                "VALUES (2, 'Text', 'Nur **Text**', 3000, 1, 2500, 0, 0, 0, NULL, 0, 4000)")
+            close()
+        }
+        val db = helper.runMigrationsAndValidate(dbName, 5, true, AppDatabase.MIGRATION_4_5)
+        db.query("SELECT id, content, checklist, isArchived, isPinned, isFavorite, color, categoryId, noteType, deletedAt, createdAt FROM notes_table ORDER BY id").use { c ->
+            c.moveToFirst()
+            assertEquals("", c.getString(1))
+            assertEquals("[ ] Milch\n[x] Brot", c.getString(2))
+            assertEquals(0, c.getInt(3))
+            assertEquals(1, c.getInt(4)); assertEquals(1, c.getInt(5)); assertEquals(2, c.getInt(6)); assertEquals(3, c.getInt(7))
+            assertEquals(1, c.getInt(8)); assertTrue(c.isNull(9)); assertEquals(1500L, c.getLong(10))
+            c.moveToNext()
+            assertEquals("Nur **Text**", c.getString(1))
+            assertEquals("", c.getString(2))
+            assertEquals("Papierkorb-Status bleibt erhalten", 4000L, c.getLong(9))
+        }
+        db.query("SELECT name, icon, color FROM categories").use { c ->
+            c.moveToFirst(); assertEquals("Einkaufen", c.getString(0)); assertEquals("", c.getString(1)); assertEquals(0, c.getInt(2))
+        }
+    }
+
+    @Test
     fun roomOpensMigratedDatabase_andKeepsManualOrder() = runBlocking {
         createV3WithSampleData()
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()

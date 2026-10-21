@@ -58,22 +58,16 @@ fun TrashScreen(
     var confirmEmpty by rememberSaveable { mutableStateOf(false) }
     var confirmDeleteId by rememberSaveable { mutableStateOf<Int?>(null) }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.trash_title)) },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back)) } },
-                actions = {
-                    if (notes.isNotEmpty()) TextButton(onClick = { confirmEmpty = true }) {
-                        Text(stringResource(R.string.trash_empty), color = MaterialTheme.colorScheme.error)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
+    dev.flondy.mynotes.ui.components.LeatherPage(
+        title = stringResource(R.string.trash_title),
+        onBack = onBack,
+        actions = {
+            if (notes.isNotEmpty()) TextButton(onClick = { confirmEmpty = true }) {
+                Text(stringResource(R.string.trash_empty), color = dev.flondy.mynotes.ui.theme.LocalAppExtras.current.accent)
+            }
         },
-    ) { padding ->
-        Box(Modifier.padding(padding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    ) { _ ->
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             if (notes.isEmpty()) {
                 EmptyState(Icons.Outlined.DeleteOutline, stringResource(R.string.trash_empty_title), stringResource(R.string.trash_info, retentionDays), Modifier.padding(top = 48.dp))
             } else {
@@ -93,7 +87,8 @@ fun TrashScreen(
                     items(notes, key = { it.id }) { note ->
                         Surface(
                             shape = MaterialTheme.shapes.large,
-                            color = MaterialTheme.colorScheme.surfaceContainer,
+                            color = dev.flondy.mynotes.ui.theme.LocalAppExtras.current.card,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, dev.flondy.mynotes.ui.theme.LocalAppExtras.current.cardBorder),
                             modifier = Modifier.fillMaxWidth().animateItem(),
                         ) {
                             Row(Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -103,7 +98,7 @@ fun TrashScreen(
                                         style = MaterialTheme.typography.titleMedium,
                                         maxLines = 1, overflow = TextOverflow.Ellipsis,
                                     )
-                                    val preview = if (note.isChecklist) ChecklistCodec.toShareText(note.content) else note.content
+                                    val preview = listOf(ChecklistCodec.toShareText(note.checklist), dev.flondy.mynotes.data.RichText.toPlainText(note.content)).filter { it.isNotBlank() }.joinToString("\n")
                                     if (preview.isNotBlank()) {
                                         Text(preview, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant,
                                             maxLines = 2, overflow = TextOverflow.Ellipsis)

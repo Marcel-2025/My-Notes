@@ -119,6 +119,44 @@ class RepositoryTest {
         } finally { other.close() }
     }
 
+    @Test fun archiveHidesNoteButKeepsIt() = runBlocking {
+        val a = add("A"); add("B")
+        repo.setArchived(a, true)
+        assertEquals(listOf("B"), activeIds())
+        assertEquals(listOf(a), repo.archived.first().map { it.id })
+        repo.setArchived(a, false)
+        assertEquals(2, repo.activeNotes.first().size)
+    }
+
+    @Test fun duplicateCreatesIndependentCopyOnTop() = runBlocking {
+        val a = repo.insertNote(Note(title = "Plan", content = "Text", checklist = "[ ] x", createdAt = 1, updatedAt = 1, isPinned = true))
+        val copy = repo.duplicate(a, "(Kopie)", now = 99)!!
+        val c = repo.getNote(copy)!!
+        assertEquals("Plan (Kopie)", c.title)
+        assertEquals("Text", c.content); assertEquals("[ ] x", c.checklist)
+        assertEquals(99, c.createdAt)
+        assertEquals(false, c.isPinned)
+        repo.updateNote(c.copy(content = "geändert"))
+        assertEquals("Text", repo.getNote(a)!!.content)
+    }
+
+    @Test fun backupV2_keepsChecklistAndText_andV1IsConverted() = runBlocking {
+        repo.insertNote(Note(title = "Beides", content = "Notiz", checklist = "[x] a", noteType = Note.TYPE_CHECKLIST, isArchived = true))
+        val json = repo.exportBackupJson()
+        val other = Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), AppDatabase::class.java).allowMainThreadQueries().build()
+        try {
+            val r2 = NoteRepository(other)
+            r2.importBackup(r2.previewImport(json).data)
+            val n = r2.archived.first().single()
+            assertEquals("Notiz", n.content); assertEquals("[x] a", n.checklist)
+            // Backup aus App 2.0 (Version 1): Liste stand in "content"
+            val v1 = "{\"format\":\"mynotes-backup\",\"version\":1,\"notes\":[{\"title\":\"Alt\",\"content\":\"[ ] Milch\",\"noteType\":1}]}"
+            r2.importBackup(r2.previewImport(v1).data)
+            val old = r2.activeNotes.first().single { it.title == "Alt" }
+            assertEquals("", old.content); assertEquals("[ ] Milch", old.checklist)
+        } finally { other.close() }
+    }
+
     @Test fun invalidBackupIsRejected() = runBlocking {
         for (bad in listOf("kein json", "{\"format\":\"andere-app\",\"version\":1,\"notes\":[]}", "{\"format\":\"mynotes-backup\",\"version\":99,\"notes\":[]}")) {
             try { repo.previewImport(bad); fail("sollte fehlschlagen: $bad") } catch (_: BackupFormat.InvalidBackupException) {}

@@ -180,3 +180,51 @@ und ggf. die Android-16-SDK-Plattform installieren. Die neuen Tests laufen mit `
 | 10 | Weitere Sprachen (ES, FR, IT, TR) | Reichweite | gering | gering |
 
 Größtes Potenzial für **Nutzerbindung**: Erinnerungen + Widget. Für **Umsatz**: Personalisierungspaket und App-Sperre als faire Einmalkäufe.
+
+---
+
+# Version 2.1 – Design „Leder & Papier“ (21.10.2026)
+
+Branch `feature/design-leder` · versionCode 4 · versionName 2.1 · Datenbank v5
+
+## Sicherungen
+| Was | Wo |
+|---|---|
+| Design 2.0 (Premium Dark/Gelb) | Branch `design/v2.0-premium-dark`, Tag `backup/design-v2.0-2026-10-21` |
+| Deine Änderungen (AGP 9.4.1, Kotlin 2.2.10, Gradle 9.6, Icon) | Commit `2561f36` |
+
+Zurück zum alten Design: `git checkout design/v2.0-premium-dark`
+⚠️ Wer 2.1 (DB v5) installiert hat, kann nicht auf 2.0 (DB v4) zurück – Android erlaubt keine Downgrades.
+
+## Neu
+- **Design:** Leder-Kopfzeilen mit feiner Narbung und Ziernaht, Papierkarten, Gold-Akzente, Blattgrün, Schrift **Nunito** (OFL, `docs/licenses/Nunito-OFL.txt`), Abend-Variante (dunkel)
+- **App-Icon:** dein Leder-Notizbuch – mit passendem dunkelbraunen Hintergrund statt blauem Rand, sicher für Kreis-/Squircle-Masken; Themen-Icon (Android 13) und Legacy-Icons (Android 7) ergänzt
+- **Startseite:** ☰-Seitenmenü, Lupe, ⋮-Menü (Ansicht, Sortieren & Filtern, Hell/Dunkel, Einstellungen); Chips *Alle · Notizen · Listen · Kategorien mit Icons*
+- **3 Ansichten:** Raster (2 Spalten, Tablet automatisch mehr), Liste, Übersicht (Angeheftet · Favoriten · Kategorien mit Anzahl · Meine Notizen)
+- **Untere Navigation:** Notizen · Favoriten · Archiv
+- **Suche:** „n Ergebnisse für …“ + Sortier-Menü direkt in der Ergebniszeile; findet auch Checklisten-Einträge
+- **Drag & Drop jetzt auch im Raster** (Overlay-Technik, zweidimensionale Zielerkennung)
+- **Archiv:** Notizen archivieren / zurückholen (mit „Rückgängig“)
+- **Duplizieren** (Kontextmenü und Editor)
+- **Kategorien mit Icon** (19 Symbole), neue Standardkategorie „Reisen“ (nur Neuinstallationen); bestehende Kategorien bekommen automatisch ein passendes Icon
+- **Editor:** Titel- und Kategorie-Bereich, Checkliste **und** Notiztext in einer Notiz, Formatierungsleiste (fett, kursiv, unterstrichen, Aufzählung, Nummerierung, Link), Aufzählungen setzen sich bei Enter fort, Zeichenanzahl, unten *Löschen · Duplizieren · Speichern*
+- **Kartendatum:** „Heute, 09:41“, „Gestern, 18:30“, „25. Mai 2024“
+
+## Datenbank v4 → v5 (getestet)
+Nur neue Spalten (`isArchived`, `checklist`, Kategorie `icon`/`color`). Einzige Datenübernahme: Bei bisherigen
+Checklisten wird die Liste aus `content` nach `checklist` verschoben – nichts wird gelöscht. Backup-Format v2;
+Backups aus 2.0 (v1) werden beim Import automatisch umgewandelt.
+
+## Bewusste Abweichungen von den Store-Grafiken
+- Formatierung über unsichtbare Steuerzeichen (Markdown-ähnlich) statt Rich-Text-Engine – robust, suchbar, kompatibel
+- Zeichenanzahl ohne Limit (statt „142/1000“)
+- Übersicht nennt den Bereich „Kategorien“ statt „Meine Listen“, um Verwechslung mit Checklisten zu vermeiden
+- „Cloud Sync“ im Beispiel-Screenshot ist nur Notizinhalt – die App hat keine Cloud-Synchronisierung
+
+## Qualitätssicherung 2.1
+`testDebugUnitTest` **58/58 bestanden** (u. a. Migration 4→5, Formatierung, Archiv, Duplizieren, Backup v1/v2,
+Raster-Drag-&-Drop links/rechts/hoch/runter, End-to-End mit Suche, Archiv- und Favoriten-Tab, Übersicht, Einstellungen) ·
+`assembleRelease` + `bundleRelease` (R8) ✅ · Lint: 0 Fehler. Bildschirmfotos hell/dunkel visuell geprüft.
+
+**Bitte manuell auf dem Gerät prüfen:** Update von 2.0 → 2.1 mit echten Notizen, Drag & Drop im Raster „im Gefühl“,
+Formatierungsleiste mit Tastatur, Icon auf dem Startbildschirm (Pixel/Samsung), dunkler Modus.

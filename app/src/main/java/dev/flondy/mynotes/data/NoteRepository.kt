@@ -13,6 +13,7 @@ class NoteRepository(private val db: AppDatabase) {
 
     val activeNotes: Flow<List<Note>> = noteDao.observeActiveNotes()
     val trash: Flow<List<Note>> = noteDao.observeTrash()
+    val archived: Flow<List<Note>> = noteDao.observeArchived()
     val categories: Flow<List<Category>> = categoryDao.observeAll()
 
     suspend fun getNote(id: Int): Note? = noteDao.getNoteById(id)
@@ -36,6 +37,15 @@ class NoteRepository(private val db: AppDatabase) {
     suspend fun setColor(id: Int, color: Int) = noteDao.setColor(id, color)
     suspend fun setCategory(id: Int, categoryId: Int?) = noteDao.setCategory(id, categoryId)
 
+    suspend fun setArchived(id: Int, archived: Boolean) = noteDao.setArchived(id, archived)
+
+    /** Legt eine Kopie oben in der Liste an (eigene ID, neues Datum, nicht angeheftet). */
+    suspend fun duplicate(id: Int, copySuffix: String, now: Long = System.currentTimeMillis()): Int? {
+        val original = noteDao.getNoteById(id) ?: return null
+        val title = if (original.title.isBlank()) original.title else "${original.title} $copySuffix"
+        return insertNote(original.copy(id = 0, title = title, createdAt = now, updatedAt = now, isPinned = false, isArchived = false, deletedAt = null))
+    }
+
     suspend fun moveToTrash(id: Int, now: Long = System.currentTimeMillis()) = noteDao.moveToTrash(id, now)
     suspend fun moveAllToTrash(now: Long = System.currentTimeMillis()) = noteDao.moveAllToTrash(now)
     suspend fun restore(id: Int) = noteDao.restoreFromTrash(id)
@@ -50,20 +60,24 @@ class NoteRepository(private val db: AppDatabase) {
     suspend fun noteCount(): Int = noteDao.getNoteCount()
 
     // --- Kategorien ---
-    suspend fun addCategory(name: String): Int {
+    suspend fun addCategory(name: String, icon: String = "", color: Int = 0): Int {
         val pos = (categoryDao.maxPosition() ?: -1) + 1
-        return categoryDao.insert(Category(name = name.trim(), position = pos)).toInt()
+        return categoryDao.insert(Category(name = name.trim(), position = pos, icon = icon, color = color)).toInt()
     }
 
     suspend fun renameCategory(category: Category, name: String) = categoryDao.update(category.copy(name = name.trim()))
+    suspend fun updateCategory(category: Category) = categoryDao.update(category.copy(name = category.name.trim()))
     suspend fun deleteCategory(id: Int) = db.deleteCategorySafely(id)
     suspend fun categoryCount(): Int = categoryDao.count()
 
-    suspend fun seedCategories(names: List<String>) = db.withTransaction {
+    /** Legt Standardkategorien an (nur wenn noch keine existieren). Paare aus Name und Icon-Schlüssel. */
+    suspend fun seedCategories(entries: List<Pair<String, String>>) = db.withTransaction {
         if (categoryDao.count() == 0) {
-            names.forEachIndexed { i, name -> categoryDao.insert(Category(name = name, position = i)) }
+            entries.forEachIndexed { i, (name, icon) -> categoryDao.insert(Category(name = name, position = i, icon = icon)) }
         }
     }
+
+    suspend fun getCategories(): List<Category> = categoryDao.getAll()
 
     // --- Backup ---
     suspend fun exportBackupJson(): String =
@@ -92,7 +106,7 @@ class NoteRepository(private val db: AppDatabase) {
         var pos = (categoryDao.maxPosition() ?: -1) + 1
         data.categories.forEach { c ->
             val match = existingCats.firstOrNull { it.name.equals(c.name, ignoreCase = true) }
-            catIdMap[c.id] = match?.id ?: categoryDao.insert(Category(name = c.name, position = pos++)).toInt()
+            catIdMap[c.id] = match?.id ?: categoryDao.insert(Category(name = c.name, position = pos++, icon = c.icon, color = c.color)).toInt()
         }
         val existing = noteDao.getAllIncludingTrash().map(BackupFormat::fingerprint).toMutableSet()
         var order = (noteDao.getMaxDisplayOrder() ?: -1) + 1

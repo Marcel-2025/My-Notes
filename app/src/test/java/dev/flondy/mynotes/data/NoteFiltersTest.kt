@@ -32,6 +32,11 @@ class NoteFiltersTest {
         assertEquals(listOf(4), ids(NoteFilters.apply(notes, NoteQuery(search = "  zoo "), SortMode.MANUAL, false, now)))
     }
 
+    @Test fun search_findsChecklistItems() {
+        val list = listOf(Note(id = 9, title = "Einkauf", content = "", checklist = "[ ] Bananen\n[x] Brot"))
+        assertEquals(listOf(9), ids(NoteFilters.apply(list, NoteQuery(search = "banane"), SortMode.MANUAL, false, now)))
+    }
+
     @Test fun search_noResults_andEmptyQueryReturnsAll() {
         assertTrue(NoteFilters.apply(notes, NoteQuery(search = "xyz"), SortMode.MANUAL, false, now).isEmpty())
         assertEquals(4, NoteFilters.apply(notes, NoteQuery(search = "   "), SortMode.MANUAL, false, now).size)
@@ -62,6 +67,7 @@ class NoteFiltersTest {
         assertEquals(listOf(2), ids(NoteFilters.apply(notes, NoteQuery(quickFilter = QuickFilter.FAVORITES), SortMode.MANUAL, false, now)))
         assertEquals(listOf(3), ids(NoteFilters.apply(notes, NoteQuery(quickFilter = QuickFilter.PINNED), SortMode.MANUAL, false, now)))
         assertEquals(listOf(4), ids(NoteFilters.apply(notes, NoteQuery(quickFilter = QuickFilter.CHECKLISTS), SortMode.MANUAL, false, now)))
+        assertEquals(listOf(3, 2, 1), ids(NoteFilters.apply(notes, NoteQuery(quickFilter = QuickFilter.TEXT), SortMode.MANUAL, false, now)))
         assertEquals(listOf(2), ids(NoteFilters.apply(notes, NoteQuery(categoryId = 7), SortMode.MANUAL, false, now)))
         assertEquals(listOf(2, 1, 4), ids(NoteFilters.apply(notes, NoteQuery(onlyWithContent = true), SortMode.MANUAL, false, now)))
     }

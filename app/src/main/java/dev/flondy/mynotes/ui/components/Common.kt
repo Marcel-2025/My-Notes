@@ -100,7 +100,7 @@ fun CategoryChips(
     ) {
         AppFilterChip(selected = selectedId == null, label = noneLabel) { onSelect(null) }
         categories.forEach { c ->
-            AppFilterChip(selected = selectedId == c.id, label = c.name) { onSelect(c.id) }
+            AppFilterChip(selected = selectedId == c.id, label = c.name, leadingIcon = CategoryIcons.forCategory(c).icon) { onSelect(c.id) }
         }
     }
 }
@@ -116,14 +116,17 @@ fun AppFilterChip(
     FilterChip(
         selected = selected,
         onClick = onClick,
-        label = { Text(label, maxLines = 1) },
+        label = { Text(label, maxLines = 1, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(vertical = 6.dp)) },
         leadingIcon = leadingIcon?.let { { Icon(it, null, Modifier.size(18.dp)) } },
         shape = CircleShape,
+        elevation = FilterChipDefaults.filterChipElevation(elevation = if (selected) 2.dp else 0.dp),
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = extras.accent,
             selectedLabelColor = extras.onAccent,
             selectedLeadingIconColor = extras.onAccent,
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            containerColor = extras.cardHigh,
+            labelColor = MaterialTheme.colorScheme.onSurface,
+            iconColor = MaterialTheme.colorScheme.onSurfaceVariant,
         ),
         border = FilterChipDefaults.filterChipBorder(
             enabled = true, selected = selected,
@@ -162,6 +165,8 @@ fun TextInputDialog(
     confirmLabel: String,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
+    maxLength: Int = 40,
+    content: (@Composable () -> Unit)? = null,
 ) {
     var value by rememberSaveable { mutableStateOf(initial) }
     val focus = remember { FocusRequester() }
@@ -170,19 +175,23 @@ fun TextInputDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = {
-            OutlinedTextField(
-                value = value,
-                onValueChange = { if (it.length <= 40) value = it },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                modifier = Modifier.fillMaxWidth().focusRequester(focus),
-            )
+            Column {
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = { if (it.length <= maxLength) value = it },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    modifier = Modifier.fillMaxWidth().focusRequester(focus),
+                )
+                content?.invoke()
+            }
         },
         confirmButton = {
             TextButton(enabled = value.isNotBlank(), onClick = { onConfirm(value.trim()); onDismiss() }) { Text(confirmLabel) }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
         shape = MaterialTheme.shapes.extraLarge,
+        containerColor = MaterialTheme.colorScheme.background,
     )
 }
 

@@ -27,7 +27,6 @@
     <string name="action_save">Save</string>
     <string name="action_share">Share</string>
     <string name="action_to_checklist">Convert to checklist</string>
-    <string name="action_to_text">Convert to text note</string>
     <string name="action_undo">Undo</string>
 
     <string name="a11y_more">More options</string>
@@ -42,7 +41,6 @@
     <string name="search_hint">Search notes…</string>
     <string name="search_clear">Clear search</string>
     <string name="new_note">New note</string>
-    <string name="new_checklist">New checklist</string>
     <string name="empty_title">No notes yet</string>
     <string name="empty_subtitle">Tap “New note” to capture your first thought.</string>
     <string name="empty_search_title">No results for “%1$s”</string>
@@ -54,8 +52,6 @@
     <string name="ad_free_thanks">Ad-free thanks to Premium ✨ Thank you!</string>
 
     <string name="filter_all">All</string>
-    <string name="filter_favorites">Favorites</string>
-    <string name="filter_pinned">Pinned</string>
     <string name="filter_checklists">Lists</string>
     <string name="filter_sort_title">Sort &amp; filter</string>
     <string name="filter_reset">Reset</string>
@@ -81,10 +77,6 @@
     <string name="editor_saving">Saving…</string>
     <string name="meta_edited">Edited %1$s</string>
     <string name="meta_created">Created %1$s</string>
-    <plurals name="word_count">
-        <item quantity="one">%d word</item>
-        <item quantity="other">%d words</item>
-    </plurals>
     <string name="label_color">Color</string>
     <string name="label_category">Category</string>
     <string name="label_color_category">Color &amp; category</string>
@@ -113,7 +105,6 @@
     <string name="categories_empty_title">No categories</string>
     <string name="categories_empty_subtitle">Create categories to organize your notes.</string>
     <string name="category_add">New category</string>
-    <string name="category_rename">Rename</string>
     <string name="category_delete">Delete category</string>
     <string name="category_delete_confirm">Delete “%1$s”? Your notes are kept and only lose this category.</string>
     <string name="category_none">None</string>
@@ -147,7 +138,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="setting_accent">Accent color</string>
-    <string name="accent_yellow">Yellow</string>
+    <string name="accent_yellow">Gold</string>
     <string name="accent_mint">Mint</string>
     <string name="accent_lavender">Lavender</string>
     <string name="accent_coral">Coral</string>
@@ -197,9 +188,7 @@
     <string name="about_licenses">Open-source licenses</string>
     <string name="about_developer">Made by Flondy · Your notes stay on your device.</string>
     <string name="feedback_subject">Feedback on Notes &amp; Lists</string>
-    <string name="licenses_text">This app uses:\n\n• AndroidX (Jetpack Compose, Room, DataStore, Lifecycle, Activity) – Apache License 2.0\n• Material Icons – Apache License 2.0\n• Kotlin &amp; kotlinx.coroutines – Apache License 2.0\n• Google Mobile Ads SDK, User Messaging Platform and Google Play Billing Library – Google Terms of Service\n\nFull license text: https://www.apache.org/licenses/LICENSE-2.0</string>
-
-    <string name="premium_open">Premium</string>
+    <string name="licenses_text">This app uses:\n\n• AndroidX (Jetpack Compose, Room, DataStore, Lifecycle, Activity) – Apache License 2.0\n• Material Icons – Apache License 2.0\n• Nunito font – SIL Open Font License 1.1\n• Kotlin &amp; kotlinx.coroutines – Apache License 2.0\n• Google Mobile Ads SDK, User Messaging Platform and Google Play Billing Library – Google Terms of Service\n\nFull license text: https://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="premium_title">Write without ads</string>
     <string name="premium_subtitle">Full focus on your thoughts – no banners, no distractions.</string>
     <string name="premium_thanks_title">Thank you for your support!</string>
@@ -234,9 +223,74 @@
     <string name="billing_error">Google Play is currently unavailable. Please try again later.</string>
 
     <string name="sample_welcome_title">Welcome! 👋</string>
-    <string name="sample_welcome_body">Tap a note to edit it. Long-press to drag it to a new position. Use ⋮ to pin, favorite, color, categorize or share.</string>
+    <string name="sample_welcome_body">Tap a note to edit it. Long-press to drag it to a new position.\n• Use ⋮ to pin, archive, duplicate or share\n• Use **bold**, *italic* and lists in the editor</string>
     <string name="sample_shopping_title">Shopping list</string>
-    <string name="sample_shopping_body">[ ] Milk\n[x] Bread\n[ ] Eggs</string>
-    <string name="sample_ideas_title">Weekend ideas</string>
+    <string name="sample_shopping_body">[ ] Milk\n[ ] Eggs\n[ ] Bananas\n[x] Wholegrain bread\n[ ] Tomatoes</string>
+    <string name="sample_ideas_title">Weekend ideas 💡</string>
     <string name="sample_ideas_body">Go hiking or read a good book.</string>
+
+    <!-- Design 2.1 (leather & paper) -->
+    <string name="a11y_open_menu">Open menu</string>
+    <string name="search_open">Search</string>
+    <string name="action_archive">Archive</string>
+    <string name="action_unarchive">Unarchive</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="archived_message">Note archived</string>
+    <string name="duplicated_message">Copy created</string>
+    <string name="copy_suffix">(copy)</string>
+    <string name="tab_notes">Notes</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="tab_archive">Archive</string>
+    <string name="archive_empty_title">Archive is empty</string>
+    <string name="archive_empty_subtitle">Archived notes disappear from your overview but are kept safe.</string>
+    <string name="favorites_empty_title">No favorites yet</string>
+    <string name="favorites_empty_subtitle">Tap the star on a note to collect it here.</string>
+    <string name="drawer_all_notes">All notes</string>
+    <string name="drawer_tagline">Organize notes, lists &amp; ideas in style</string>
+    <string name="filter_text">Notes</string>
+    <string name="filter_more">More filters…</string>
+    <string name="show_all">Show all</string>
+    <string name="section_my_notes">My notes</string>
+    <string name="view_title">View</string>
+    <string name="view_grid">Grid</string>
+    <string name="view_list">List</string>
+    <string name="view_overview">Overview</string>
+    <string name="sort_short_manual">Manual</string>
+    <string name="sort_short_updated">Edited</string>
+    <string name="sort_short_newest">Newest</string>
+    <string name="sort_short_oldest">Oldest</string>
+    <plurals name="search_results">
+        <item quantity="one">%1$d result for “%2$s”</item>
+        <item quantity="other">%1$d results for “%2$s”</item>
+    </plurals>
+    <plurals name="note_count">
+        <item quantity="one">%d note</item>
+        <item quantity="other">%d notes</item>
+    </plurals>
+    <plurals name="char_count">
+        <item quantity="one">%d character</item>
+        <item quantity="other">%d characters</item>
+    </plurals>
+    <string name="date_today_at">Today, %1$s</string>
+    <string name="date_yesterday_at">Yesterday, %1$s</string>
+    <string name="editor_new_title">New note</string>
+    <string name="editor_edit_title">Edit note</string>
+    <string name="editor_title_label">Title</string>
+    <string name="editor_text_label">Note text</string>
+    <string name="editor_add_checklist">Add checklist</string>
+    <string name="editor_remove_checklist">Remove checklist</string>
+    <string name="editor_clear_title">Clear title</string>
+    <string name="format_bold">Bold</string>
+    <string name="format_italic">Italic</string>
+    <string name="format_underline">Underline</string>
+    <string name="format_bullets">Bulleted list</string>
+    <string name="format_numbers">Numbered list</string>
+    <string name="format_link">Insert link</string>
+    <string name="format_link_title">Link (web address)</string>
+    <string name="category_edit">Edit category</string>
+    <string name="category_icon">Icon</string>
+    <string name="category_travel">Travel</string>
+    <string name="sample_travel_title">Trip planning</string>
+    <string name="sample_travel_list">[x] Compare flights\n[x] Book hotel\n[ ] Make a packing list\n[ ] Note sights to see</string>
+    <string name="sample_travel_body">This year we are going to **Italy**. The Amalfi Coast is at the top of the list! ☀️</string>
 </resources>

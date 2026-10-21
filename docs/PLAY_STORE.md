@@ -1,4 +1,36 @@
-# Google Play – Store-Texte für Version 2.0 (versionCode 3)
+# Google Play – Store-Texte
+
+## Version 2.1 (versionCode 4) – Release-Name: `2.1 – Leder & Papier`
+
+**de-DE**
+```
+Version 2.1 – neues Design „Leder & Papier“:
+• Warmes Leder-Design mit Papierkarten und neuem App-Icon
+• Raster-, Listen- und Übersichtsansicht
+• Neu: Archiv, Favoriten-Tab und Notizen duplizieren
+• Checkliste und Text in einer Notiz
+• Text formatieren: fett, kursiv, unterstrichen, Listen, Links
+• Kategorien mit Symbolen
+• Drag & Drop jetzt auch im Raster
+Alle Notizen und Käufe bleiben erhalten.
+```
+
+**en-US**
+```
+Version 2.1 – new "Leather & Paper" design:
+• Warm leather look with paper cards and a new app icon
+• Grid, list and overview layouts
+• New: archive, favorites tab and duplicate notes
+• Checklist and text in one note
+• Text formatting: bold, italic, underline, lists, links
+• Categories with icons
+• Drag & drop now also in the grid
+All your notes and purchases are kept.
+```
+
+---
+
+# Version 2.0 (versionCode 3)
 
 Alle Texte beschreiben ausschließlich Funktionen, die in dieser Version implementiert sind.
 Zeichenzahlen wurden per Skript geprüft (Limits: Kurzbeschreibung 80, Beschreibung 4.000, Versionshinweise 500).
