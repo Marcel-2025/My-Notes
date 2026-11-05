@@ -90,7 +90,7 @@ fun CategoriesScreen(
             EmptyState(Icons.Outlined.Label, stringResource(R.string.categories_empty_title), stringResource(R.string.categories_empty_subtitle), Modifier.padding(top = 32.dp))
         } else {
             LazyColumn(
-                Modifier.widthIn(max = 760.dp).fillMaxSize(),
+                Modifier.widthIn(max = dev.flondy.mynotes.ui.components.rememberWindowLayout().readingMaxWidth).fillMaxSize(),
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 16.dp, bottom = bottom + 120.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {

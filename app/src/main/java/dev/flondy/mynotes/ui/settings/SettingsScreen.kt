@@ -143,7 +143,7 @@ fun SettingsScreen(
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             Column(
                 Modifier
-                    .widthIn(max = 760.dp)
+                    .widthIn(max = dev.flondy.mynotes.ui.components.rememberWindowLayout().readingMaxWidth)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .navigationBarsPadding()

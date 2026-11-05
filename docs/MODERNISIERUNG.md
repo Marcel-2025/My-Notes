@@ -228,3 +228,21 @@ Raster-Drag-&-Drop links/rechts/hoch/runter, End-to-End mit Suche, Archiv- und F
 
 **Bitte manuell auf dem Gerät prüfen:** Update von 2.0 → 2.1 mit echten Notizen, Drag & Drop im Raster „im Gefühl“,
 Formatierungsleiste mit Tastatur, Icon auf dem Startbildschirm (Pixel/Samsung), dunkler Modus.
+
+
+---
+
+## Version 2.2 – Tablets & Querformat (versionCode 5)
+
+Ziel: Auf Tablets – vor allem im Querformat – gut aussehen und bequem bedienbar sein, ohne geteilte Ansichten (kein Liste/Detail nebeneinander).
+
+**Umsetzung**
+- `ui/components/Adaptive.kt`: `WindowLayout` leitet aus Breite/Höhe (dp) Breitenklasse (Kompakt < 600, Mittel < 840, Erweitert ≥ 840), Querformat und „niedrig“ (< 480 dp) ab. Keine neue Bibliothek.
+- **Seitliche Navigation (Navigation Rail)** auf dem Leder statt Leiste unten: Tablets quer, große Tablets (≥ 840 dp) und Handys quer. Der „+“-Button sitzt oben in der Leiste.
+- **Kompakte Kopfzeile** (eine Zeile mit Logo, Titel, Suche, Menü) im Querformat.
+- **Startseite:** Inhaltsbreite bis 1360 dp; Raster mit adaptiver Kartenbreite (156/190/216 dp); Liste mit 2–3 Spalten; Übersicht mit Kartenzeilen (2–3) und Kategorie-Kacheln (2/3/4 Spalten); breitere Favoriten-Karten.
+- **Editor, Einstellungen, Kategorien, Papierkorb:** Lesebreite 760 dp bzw. 880 dp auf großen Tablets; Editor-Leiste unten auf Textbreite zentriert und im Handy-Querformat flacher.
+- **Querformat-Ränder:** seitliche Navigationsleiste und Kamera-Aussparung werden ausgespart (Fläche dahinter in Leder-Braun).
+- Handy im Hochformat bleibt unverändert.
+
+**Tests:** 63 Unit-/UI-Tests grün, neu `WindowLayoutTest` (5 Fälle). Zusätzlich wurden Bildschirmfotos in 4 Größen (411×891, 891×411, 800×1280, 1280×800 dp) geprüft (temporäres Roborazzi, nicht im Projekt).

@@ -72,7 +72,7 @@ fun TrashScreen(
                 EmptyState(Icons.Outlined.DeleteOutline, stringResource(R.string.trash_empty_title), stringResource(R.string.trash_info, retentionDays), Modifier.padding(top = 48.dp))
             } else {
                 LazyColumn(
-                    Modifier.widthIn(max = 760.dp).fillMaxSize(),
+                    Modifier.widthIn(max = dev.flondy.mynotes.ui.components.rememberWindowLayout().readingMaxWidth).fillMaxSize(),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {

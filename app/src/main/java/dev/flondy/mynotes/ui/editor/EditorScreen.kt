@@ -185,6 +185,7 @@ fun EditorScreen(
     val titleFocus = remember { FocusRequester() }
     val contentFocus = remember { FocusRequester() }
     val imeVisible = WindowInsets.isImeVisible
+    val window = dev.flondy.mynotes.ui.components.rememberWindowLayout()
 
     LaunchedEffect(Unit) { if (state.focusTitle) runCatching { titleFocus.requestFocus() } }
 
@@ -207,6 +208,8 @@ fun EditorScreen(
                         onDuplicate = actions.onDuplicate,
                         onSave = actions.onClose,
                         canDuplicate = !state.isBlank,
+                        maxWidth = window.readingMaxWidth,
+                        short = window.isShort,
                     )
                 }
             },
@@ -224,10 +227,10 @@ fun EditorScreen(
                 androidx.compose.runtime.CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
                 Column(
                     Modifier
-                        .widthIn(max = 760.dp)
+                        .widthIn(max = window.readingMaxWidth)
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                        .padding(horizontal = if (window.isTabletOrLarger) 24.dp else 16.dp, vertical = if (window.isShort) 10.dp else 16.dp),
                     verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     // ---- Titel & Kategorie
@@ -364,11 +367,13 @@ private fun EditorTopBar(
 }
 
 @Composable
-private fun EditorBottomBar(onDelete: () -> Unit, onDuplicate: () -> Unit, onSave: () -> Unit, canDuplicate: Boolean) {
+private fun EditorBottomBar(onDelete: () -> Unit, onDuplicate: () -> Unit, onSave: () -> Unit, canDuplicate: Boolean, maxWidth: androidx.compose.ui.unit.Dp, short: Boolean = false) {
     val extras = LocalAppExtras.current
     Surface(color = MaterialTheme.colorScheme.background, shadowElevation = 8.dp) {
+        // Auf Tablets bleiben die Knöpfe über dem Text statt an den Bildschirmrändern
+        Box(Modifier.fillMaxWidth().navigationBarsPadding(), contentAlignment = Alignment.Center) {
         Row(
-            Modifier.fillMaxWidth().navigationBarsPadding().padding(horizontal = 12.dp, vertical = 10.dp),
+            Modifier.widthIn(max = maxWidth + 16.dp).fillMaxWidth().padding(horizontal = 12.dp, vertical = if (short) 4.dp else 10.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             BottomAction(Icons.Outlined.Delete, stringResource(R.string.action_delete), onDelete, Modifier.testTag("editor_delete"))
@@ -379,12 +384,13 @@ private fun EditorBottomBar(onDelete: () -> Unit, onDuplicate: () -> Unit, onSav
                 shape = RoundedCornerShape(18.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = extras.accent, contentColor = extras.onAccent),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.dp),
-                modifier = Modifier.heightIn(min = 52.dp).testTag("editor_save"),
+                modifier = Modifier.heightIn(min = if (short) 44.dp else 52.dp).testTag("editor_save"),
             ) {
                 Icon(Icons.Filled.Check, null)
                 Spacer(Modifier.width(8.dp))
                 Text(stringResource(R.string.action_save), style = MaterialTheme.typography.titleMedium)
             }
+        }
         }
     }
 }

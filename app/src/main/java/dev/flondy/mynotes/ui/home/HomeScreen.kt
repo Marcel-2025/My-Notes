@@ -89,6 +89,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -155,6 +158,8 @@ import dev.flondy.mynotes.ui.components.NoteDragState
 import dev.flondy.mynotes.ui.components.ReorderableNoteList
 import dev.flondy.mynotes.ui.components.SheetLabel
 import dev.flondy.mynotes.ui.components.leather
+import dev.flondy.mynotes.ui.components.WindowLayout
+import dev.flondy.mynotes.ui.components.rememberWindowLayout
 import dev.flondy.mynotes.ui.theme.LocalAppExtras
 import dev.flondy.mynotes.ui.theme.Motion
 import kotlinx.coroutines.launch
@@ -192,6 +197,9 @@ fun HomeScreen(
     var searchOpen by rememberSaveable { mutableStateOf(query.search.isNotEmpty()) }
     val imeVisible = WindowInsets.isImeVisible
     val categoryById = remember(categories) { categories.associateBy { it.id } }
+    val window = rememberWindowLayout()
+    val showFab = !imeVisible && state.tab != HomeTab.ARCHIVE
+    val onNewNote = { vm.openNewNote(if (query.quickFilter == QuickFilter.CHECKLISTS) Note.TYPE_CHECKLIST else Note.TYPE_TEXT) }
 
     fun closeDrawerThen(action: () -> Unit) {
         scope.launch { drawerState.close() }
@@ -218,6 +226,7 @@ fun HomeScreen(
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 topBar = {
                     HomeHeader(
+                        compact = window.compactHeader,
                         isDark = isDark,
                         layout = settings.homeLayout,
                         onMenu = { scope.launch { drawerState.open() } },
@@ -229,11 +238,10 @@ fun HomeScreen(
                     )
                 },
                 floatingActionButton = {
-                    if (!imeVisible && state.tab != HomeTab.ARCHIVE) {
+                    // Mit seitlicher Navigation sitzt der Button oben in der Leiste (gut mit dem Daumen erreichbar im Querformat)
+                    if (showFab && !window.useNavigationRail) {
                         FloatingActionButton(
-                            onClick = {
-                                vm.openNewNote(if (query.quickFilter == QuickFilter.CHECKLISTS) Note.TYPE_CHECKLIST else Note.TYPE_TEXT)
-                            },
+                            onClick = onNewNote,
                             shape = CircleShape,
                             containerColor = extras.accent,
                             contentColor = extras.onAccent,
@@ -250,21 +258,32 @@ fun HomeScreen(
                         AnimatedVisibility(premium.adFree && settings.showAdFreeBadge && !imeVisible) {
                             AdFreeBadge(onClose = actions.onHideAdFreeBadge)
                         }
-                        if (!imeVisible) HomeBottomBar(state.tab, state.archivedCount, vm::setTab)
+                        if (!imeVisible && !window.useNavigationRail) HomeBottomBar(state.tab, state.archivedCount, vm::setTab)
                         else Spacer(Modifier.navigationBarsPadding())
                     }
                 },
             ) { padding ->
+                Row(Modifier.padding(top = padding.calculateTopPadding()).fillMaxSize()) {
+                if (window.useNavigationRail) {
+                    HomeRail(
+                        tab = state.tab,
+                        showFab = showFab,
+                        short = window.isShort,
+                        onNewNote = onNewNote,
+                        onTab = vm::setTab,
+                        modifier = Modifier.padding(bottom = padding.calculateBottomPadding()),
+                    )
+                }
                 Column(
                     Modifier
-                        .padding(top = padding.calculateTopPadding())
-                        .fillMaxSize()
+                        .weight(1f)
+                        .fillMaxHeight()
                         .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                         .background(MaterialTheme.colorScheme.background),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     androidx.compose.runtime.CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
-                    Column(Modifier.widthIn(max = 900.dp).fillMaxSize()) {
+                    Column(Modifier.widthIn(max = window.contentMaxWidth).fillMaxSize()) {
                         AnimatedVisibility(searchOpen, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
                             SearchField(query.search, vm::setSearch, onClose = { searchOpen = false; vm.setSearch("") })
                         }
@@ -281,12 +300,14 @@ fun HomeScreen(
                             categories = categories,
                             categoryById = categoryById,
                             bottomPadding = padding.calculateBottomPadding(),
+                            window = window,
                             vm = vm,
                             onMenu = { menuNoteId = it.id },
                             onOpenCategories = actions.onOpenCategories,
                         )
                     }
                     }
+                }
                 }
             }
         }
@@ -331,6 +352,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeHeader(
+    compact: Boolean,
     isDark: Boolean,
     layout: HomeLayout,
     onMenu: () -> Unit,
@@ -342,36 +364,63 @@ private fun HomeHeader(
 ) {
     val extras = LocalAppExtras.current
     var menuOpen by remember { mutableStateOf(false) }
+    val actions: @Composable () -> Unit = {
+        IconButton(onClick = onSearch) { Icon(Icons.Filled.Search, stringResource(R.string.search_open), tint = extras.onLeather) }
+        Box {
+            IconButton(onClick = { menuOpen = true }) { Icon(Icons.Filled.MoreVert, stringResource(R.string.a11y_more), tint = extras.onLeather) }
+            DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                Text(stringResource(R.string.view_title), style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
+                HomeLayout.entries.forEach { l ->
+                    DropdownMenuItem(
+                        text = { Text(stringResource(layoutLabel(l))) },
+                        leadingIcon = { Icon(layoutIcon(l), null) },
+                        trailingIcon = { if (l == layout) Icon(Icons.Filled.Check, null) },
+                        onClick = { menuOpen = false; onLayout(l) },
+                    )
+                }
+                HorizontalDivider()
+                DropdownMenuItem(text = { Text(stringResource(R.string.filter_sort_title)) }, leadingIcon = { Icon(Icons.Outlined.Tune, null) },
+                    onClick = { menuOpen = false; onFilter() })
+                DropdownMenuItem(
+                    text = { Text(stringResource(if (isDark) R.string.a11y_theme_light else R.string.a11y_theme_dark)) },
+                    leadingIcon = { Icon(if (isDark) Icons.Outlined.LightMode else Icons.Outlined.DarkMode, null) },
+                    onClick = { menuOpen = false; onToggleTheme() },
+                )
+                DropdownMenuItem(text = { Text(stringResource(R.string.settings_title)) }, leadingIcon = { Icon(Icons.Outlined.Settings, null) },
+                    onClick = { menuOpen = false; onSettings() })
+            }
+        }
+    }
+    if (compact) {
+        // Querformat: eine Zeile mit Logo, Titel und Aktionen – spart Höhe für die Notizen
+        Row(
+            Modifier.fillMaxWidth().statusBarsPadding().padding(start = 4.dp, end = 4.dp, top = 4.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(onClick = onMenu) { Icon(Icons.Filled.Menu, stringResource(R.string.a11y_open_menu), tint = extras.onLeather) }
+            Spacer(Modifier.width(4.dp))
+            AppLogo(size = 40.dp)
+            Spacer(Modifier.width(12.dp))
+            Text(
+                stringResource(R.string.home_title),
+                style = MaterialTheme.typography.headlineSmall,
+                color = extras.onLeather,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false),
+            )
+            Icon(Icons.Filled.Eco, null, tint = extras.leaf, modifier = Modifier.padding(start = 6.dp, bottom = 12.dp).size(18.dp).rotate(-20f))
+            Spacer(Modifier.weight(1f))
+            actions()
+        }
+        return
+    }
     Column(Modifier.fillMaxWidth().statusBarsPadding()) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = onMenu) { Icon(Icons.Filled.Menu, stringResource(R.string.a11y_open_menu), tint = extras.onLeather) }
             Spacer(Modifier.weight(1f))
-            IconButton(onClick = onSearch) { Icon(Icons.Filled.Search, stringResource(R.string.search_open), tint = extras.onLeather) }
-            Box {
-                IconButton(onClick = { menuOpen = true }) { Icon(Icons.Filled.MoreVert, stringResource(R.string.a11y_more), tint = extras.onLeather) }
-                DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
-                    Text(stringResource(R.string.view_title), style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
-                    HomeLayout.entries.forEach { l ->
-                        DropdownMenuItem(
-                            text = { Text(stringResource(layoutLabel(l))) },
-                            leadingIcon = { Icon(layoutIcon(l), null) },
-                            trailingIcon = { if (l == layout) Icon(Icons.Filled.Check, null) },
-                            onClick = { menuOpen = false; onLayout(l) },
-                        )
-                    }
-                    HorizontalDivider()
-                    DropdownMenuItem(text = { Text(stringResource(R.string.filter_sort_title)) }, leadingIcon = { Icon(Icons.Outlined.Tune, null) },
-                        onClick = { menuOpen = false; onFilter() })
-                    DropdownMenuItem(
-                        text = { Text(stringResource(if (isDark) R.string.a11y_theme_light else R.string.a11y_theme_dark)) },
-                        leadingIcon = { Icon(if (isDark) Icons.Outlined.LightMode else Icons.Outlined.DarkMode, null) },
-                        onClick = { menuOpen = false; onToggleTheme() },
-                    )
-                    DropdownMenuItem(text = { Text(stringResource(R.string.settings_title)) }, leadingIcon = { Icon(Icons.Outlined.Settings, null) },
-                        onClick = { menuOpen = false; onSettings() })
-                }
-            }
+            actions()
         }
         Row(Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, bottom = 22.dp), verticalAlignment = Alignment.CenterVertically) {
             AppLogo(size = 58.dp)
@@ -530,6 +579,7 @@ private fun HomeContent(
     categories: List<Category>,
     categoryById: Map<Int, Category>,
     bottomPadding: Dp,
+    window: WindowLayout,
     vm: NotesViewModel,
     onMenu: (Note) -> Unit,
     onOpenCategories: () -> Unit,
@@ -537,7 +587,8 @@ private fun HomeContent(
     if (!state.loaded) return
     val searching = query.search.isNotBlank()
     val overview = settings.homeLayout == HomeLayout.OVERVIEW && state.tab == HomeTab.NOTES && !query.isFiltered
-    val contentBottom = bottomPadding + 96.dp
+    // Ohne schwebenden Button (seitliche Navigation) braucht es unten weniger Platz
+    val contentBottom = bottomPadding + if (window.useNavigationRail) 24.dp else 96.dp
 
     if (state.notes.isEmpty() && !(overview && state.totalActive > 0)) {
         Box(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), contentAlignment = Alignment.TopCenter) {
@@ -556,16 +607,15 @@ private fun HomeContent(
     }
 
     if (overview) {
-        OverviewContent(state, settings, categories, categoryById, contentBottom, vm, onMenu, onOpenCategories)
+        OverviewContent(state, settings, categories, categoryById, contentBottom, window, vm, onMenu, onOpenCategories)
         return
     }
 
     // Suche zeigt Treffer immer als Liste (wie im Screenshot); sonst Raster oder Liste nach Einstellung
     val asGrid = settings.homeLayout == HomeLayout.GRID && !searching
-    val wide = LocalConfiguration.current.screenWidthDp >= 600
     val columns = when {
-        asGrid -> GridCells.Adaptive(if (wide) 200.dp else 156.dp)
-        wide -> GridCells.Adaptive(360.dp)
+        asGrid -> GridCells.Adaptive(window.gridMinCell)
+        window.listColumns > 1 -> GridCells.Fixed(window.listColumns)
         else -> GridCells.Fixed(1)
     }
     val listState = rememberLazyGridState()
@@ -620,24 +670,29 @@ private fun OverviewContent(
     categories: List<Category>,
     categoryById: Map<Int, Category>,
     bottomPadding: Dp,
+    window: WindowLayout,
     vm: NotesViewModel,
     onMenu: (Note) -> Unit,
     onOpenCategories: () -> Unit,
 ) {
+    val cols = window.listColumns
     val others = remember(state.notes) { state.notes.filterNot { it.isPinned } }
     LazyColumn(
         contentPadding = PaddingValues(top = 8.dp, bottom = bottomPadding),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.fillMaxSize().testTag("overview"),
     ) {
-        items(state.pinned, key = { "pin_${it.id}" }) { note ->
-            NoteCard(
-                note = note, category = note.categoryId?.let(categoryById::get), layout = CardLayout.LIST,
-                density = settings.cardDensity, searchQuery = "", hideCheckedItems = settings.hideCheckedItems,
-                isPlaceholder = false, isOverlay = false, onClick = { vm.openEditor(note) }, onLongClick = { onMenu(note) },
-                onMenu = { onMenu(note) }, accessibilityActions = emptyList(),
-                modifier = Modifier.padding(horizontal = 16.dp).animateItem(),
-            )
+        // Auf Tablets stehen Listenkarten nebeneinander (Zeilen mit 2–3 Karten), auf Handys untereinander
+        items(state.pinned.chunked(cols), key = { row -> "pin_${row.first().id}" }) { row ->
+            CardRow(row, cols, Modifier.animateItem()) { note, m ->
+                NoteCard(
+                    note = note, category = note.categoryId?.let(categoryById::get), layout = CardLayout.LIST,
+                    density = settings.cardDensity, searchQuery = "", hideCheckedItems = settings.hideCheckedItems,
+                    isPlaceholder = false, isOverlay = false, onClick = { vm.openEditor(note) }, onLongClick = { onMenu(note) },
+                    onMenu = { onMenu(note) }, accessibilityActions = emptyList(),
+                    modifier = m,
+                )
+            }
         }
         if (state.favorites.isNotEmpty()) {
             item(key = "fav_header") {
@@ -651,7 +706,7 @@ private fun OverviewContent(
                             density = settings.cardDensity, searchQuery = "", hideCheckedItems = settings.hideCheckedItems,
                             isPlaceholder = false, isOverlay = false, onClick = { vm.openEditor(note) }, onLongClick = { onMenu(note) },
                             onMenu = { onMenu(note) }, accessibilityActions = emptyList(),
-                            modifier = Modifier.width(176.dp),
+                            modifier = Modifier.width(window.favoriteCardWidth),
                         )
                     }
                 }
@@ -661,12 +716,9 @@ private fun OverviewContent(
             item(key = "cat_header") {
                 SectionHeader(Icons.Outlined.Category, LocalAppExtras.current.accent, stringResource(R.string.categories_title), onAll = onOpenCategories)
             }
-            items(categories.chunked(2), key = { row -> "cat_${row.first().id}" }) { row ->
-                Row(Modifier.padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    row.forEach { c ->
-                        CategoryTile(c, state.categoryCounts[c.id] ?: 0, Modifier.weight(1f)) { vm.setCategoryFilter(c.id) }
-                    }
-                    if (row.size == 1) Spacer(Modifier.weight(1f))
+            items(categories.chunked(window.categoryColumns), key = { row -> "cat_${row.first().id}" }) { row ->
+                CardRow(row, window.categoryColumns) { c, m ->
+                    CategoryTile(c, state.categoryCounts[c.id] ?: 0, m) { vm.setCategoryFilter(c.id) }
                 }
             }
         }
@@ -675,17 +727,28 @@ private fun OverviewContent(
                 SectionHeader(Icons.AutoMirrored.Outlined.Notes, LocalAppExtras.current.accent, stringResource(R.string.section_my_notes),
                     onAll = { vm.setHomeLayout(HomeLayout.LIST) })
             }
-            items(others, key = { it.id }) { note ->
-                NoteCard(
-                    note = note, category = note.categoryId?.let(categoryById::get), layout = CardLayout.LIST,
-                    density = settings.cardDensity, searchQuery = "", hideCheckedItems = settings.hideCheckedItems,
-                    isPlaceholder = false, isOverlay = false, onClick = { vm.openEditor(note) }, onLongClick = { onMenu(note) },
-                    onMenu = { onMenu(note) }, accessibilityActions = emptyList(),
-                    onToggleFavorite = { vm.toggleFavorite(note) },
-                    modifier = Modifier.padding(horizontal = 16.dp).animateItem(),
-                )
+            items(others.chunked(cols), key = { row -> row.first().id }) { row ->
+                CardRow(row, cols, Modifier.animateItem()) { note, m ->
+                    NoteCard(
+                        note = note, category = note.categoryId?.let(categoryById::get), layout = CardLayout.LIST,
+                        density = settings.cardDensity, searchQuery = "", hideCheckedItems = settings.hideCheckedItems,
+                        isPlaceholder = false, isOverlay = false, onClick = { vm.openEditor(note) }, onLongClick = { onMenu(note) },
+                        onMenu = { onMenu(note) }, accessibilityActions = emptyList(),
+                        onToggleFavorite = { vm.toggleFavorite(note) },
+                        modifier = m,
+                    )
+                }
             }
         }
+    }
+}
+
+/** Eine Zeile mit [columns] gleich breiten Feldern; fehlende Plätze bleiben leer, damit alle Karten gleich breit sind. */
+@Composable
+private fun <T> CardRow(row: List<T>, columns: Int, modifier: Modifier = Modifier, cell: @Composable (T, Modifier) -> Unit) {
+    Row(modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        row.forEach { cell(it, Modifier.weight(1f)) }
+        repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
     }
 }
 
@@ -761,6 +824,63 @@ private fun HomeBottomBar(tab: HomeTab, archivedCount: Int, onTab: (HomeTab) -> 
                 modifier = Modifier.testTag("tab_archive"),
             )
         }
+    }
+}
+
+/** Seitliche Navigation im Querformat und auf großen Tablets – auf dem Leder, links neben dem Papier. */
+@Composable
+private fun HomeRail(tab: HomeTab, showFab: Boolean, short: Boolean, onNewNote: () -> Unit, onTab: (HomeTab) -> Unit, modifier: Modifier = Modifier) {
+    val gap = if (short) 0.dp else 8.dp
+    val extras = LocalAppExtras.current
+    NavigationRail(
+        containerColor = Color.Transparent,
+        contentColor = extras.onLeather,
+        windowInsets = WindowInsets(0),
+        header = {
+            if (showFab) {
+                FloatingActionButton(
+                    onClick = onNewNote,
+                    shape = CircleShape,
+                    containerColor = extras.accent,
+                    contentColor = extras.onAccent,
+                    modifier = Modifier.padding(top = 4.dp).size(56.dp).testTag("fab_new_note"),
+                ) {
+                    Icon(Icons.Filled.Add, stringResource(R.string.new_note), Modifier.size(28.dp))
+                }
+            } else {
+                Spacer(Modifier.size(60.dp))
+            }
+        },
+        modifier = modifier.fillMaxHeight().width(88.dp).testTag("nav_rail"),
+    ) {
+        Spacer(Modifier.height(if (short) 4.dp else 16.dp))
+        val colors = NavigationRailItemDefaults.colors(
+            selectedIconColor = extras.leatherDark,
+            selectedTextColor = extras.onLeather,
+            indicatorColor = extras.accent,
+            unselectedIconColor = extras.onLeather.copy(alpha = 0.8f),
+            unselectedTextColor = extras.onLeather.copy(alpha = 0.8f),
+        )
+        NavigationRailItem(
+            selected = tab == HomeTab.NOTES, onClick = { onTab(HomeTab.NOTES) }, colors = colors,
+            icon = { Icon(if (tab == HomeTab.NOTES) Icons.Filled.Home else Icons.Outlined.Home, null) },
+            label = { Text(stringResource(R.string.tab_notes)) },
+            modifier = Modifier.testTag("tab_notes"),
+        )
+        Spacer(Modifier.height(gap))
+        NavigationRailItem(
+            selected = tab == HomeTab.FAVORITES, onClick = { onTab(HomeTab.FAVORITES) }, colors = colors,
+            icon = { Icon(if (tab == HomeTab.FAVORITES) Icons.Filled.Star else Icons.Outlined.StarOutline, null) },
+            label = { Text(stringResource(R.string.tab_favorites)) },
+            modifier = Modifier.testTag("tab_favorites"),
+        )
+        Spacer(Modifier.height(gap))
+        NavigationRailItem(
+            selected = tab == HomeTab.ARCHIVE, onClick = { onTab(HomeTab.ARCHIVE) }, colors = colors,
+            icon = { Icon(if (tab == HomeTab.ARCHIVE) Icons.Filled.Inventory2 else Icons.Outlined.Inventory2, null) },
+            label = { Text(stringResource(R.string.tab_archive)) },
+            modifier = Modifier.testTag("tab_archive"),
+        )
     }
 }
 

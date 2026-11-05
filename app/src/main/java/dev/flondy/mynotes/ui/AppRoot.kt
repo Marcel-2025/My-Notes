@@ -8,6 +8,10 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.background
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.core.tween
@@ -165,7 +169,16 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
     }
 
     val editor = notesVm.editor
-    Box(Modifier.fillMaxSize()) {
+    // Im Querformat liegen Navigationsleiste/Kamera-Aussparung seitlich: Inhalte davon fernhalten, Fläche dahinter in Leder-Braun
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(dev.flondy.mynotes.ui.theme.LocalAppExtras.current.leatherDark)
+            .windowInsetsPadding(
+                androidx.compose.foundation.layout.WindowInsets.safeDrawing
+                    .only(androidx.compose.foundation.layout.WindowInsetsSides.Horizontal),
+            ),
+    ) {
         AnimatedContent(
             targetState = backStack.last(),
             transitionSpec = { routeTransition(initialState, targetState, animate) },

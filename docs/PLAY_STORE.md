@@ -1,5 +1,31 @@
 # Google Play – Store-Texte
 
+## Version 2.2 (versionCode 5) – Release-Name: `2.2 – Tablets & Querformat`
+
+**de-DE**
+```
+Version 2.2 – schön auf Tablets:
+• Angepasst an jede Bildschirmgröße, hoch und quer
+• Im Querformat: Navigation seitlich, kompakte Kopfzeile, mehr Platz für Notizen
+• Mehr Spalten im Raster, Liste und Übersicht nebeneinander
+• Editor und Einstellungen in angenehmer Lesebreite
+• Kein geteilter Bildschirm – jede Seite bleibt übersichtlich
+Alle Notizen und Käufe bleiben erhalten.
+```
+
+**en-US**
+```
+Version 2.2 – great on tablets:
+• Adapts to every screen size, portrait and landscape
+• Landscape: side navigation, compact header, more room for notes
+• More columns in the grid, list and overview side by side
+• Editor and settings at a comfortable reading width
+• No split screen – every page stays clear
+All your notes and purchases are kept.
+```
+
+---
+
 ## Version 2.1 (versionCode 4) – Release-Name: `2.1 – Leder & Papier`
 
 **de-DE**
