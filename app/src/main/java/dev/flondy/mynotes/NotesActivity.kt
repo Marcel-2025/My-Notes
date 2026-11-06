@@ -37,6 +37,11 @@ class NotesActivity : ComponentActivity() {
     private val notesViewModel: NotesViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
+    // App-Sprache für Android < 13 (ab 13 übernimmt das System)
+    override fun attachBaseContext(newBase: android.content.Context) {
+        super.attachBaseContext(dev.flondy.mynotes.settings.AppLanguage.wrap(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)

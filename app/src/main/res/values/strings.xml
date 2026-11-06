@@ -293,4 +293,6 @@
     <string name="sample_travel_title">Trip planning</string>
     <string name="sample_travel_list">[x] Compare flights\n[x] Book hotel\n[ ] Make a packing list\n[ ] Note sights to see</string>
     <string name="sample_travel_body">This year we are going to **Italy**. The Amalfi Coast is at the top of the list! ☀️</string>
+    <string name="setting_language">Language</string>
+    <string name="language_system">System default</string>
 </resources>

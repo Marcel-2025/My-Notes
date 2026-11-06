@@ -14,8 +14,8 @@ android {
         applicationId = "dev.flondy.mynotes" // NIEMALS ändern – Play-Store-Identität
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "2.2"
+        versionCode = 6
+        versionName = "2.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,6 +46,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    // Alle Sprachen im App Bundle behalten: Sonst liefert Google Play nur die Gerätesprache aus
+    // und der Sprach-Umschalter in den Einstellungen hätte für andere Sprachen keine Texte.
+    bundle {
+        language { enableSplit = false }
     }
     buildFeatures {
         compose = true

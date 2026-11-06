@@ -10,6 +10,10 @@ import kotlinx.coroutines.Dispatchers
 
 /** Einfache manuelle Dependency Injection – App-weite Singletons. */
 class MyNotesApp : Application() {
+    override fun attachBaseContext(base: android.content.Context) {
+        super.attachBaseContext(dev.flondy.mynotes.settings.AppLanguage.wrap(base))
+    }
+
     val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }

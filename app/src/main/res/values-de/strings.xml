@@ -305,4 +305,6 @@
     <string name="sample_travel_title">Reiseplanung</string>
     <string name="sample_travel_list">[x] Flüge vergleichen\n[x] Hotel buchen\n[ ] Packliste erstellen\n[ ] Sehenswürdigkeiten notieren</string>
     <string name="sample_travel_body">Dieses Jahr soll es nach **Italien** gehen. Die Amalfiküste steht ganz oben auf der Liste! ☀️</string>
+    <string name="setting_language">Sprache</string>
+    <string name="language_system">Systemsprache</string>
 </resources>

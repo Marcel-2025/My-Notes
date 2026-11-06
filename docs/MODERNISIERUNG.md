@@ -246,3 +246,16 @@ Ziel: Auf Tablets – vor allem im Querformat – gut aussehen und bequem bedien
 - Handy im Hochformat bleibt unverändert.
 
 **Tests:** 63 Unit-/UI-Tests grün, neu `WindowLayoutTest` (5 Fälle). Zusätzlich wurden Bildschirmfotos in 4 Größen (411×891, 891×411, 800×1280, 1280×800 dp) geprüft (temporäres Roborazzi, nicht im Projekt).
+
+
+---
+
+## Version 2.3 – 9 Sprachen (versionCode 6)
+
+- **Neue Übersetzungen:** Spanisch (`values-es`), Französisch (`values-fr`), Italienisch (`values-it`), Portugiesisch (`values-pt`, brasilianisch, gilt auch für Portugal), Polnisch (`values-pl`), Russisch (`values-ru`), Türkisch (`values-tr`) – jeweils alle 269 Texte und 3 Pluralformen (Russisch/Polnisch mit one/few/many/other). Englisch (`values`) und Deutsch (`values-de`) wie bisher.
+- **Sprach-Umschalter:** Einstellungen → Sprache (Systemsprache oder eine der 9 Sprachen, jeweils in eigener Schreibweise).
+  - Android 13+: offizielle App-Sprache über `LocaleManager`; zusätzlich in den Systemeinstellungen („App-Sprachen“) dank `res/xml/locales_config.xml` und `android:localeConfig`.
+  - Android 7–12: Auswahl in SharedPreferences, angewendet in `attachBaseContext` von Activity und Application (`settings/AppLanguage.kt`), Activity wird neu gestartet.
+- **App Bundle:** `bundle { language { enableSplit = false } }` – alle Sprachen werden ausgeliefert, sonst hätte der Umschalter auf Geräten mit anderer Systemsprache keine Texte.
+- Bestehende Notizen und Kategorien bleiben unverändert (es sind Nutzerdaten); Beispielnotizen und Standardkategorien entstehen bei Neuinstallation in der jeweiligen Sprache.
+- **Tests:** 66 grün, neu `TranslationsTest` (alle Texte vorhanden, gleiche Platzhalter, Pluralformen, Sprachliste = locales_config). Bildschirmfotos in Russisch, Französisch, Türkisch, Polnisch (Handy) und Spanisch (Tablet quer) geprüft.

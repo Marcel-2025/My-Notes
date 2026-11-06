@@ -29,6 +29,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Animation
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.CheckBox
@@ -71,6 +72,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -138,6 +140,9 @@ fun SettingsScreen(
     var showSortDialog by rememberSaveable { mutableStateOf(false) }
     var showLicenses by rememberSaveable { mutableStateOf(false) }
     var confirmDeleteAll by rememberSaveable { mutableStateOf(false) }
+    var showLanguageDialog by rememberSaveable { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val currentLanguage = remember { dev.flondy.mynotes.settings.AppLanguage.current(context) }
 
     dev.flondy.mynotes.ui.components.LeatherPage(title = stringResource(R.string.settings_title), onBack = actions.onBack) { _ ->
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -227,6 +232,18 @@ fun SettingsScreen(
                     }
                 }
 
+                // ---------------- Sprache
+                SectionTitle(stringResource(R.string.setting_language))
+                SettingsGroup {
+                    NavItem(
+                        Icons.Outlined.Language,
+                        stringResource(R.string.setting_language),
+                        if (currentLanguage.isEmpty()) stringResource(R.string.language_system)
+                        else dev.flondy.mynotes.settings.AppLanguage.nativeName(currentLanguage),
+                        onClick = { showLanguageDialog = true },
+                    )
+                }
+
                 // ---------------- Notizen
                 SectionTitle(stringResource(R.string.section_notes))
                 SettingsGroup {
@@ -292,6 +309,36 @@ fun SettingsScreen(
                 }
             }
         }
+    }
+
+    if (showLanguageDialog) {
+        val activity = context as? android.app.Activity
+        val options = listOf("") + dev.flondy.mynotes.settings.AppLanguage.supported
+        AlertDialog(
+            onDismissRequest = { showLanguageDialog = false },
+            title = { Text(stringResource(R.string.setting_language)) },
+            text = {
+                Column(Modifier.verticalScroll(rememberScrollState())) {
+                    options.forEach { tag ->
+                        Row(
+                            Modifier.fillMaxWidth().clickable(role = Role.RadioButton) {
+                                showLanguageDialog = false
+                                if (activity != null) dev.flondy.mynotes.settings.AppLanguage.set(activity, tag)
+                            }.testTag("language_" + tag.ifEmpty { "system" }),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            RadioButton(selected = currentLanguage == tag, onClick = null, modifier = Modifier.padding(12.dp))
+                            Text(
+                                if (tag.isEmpty()) stringResource(R.string.language_system)
+                                else dev.flondy.mynotes.settings.AppLanguage.nativeName(tag),
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = { androidx.compose.material3.TextButton(onClick = { showLanguageDialog = false }) { Text(stringResource(android.R.string.cancel)) } },
+        )
     }
 
     if (showSortDialog) {

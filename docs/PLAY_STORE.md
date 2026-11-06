@@ -1,5 +1,90 @@
 # Google Play – Store-Texte
 
+## Version 2.3 (versionCode 6) – Release-Name: `2.3 – 9 Sprachen`
+
+**de-DE** (321 Zeichen)
+```
+Version 2.3 – jetzt in 9 Sprachen:
+• Neu: Englisch, Spanisch, Französisch, Italienisch, Portugiesisch, Polnisch, Russisch und Türkisch
+• Sprache direkt in den Einstellungen wählen – oder der Systemsprache folgen
+• Ab Android 13 auch unter „App-Sprachen“ in den Systemeinstellungen
+Alle Notizen und Käufe bleiben erhalten.
+```
+
+**en-US** (287 Zeichen)
+```
+Version 2.3 – now in 9 languages:
+• New: German, Spanish, French, Italian, Portuguese, Polish, Russian and Turkish
+• Pick your language right in Settings – or follow the system language
+• On Android 13+ also under "App languages" in system settings
+All your notes and purchases are kept.
+```
+
+**es-ES** (292 Zeichen)
+```
+Versión 2.3 – ahora en 9 idiomas:
+• Nuevo: español, francés, italiano, portugués, polaco, ruso, turco, alemán e inglés
+• Elige el idioma en Ajustes o usa el idioma del sistema
+• En Android 13+ también en «Idiomas de las apps» de los ajustes del sistema
+Se conservan todas tus notas y compras.
+```
+
+**fr-FR** (326 Zeichen)
+```
+Version 2.3 – disponible en 9 langues :
+• Nouveau : français, espagnol, italien, portugais, polonais, russe, turc, allemand et anglais
+• Choisis la langue dans les Paramètres ou suis la langue du système
+• Sur Android 13+, aussi dans « Langues des applis » des paramètres système
+Toutes tes notes et tes achats sont conservés.
+```
+
+**it-IT** (314 Zeichen)
+```
+Versione 2.3 – ora in 9 lingue:
+• Novità: italiano, spagnolo, francese, portoghese, polacco, russo, turco, tedesco e inglese
+• Scegli la lingua nelle Impostazioni o segui la lingua di sistema
+• Su Android 13+ anche in «Lingue delle app» nelle impostazioni di sistema
+Tutte le note e gli acquisti restano invariati.
+```
+
+**pt-BR** (303 Zeichen)
+```
+Versão 2.3 – agora em 9 idiomas:
+• Novo: português, espanhol, francês, italiano, polonês, russo, turco, alemão e inglês
+• Escolha o idioma nas Configurações ou siga o idioma do sistema
+• No Android 13+ também em "Idiomas dos apps" nas configurações do sistema
+Todas as suas notas e compras são mantidas.
+```
+
+**pl-PL** (313 Zeichen)
+```
+Wersja 2.3 – teraz w 9 językach:
+• Nowość: polski, angielski, hiszpański, francuski, włoski, portugalski, rosyjski, turecki i niemiecki
+• Wybierz język w Ustawieniach lub korzystaj z języka systemu
+• Na Androidzie 13+ także w „Języki aplikacji” w ustawieniach systemu
+Wszystkie notatki i zakupy zostają zachowane.
+```
+
+**ru-RU** (310 Zeichen)
+```
+Версия 2.3 – теперь на 9 языках:
+• Новое: русский, английский, испанский, французский, итальянский, португальский, польский, турецкий и немецкий
+• Выбирай язык в настройках приложения или используй язык системы
+• На Android 13+ также в «Языки приложений» в настройках системы
+Все заметки и покупки сохраняются.
+```
+
+**tr-TR** (295 Zeichen)
+```
+Sürüm 2.3 – artık 9 dilde:
+• Yeni: Türkçe, İngilizce, İspanyolca, Fransızca, İtalyanca, Portekizce, Lehçe, Rusça ve Almanca
+• Dili doğrudan Ayarlar'dan seç ya da sistem dilini kullan
+• Android 13 ve üzeri: sistem ayarlarında „Uygulama dilleri" altında da
+Tüm notların ve satın alımların korunur.
+```
+
+---
+
 ## Version 2.2 (versionCode 5) – Release-Name: `2.2 – Tablets & Querformat`
 
 **de-DE**
