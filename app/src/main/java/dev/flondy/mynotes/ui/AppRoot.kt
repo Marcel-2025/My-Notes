@@ -66,12 +66,17 @@ import dev.flondy.mynotes.ui.settings.SettingsScreen
 import dev.flondy.mynotes.ui.theme.LocalAppExtras
 import dev.flondy.mynotes.ui.theme.isAppInDarkTheme
 import dev.flondy.mynotes.ui.trash.TrashScreen
+import dev.flondy.mynotes.ui.shop.ShopActions
+import dev.flondy.mynotes.ui.shop.ShopScreen
+import dev.flondy.mynotes.ui.shop.TemplatePickerDialog
+import dev.flondy.mynotes.ui.stats.StatsScreen
+import dev.flondy.mynotes.BuildConfig
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-enum class Route { HOME, SETTINGS, CATEGORIES, TRASH, PREMIUM }
+enum class Route { HOME, SETTINGS, CATEGORIES, TRASH, STATS, SHOP, PREMIUM }
 
 object Links {
     const val PLAY_STORE = "https://play.google.com/store/apps/details?id=dev.flondy.mynotes"
@@ -103,6 +108,8 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
     fun back() { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) }
 
     var importPreview by remember { mutableStateOf<NoteRepository.ImportPreview?>(null) }
+    var showTemplates by remember { mutableStateOf(false) }
+    val allNotes by notesVm.notes.collectAsStateWithLifecycle()
     var pendingTxtNote by remember { mutableStateOf<Note?>(null) }
 
     // --- Dateiauswahl (Storage Access Framework – keine Speicherberechtigung nötig)
@@ -201,6 +208,9 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                         onHideAdFreeBadge = { settingsVm.setShowAdFreeBadge(false) },
                         onShare = ::share,
                         onExportTxt = ::exportTxt,
+                        onOpenShop = { navigate(Route.SHOP) },
+                        onOpenStats = { navigate(Route.STATS) },
+                        onOpenTemplates = { showTemplates = true },
                     ),
                 )
                 Route.SETTINGS -> SettingsScreen(
@@ -210,6 +220,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     trashCount = trash.size,
                     actions = SettingsActions(
                         onBack = ::back,
+                        onOpenShop = { navigate(Route.SHOP) },
                         onThemeMode = settingsVm::setThemeMode,
                         onAccent = settingsVm::setAccent,
                         onCardDensity = settingsVm::setCardDensity,
@@ -244,6 +255,17 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     onAdd = { name, icon -> notesVm.addCategory(name, icon) },
                     onUpdate = { notesVm.updateCategory(it) },
                     onDelete = { notesVm.deleteCategory(it) },
+                )
+                Route.STATS -> StatsScreen(notes = allNotes, categories = categories, onBack = ::back)
+                Route.SHOP -> ShopScreen(
+                    settings = settings,
+                    actions = ShopActions(
+                        onBack = ::back,
+                        onUseSkin = settingsVm::setSkin,
+                        onUsePattern = settingsVm::setPaperPattern,
+                        onTemplate = { t -> notesVm.openTemplate(t) },
+                        onDebugUnlock = if (BuildConfig.DEBUG) { on -> settingsVm.setDebugUnlockAll(on) } else null,
+                    ),
                 )
                 Route.TRASH -> TrashScreen(
                     notes = trash,
@@ -298,6 +320,8 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
             )
         }
     }
+
+    if (showTemplates) TemplatePickerDialog(onPick = { t -> showTemplates = false; notesVm.openTemplate(t) }, onDismiss = { showTemplates = false })
 
     importPreview?.let { preview ->
         AlertDialog(

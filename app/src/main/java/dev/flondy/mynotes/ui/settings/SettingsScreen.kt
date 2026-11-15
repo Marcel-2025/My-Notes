@@ -30,6 +30,7 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.Animation
 import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.CheckBox
@@ -103,6 +104,7 @@ import dev.flondy.mynotes.ui.theme.LocalAppExtras
 
 data class SettingsActions(
     val onBack: () -> Unit,
+    val onOpenShop: () -> Unit = {},
     val onThemeMode: (ThemeMode) -> Unit,
     val onAccent: (AccentColor) -> Unit,
     val onCardDensity: (CardDensity) -> Unit,
@@ -207,6 +209,7 @@ fun SettingsScreen(
                         }
                     }
                     Divider()
+                    NavItem(Icons.Outlined.Palette, stringResource(R.string.settings_design), stringResource(R.string.settings_design_desc), actions.onOpenShop)
                     SwitchItem(Icons.Outlined.ViewAgenda, stringResource(R.string.setting_compact), stringResource(R.string.setting_compact_desc),
                         settings.cardDensity == CardDensity.COMPACT) { actions.onCardDensity(if (it) CardDensity.COMPACT else CardDensity.COMFORTABLE) }
                     SwitchItem(Icons.Outlined.Animation, stringResource(R.string.setting_animations), stringResource(R.string.setting_animations_desc),

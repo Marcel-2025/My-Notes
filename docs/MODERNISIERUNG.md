@@ -259,3 +259,19 @@ Ziel: Auf Tablets – vor allem im Querformat – gut aussehen und bequem bedien
 - **App Bundle:** `bundle { language { enableSplit = false } }` – alle Sprachen werden ausgeliefert, sonst hätte der Umschalter auf Geräten mit anderer Systemsprache keine Texte.
 - Bestehende Notizen und Kategorien bleiben unverändert (es sind Nutzerdaten); Beispielnotizen und Standardkategorien entstehen bei Neuinstallation in der jeweiligen Sprache.
 - **Tests:** 66 grün, neu `TranslationsTest` (alle Texte vorhanden, gleiche Platzhalter, Pluralformen, Sprachliste = locales_config). Bildschirmfotos in Russisch, Französisch, Türkisch, Polnisch (Handy) und Spanisch (Tablet quer) geprüft.
+
+
+---
+
+## Version 2.4 – Designs & Vorlagen (versionCode 7)
+
+- **Designs (Skins):** `ui/theme/Skins.kt` – 7 Paletten (Leder & Papier, Graphit kostenlos; Mitternacht, Waldhütte, Pergament, Kirschblüte, Ozean Premium), je hell + Abend. `MyNotesTheme(skin, pattern)` übernimmt Farben, Zusatzfarben blenden animiert über. Eigene Akzentfarbe gilt weiter (außer „Gelb“ = Akzent des Designs).
+- **Papiermuster:** glatt, liniert (kostenlos), kariert, Punktraster (Premium) – gezeichnet hinter den Editor-Karten (`Modifier.paperPattern`).
+- **Design-Shop** (`ui/shop/ShopScreen.kt`): Live-Mini-Vorschau je Design, Abzeichen „Kostenlos/Premium“ mit Glanz, gestaffeltes Einblenden. Premium: „Vorschau 30 s“ (`ShopPreview`, nur im Speicher, endet von selbst) und ein **deaktivierter** Knopf „Freischalten – bald“. Es gibt **keinen** Kauf und keine Preise in der App.
+- **Freischaltung vorbereitet:** `Entitlements` (kostenlos immer; Premium nur mit Eintrag `skin:<NAME>`/`paper:<NAME>` oder `all`). Gespeicherte Premium-Wahl ohne Freischaltung fällt auf Leder & Papier/Glatt zurück. In Debug-Builds gibt es einen Test-Schalter (`debug_unlock_all`), im Release nicht. `remove_ads` bleibt unverändert und schaltet **keine** Designs frei.
+- **Vorlagen** (`data/NoteTemplates.kt`): 6 Vorlagen in allen 9 Sprachen (Menü → Vorlagen oder im Shop), öffnen den Editor vorausgefüllt.
+- **Statistik** (`ui/stats/StatsScreen.kt`): Kennzahlen, Checklisten-Fortschritt (Ring), Balken je Kategorie, Aktivität 14 Tage – nur lokal berechnet.
+- **Einstellungen:** neuer Eintrag „Design & Papier“ → Shop. Menü: Vorlagen, Statistik, Design-Shop.
+- **Neue Einstellungen (DataStore):** `skin`, `paper_pattern`, `debug_unlock_all`. Datenbank unverändert (Version 5), keine Migration nötig.
+- 45 neue Texte in allen 9 Sprachen.
+- **Für den späteren Kauf (Vorschlag, nicht angelegt):** Einmalkauf-Produkt `personalization_pack` (alle Premium-Designs + Papiermuster) in der Play Console anlegen, Preis dort festlegen; in `BillingManager` abfragen und bei Kauf `unlocked = {"all"}` setzen.

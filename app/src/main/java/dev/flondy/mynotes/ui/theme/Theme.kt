@@ -47,62 +47,62 @@ val LocalAppExtras = staticCompositionLocalOf {
     AppExtras(false, Gold, OnGold, PaperLine, Color.Transparent, Gold, true)
 }
 
-private fun darkScheme(accent: Color) = darkColorScheme(
+private fun darkScheme(accent: Color, k: SkinPalette = Skin.LEATHER.p) = darkColorScheme(
     primary = accent,
-    onPrimary = OnGold,
-    primaryContainer = accent.copy(alpha = 0.22f).compositeOver(NightSurface),
-    onPrimaryContainer = NightText,
-    secondary = NightTextSoft,
-    onSecondary = NightBackground,
-    secondaryContainer = NightCardHigh,
-    onSecondaryContainer = NightText,
-    tertiary = Leaf,
-    background = NightBackground,
-    onBackground = NightText,
-    surface = NightBackground,
-    onSurface = NightText,
-    surfaceVariant = NightCard,
-    onSurfaceVariant = NightTextSoft,
+    onPrimary = k.onAccent,
+    primaryContainer = accent.copy(alpha = 0.22f).compositeOver(k.nightSurface),
+    onPrimaryContainer = k.nightText,
+    secondary = k.nightTextSoft,
+    onSecondary = k.nightBg,
+    secondaryContainer = k.nightCardHigh,
+    onSecondaryContainer = k.nightText,
+    tertiary = k.leaf,
+    background = k.nightBg,
+    onBackground = k.nightText,
+    surface = k.nightBg,
+    onSurface = k.nightText,
+    surfaceVariant = k.nightCard,
+    onSurfaceVariant = k.nightTextSoft,
     surfaceContainerLowest = Color(0xFF150E0A),
-    surfaceContainerLow = NightSurface,
-    surfaceContainer = NightCard,
-    surfaceContainerHigh = NightCardHigh,
+    surfaceContainerLow = k.nightSurface,
+    surfaceContainer = k.nightCard,
+    surfaceContainerHigh = k.nightCardHigh,
     surfaceContainerHighest = Color(0xFF45322A),
-    inverseSurface = PaperBackground,
-    inverseOnSurface = InkBrown,
-    outline = NightLine,
+    inverseSurface = k.paper,
+    inverseOnSurface = k.ink,
+    outline = k.nightLine,
     outlineVariant = Color(0xFF3A2A20),
     error = ErrorDark,
-    onError = NightBackground,
+    onError = k.nightBg,
     scrim = Color(0xCC000000),
 )
 
-private fun lightScheme(accent: Color) = lightColorScheme(
+private fun lightScheme(accent: Color, k: SkinPalette = Skin.LEATHER.p) = lightColorScheme(
     // Braune Tinte als Primärfarbe (Kontrast), Gold als Akzent für Auswahl & wichtige Aktionen
-    primary = Leather,
-    onPrimary = OnLeather,
-    primaryContainer = accent.copy(alpha = 0.45f).compositeOver(PaperCard),
-    onPrimaryContainer = InkBrown,
-    secondary = InkBrownSoft,
+    primary = k.leather,
+    onPrimary = k.onLeather,
+    primaryContainer = accent.copy(alpha = 0.45f).compositeOver(k.card),
+    onPrimaryContainer = k.ink,
+    secondary = k.inkSoft,
     onSecondary = Color.White,
-    secondaryContainer = PaperSunken,
-    onSecondaryContainer = InkBrown,
-    tertiary = Leaf,
-    background = PaperBackground,
-    onBackground = InkBrown,
-    surface = PaperBackground,
-    onSurface = InkBrown,
-    surfaceVariant = PaperSunken,
-    onSurfaceVariant = InkBrownSoft,
+    secondaryContainer = k.sunken,
+    onSecondaryContainer = k.ink,
+    tertiary = k.leaf,
+    background = k.paper,
+    onBackground = k.ink,
+    surface = k.paper,
+    onSurface = k.ink,
+    surfaceVariant = k.sunken,
+    onSurfaceVariant = k.inkSoft,
     surfaceContainerLowest = Color.White,
-    surfaceContainerLow = PaperCardHigh,
-    surfaceContainer = PaperCard,
+    surfaceContainerLow = k.cardHigh,
+    surfaceContainer = k.card,
     surfaceContainerHigh = Color(0xFFF6E8D1),
-    surfaceContainerHighest = PaperSunken,
-    inverseSurface = LeatherDark,
-    inverseOnSurface = OnLeather,
+    surfaceContainerHighest = k.sunken,
+    inverseSurface = k.leatherDark,
+    inverseOnSurface = k.onLeather,
     outline = Color(0xFFD9C3A3),
-    outlineVariant = PaperLine,
+    outlineVariant = k.line,
     error = ErrorLight,
     onError = Color.White,
     scrim = Color(0x99000000),
@@ -140,34 +140,61 @@ fun MyNotesTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     accentColor: AccentColor = AccentColor.YELLOW,
     animationsEnabled: Boolean = true,
+    skin: Skin = Skin.LEATHER,
+    pattern: PaperPattern = PaperPattern.PLAIN,
     content: @Composable () -> Unit,
 ) {
+    val k = skin.p
+    // Shop-Vorschau (30 s) endet von selbst – auch wenn der Shop schon verlassen wurde
+    androidx.compose.runtime.LaunchedEffect(ShopPreview.endsAt) {
+        if (ShopPreview.active) {
+            kotlinx.coroutines.delay((ShopPreview.endsAt - System.currentTimeMillis()).coerceAtLeast(0L))
+            ShopPreview.stop()
+        }
+    }
     val dark = isAppInDarkTheme(themeMode)
-    val accent = Color(accentColor.argb)
+    // Eigene Akzentfarbe gilt nur, wenn nicht „Gelb“ (Standard) gewählt ist – sonst die des Designs
+    val accent = if (accentColor == AccentColor.YELLOW) k.accent else Color(accentColor.argb)
     val animate = animationsEnabled && systemAnimationsEnabled()
-    val target = if (dark) darkScheme(accent) else lightScheme(accent)
+    val target = if (dark) darkScheme(accent, k) else lightScheme(accent, k)
     val scheme = if (animate) target.animated() else target
 
     val extras = AppExtras(
         isDark = dark,
         accent = accent,
-        onAccent = OnGold,
-        cardBorder = if (dark) NightLine else PaperLine,
-        gradientTop = if (dark) LeatherDeep else Leather,
+        onAccent = if (accentColor == AccentColor.YELLOW) k.onAccent else OnGold,
+        cardBorder = if (dark) k.nightLine else k.line,
+        gradientTop = if (dark) k.leatherDeep else k.leather,
         premiumGold = Gold,
         animationsEnabled = animate,
-        leather = if (dark) Color(0xFF3F2318) else Leather,
-        leatherDark = if (dark) LeatherDeep else LeatherDark,
-        onLeather = OnLeather,
-        card = if (dark) NightCard else PaperCard,
-        cardHigh = if (dark) NightCardHigh else PaperCardHigh,
-        sunken = if (dark) NightSurface else PaperSunken,
-        leaf = Leaf,
-    )
+        leather = if (dark) k.nightLeather else k.leather,
+        leatherDark = if (dark) k.leatherDeep else k.leatherDark,
+        onLeather = k.onLeather,
+        card = if (dark) k.nightCard else k.card,
+        cardHigh = if (dark) k.nightCardHigh else k.cardHigh,
+        sunken = if (dark) k.nightSurface else k.sunken,
+        leaf = k.leaf,
+    ).animatedExtras(animate)
 
-    CompositionLocalProvider(LocalAppExtras provides extras) {
+    CompositionLocalProvider(LocalAppExtras provides extras, LocalPaperPattern provides pattern, LocalSkin provides skin) {
         MaterialTheme(colorScheme = scheme, typography = Typography, shapes = AppShapes, content = content)
     }
+}
+
+val LocalPaperPattern = staticCompositionLocalOf { PaperPattern.PLAIN }
+val LocalSkin = staticCompositionLocalOf { Skin.LEATHER }
+
+/** Designwechsel (2.4): Leder-, Karten- und Akzentfarben blenden weich über. */
+@Composable
+private fun AppExtras.animatedExtras(animate: Boolean): AppExtras {
+    if (!animate) return this
+    val spec = tween<Color>(durationMillis = 450)
+    val leather by animateColorAsState(leather, spec, label = "leather")
+    val leatherDark by animateColorAsState(leatherDark, spec, label = "leatherDark")
+    val card by animateColorAsState(card, spec, label = "card")
+    val accent by animateColorAsState(accent, spec, label = "accent")
+    val cardBorder by animateColorAsState(cardBorder, spec, label = "border")
+    return copy(leather = leather, leatherDark = leatherDark, card = card, accent = accent, cardBorder = cardBorder)
 }
 
 /** Sanfter Theme-Wechsel: die wichtigsten Flächen- und Textfarben werden überblendet. */
@@ -183,7 +210,9 @@ private fun ColorScheme.animated(): ColorScheme {
     val surfaceVariant by animateColorAsState(surfaceVariant, spec, label = "sv")
     val onSurfaceVariant by animateColorAsState(onSurfaceVariant, spec, label = "osv")
     val primary by animateColorAsState(primary, spec, label = "primary")
-    return copy(
+    val outlineVariant by animateColorAsState(outlineVariant, spec, label = "ov")
+    val primaryContainer by animateColorAsState(primaryContainer, spec, label = "pc")
+    return copy(outlineVariant = outlineVariant, primaryContainer = primaryContainer,
         background = background, surface = surface, onSurface = onSurface, onBackground = onBackground,
         surfaceContainer = surfaceContainer, surfaceContainerHigh = surfaceContainerHigh,
         surfaceVariant = surfaceVariant, onSurfaceVariant = onSurfaceVariant, primary = primary,

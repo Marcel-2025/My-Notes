@@ -48,6 +48,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setShowAdFreeBadge(value: Boolean) = viewModelScope.launch { store.setShowAdFreeBadge(value) }
     fun setAppIcon(icon: AppIcon) = viewModelScope.launch { store.setAppIcon(icon.name) }
     fun setDebugForceAdFree(value: Boolean) = viewModelScope.launch { if (BuildConfig.DEBUG) store.setDebugForceAdFree(value) }
+    // 2.4: Design & Papier (Premium nur, wenn freigeschaltet – sonst bleibt es bei der Vorschau)
+    fun setSkin(skin: dev.flondy.mynotes.ui.theme.Skin) = viewModelScope.launch {
+        if (dev.flondy.mynotes.ui.theme.Entitlements.skinUnlocked(skin, settings.value.unlocked)) store.setSkin(skin.name)
+    }
+    fun setPaperPattern(p: dev.flondy.mynotes.ui.theme.PaperPattern) = viewModelScope.launch {
+        if (dev.flondy.mynotes.ui.theme.Entitlements.patternUnlocked(p, settings.value.unlocked)) store.setPaperPattern(p.name)
+    }
+    fun setDebugUnlockAll(value: Boolean) = viewModelScope.launch { if (BuildConfig.DEBUG) store.setDebugUnlockAll(value) }
 
     fun purchaseAdFree(activity: Activity) = billing.launchPurchase(activity)
     fun restorePurchases() = billing.refreshPurchases(userInitiated = true)

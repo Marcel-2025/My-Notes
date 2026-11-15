@@ -401,6 +401,17 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
+    /** Neue Notiz aus einer Vorlage (2.4): Editor öffnet vorausgefüllt, gespeichert wird wie bei jeder Eingabe. */
+    fun openTemplate(t: dev.flondy.mynotes.data.NoteTemplate) {
+        openNewNote(if (t.isChecklist) Note.TYPE_CHECKLIST else Note.TYPE_TEXT)
+        edit {
+            it.copy(
+                title = t.title, content = t.text, focusTitle = false,
+                items = if (t.isChecklist) t.items.map { text -> ChecklistItem(ChecklistCodec.newId(), text, false) } else it.items,
+            )
+        }
+    }
+
     private fun edit(transform: (EditorState) -> EditorState) {
         val current = editor ?: return
         editor = transform(current).copy(saveStatus = SaveStatus.PENDING)

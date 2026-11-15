@@ -145,6 +145,7 @@ import dev.flondy.mynotes.ui.components.TextInputDialog
 import dev.flondy.mynotes.ui.components.leather
 import dev.flondy.mynotes.ui.components.noteContainerColor
 import dev.flondy.mynotes.ui.theme.LocalAppExtras
+import dev.flondy.mynotes.ui.theme.paperPattern
 import dev.flondy.mynotes.ui.theme.Motion
 
 data class EditorActions(
@@ -420,7 +421,9 @@ private fun PaperSection(padding: androidx.compose.ui.unit.Dp = 16.dp, content: 
         shadowElevation = 1.dp,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Column(Modifier.padding(padding)) { content() }
+        // Papiermuster (2.4: glatt, liniert, kariert, Punktraster)
+        val pattern = dev.flondy.mynotes.ui.theme.LocalPaperPattern.current
+        Column(Modifier.paperPattern(pattern, extras.cardBorder, extras.accent).padding(padding)) { content() }
     }
 }
 

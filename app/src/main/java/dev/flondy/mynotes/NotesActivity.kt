@@ -87,6 +87,8 @@ class NotesActivity : ComponentActivity() {
                 themeMode = settings.themeMode,
                 accentColor = settings.accent,
                 animationsEnabled = settings.animationsEnabled,
+                skin = dev.flondy.mynotes.ui.theme.Entitlements.effectiveSkin(settings.skin, settings.unlocked),
+                pattern = dev.flondy.mynotes.ui.theme.Entitlements.effectivePattern(settings.paperPattern, settings.unlocked),
             ) {
                 AppRoot(notesVm = notesViewModel, settingsVm = settingsViewModel)
             }

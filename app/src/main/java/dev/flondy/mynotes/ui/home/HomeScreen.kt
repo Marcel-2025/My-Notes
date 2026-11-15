@@ -58,6 +58,9 @@ import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.Dashboard
@@ -173,6 +176,9 @@ data class HomeActions(
     val onHideAdFreeBadge: () -> Unit,
     val onShare: (Note) -> Unit,
     val onExportTxt: (Note) -> Unit,
+    val onOpenShop: () -> Unit = {},
+    val onOpenStats: () -> Unit = {},
+    val onOpenTemplates: () -> Unit = {},
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -216,6 +222,9 @@ fun HomeScreen(
                 onTrash = { closeDrawerThen(actions.onOpenTrash) },
                 onCategories = { closeDrawerThen(actions.onOpenCategories) },
                 onSettings = { closeDrawerThen(actions.onOpenSettings) },
+                onShop = { closeDrawerThen(actions.onOpenShop) },
+                onStats = { closeDrawerThen(actions.onOpenStats) },
+                onTemplates = { closeDrawerThen(actions.onOpenTemplates) },
                 onPremium = { closeDrawerThen(actions.onOpenPremium) },
             )
         },
@@ -893,6 +902,9 @@ private fun AppDrawer(
     onCategories: () -> Unit,
     onSettings: () -> Unit,
     onPremium: () -> Unit,
+    onShop: () -> Unit = {},
+    onStats: () -> Unit = {},
+    onTemplates: () -> Unit = {},
 ) {
     val extras = LocalAppExtras.current
     ModalDrawerSheet(drawerContainerColor = MaterialTheme.colorScheme.background, modifier = Modifier.width(300.dp)) {
@@ -920,6 +932,9 @@ private fun AppDrawer(
         item(Icons.Outlined.Delete, R.string.trash_title, onClick = onTrash)
         HorizontalDivider(Modifier.padding(horizontal = 28.dp, vertical = 8.dp), color = extras.cardBorder)
         item(Icons.Outlined.Category, R.string.categories_title, onClick = onCategories)
+        item(Icons.Outlined.Description, R.string.drawer_templates, onClick = onTemplates)
+        item(Icons.Outlined.BarChart, R.string.drawer_stats, onClick = onStats)
+        item(Icons.Outlined.Palette, R.string.drawer_shop, onClick = onShop)
         item(Icons.Outlined.Settings, R.string.settings_title, onClick = onSettings)
         if (showPremium) item(Icons.Outlined.WorkspacePremium, R.string.premium_unlock, onClick = onPremium)
     }

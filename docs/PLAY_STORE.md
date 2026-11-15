@@ -1,5 +1,106 @@
 # Google Play – Store-Texte
 
+## Version 2.4 (versionCode 7) – Release-Name: `2.4 – Designs & Vorlagen`
+
+**de-DE** (428 Zeichen)
+```
+Version 2.4 – Designs & Vorlagen:
+• Neu: Design-Shop mit 7 Designs und 4 Papiermustern (liniert, kariert, Punktraster)
+• Kostenlos: Leder & Papier, Graphit, Glatt und Liniert
+• Premium-Designs 30 Sekunden live ansehen – Kauf folgt bald
+• 6 Vorlagen: Einkaufsliste, Besprechung, Packliste, Wochenplan, Rezept, Tagebuch
+• Statistik: Notizen, erledigte Punkte, Aktivität der letzten 14 Tage
+Alle Notizen und Käufe bleiben erhalten.
+```
+
+**en-US** (417 Zeichen)
+```
+Version 2.4 – Designs & templates:
+• New: design shop with 7 designs and 4 paper styles (lined, squared, dotted)
+• Free: Leather & Paper, Graphite, Plain and Lined
+• Try premium designs live for 30 seconds – purchase coming soon
+• 6 templates: shopping list, meeting, packing list, weekly plan, recipe, journal
+• Statistics: notes, ticked-off items, activity of the last 14 days
+All your notes and purchases are kept.
+```
+
+**es-ES** (410 Zeichen)
+```
+Versión 2.4 – Diseños y plantillas:
+• Nuevo: tienda con 7 diseños y 4 tipos de papel (rayado, cuadriculado, punteado)
+• Gratis: Cuero y papel, Grafito, Liso y Rayado
+• Prueba los diseños Premium 30 segundos – la compra llegará pronto
+• 6 plantillas: compra, reunión, equipaje, plan semanal, receta, diario
+• Estadísticas: notas, tareas hechas, actividad de los últimos 14 días
+Tus notas y compras se mantienen.
+```
+
+**fr-FR** (405 Zeichen)
+```
+Version 2.4 – Thèmes et modèles :
+• Nouveau : boutique avec 7 thèmes et 4 papiers (ligné, quadrillé, pointillé)
+• Gratuits : Cuir & papier, Graphite, Uni et Ligné
+• Essaie les thèmes Premium 30 secondes – achat bientôt disponible
+• 6 modèles : courses, réunion, bagages, planning, recette, journal
+• Statistiques : notes, éléments cochés, activité des 14 derniers jours
+Tes notes et achats sont conservés.
+```
+
+**it-IT** (400 Zeichen)
+```
+Versione 2.4 – Temi e modelli:
+• Novità: negozio con 7 temi e 4 tipi di carta (a righe, a quadretti, a puntini)
+• Gratis: Pelle e carta, Grafite, Liscio e A righe
+• Prova i temi Premium per 30 secondi – acquisto in arrivo
+• 6 modelli: spesa, riunione, bagagli, piano settimanale, ricetta, diario
+• Statistiche: note, voci completate, attività degli ultimi 14 giorni
+Note e acquisti restano invariati.
+```
+
+**pt-BR** (397 Zeichen)
+```
+Versão 2.4 – Temas e modelos:
+• Novo: loja com 7 temas e 4 tipos de papel (pautado, quadriculado, pontilhado)
+• Grátis: Couro e papel, Grafite, Liso e Pautado
+• Experimente os temas Premium por 30 segundos – compra em breve
+• 6 modelos: compras, reunião, mala, plano semanal, receita, diário
+• Estatísticas: notas, itens concluídos, atividade dos últimos 14 dias
+Suas notas e compras são mantidas.
+```
+
+**pl-PL** (399 Zeichen)
+```
+Wersja 2.4 – Motywy i szablony:
+• Nowość: sklep z 7 motywami i 4 rodzajami papieru (w linie, w kratkę, w kropki)
+• Za darmo: Skóra i papier, Grafit, Gładki i W linie
+• Wypróbuj motywy Premium przez 30 sekund – zakup wkrótce
+• 6 szablonów: zakupy, spotkanie, pakowanie, plan tygodnia, przepis, dziennik
+• Statystyki: notatki, odhaczone punkty, aktywność z 14 dni
+Notatki i zakupy pozostają bez zmian.
+```
+
+**ru-RU** (384 Zeichen)
+```
+Версия 2.4 – Темы и шаблоны:
+• Новое: магазин с 7 темами и 4 видами бумаги (в линейку, в клетку, в точку)
+• Бесплатно: Кожа и бумага, Графит, Гладкая и В линейку
+• Премиум-темы можно смотреть 30 секунд – покупка скоро
+• 6 шаблонов: покупки, встреча, вещи, план недели, рецепт, дневник
+• Статистика: заметки, выполненные пункты, активность за 14 дней
+Все заметки и покупки сохраняются.
+```
+
+**tr-TR** (386 Zeichen)
+```
+Sürüm 2.4 – Temalar ve şablonlar:
+• Yeni: 7 tema ve 4 kâğıt türü (çizgili, kareli, noktalı) içeren mağaza
+• Ücretsiz: Deri ve kâğıt, Grafit, Düz ve Çizgili
+• Premium temaları 30 saniye canlı dene – satın alma yakında
+• 6 şablon: alışveriş, toplantı, bavul, haftalık plan, tarif, günlük
+• İstatistik: notlar, tamamlananlar, son 14 günün etkinliği
+Tüm notların ve satın alımların korunur.
+```
+
 ## Version 2.3 (versionCode 6) – Release-Name: `2.3 – 9 Sprachen`
 
 **de-DE** (321 Zeichen)

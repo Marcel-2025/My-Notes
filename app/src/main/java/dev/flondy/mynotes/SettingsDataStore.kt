@@ -42,6 +42,9 @@ class SettingsDataStore(private val context: Context) {
         val DEBUG_FORCE_AD_FREE = booleanPreferencesKey("debug_force_ad_free")
         val CATEGORIES_SEEDED = booleanPreferencesKey("categories_seeded")
         val AD_FREE_CACHE = booleanPreferencesKey("ad_free_entitlement_cache")
+        val SKIN = stringPreferencesKey("skin")
+        val PAPER_PATTERN = stringPreferencesKey("paper_pattern")
+        val DEBUG_UNLOCK_ALL = booleanPreferencesKey("debug_unlock_all")
 
         private inline fun <reified T : Enum<T>> parse(value: String?, default: T): T =
             value?.let { v -> enumValues<T>().firstOrNull { it.name == v } } ?: default
@@ -68,6 +71,10 @@ class SettingsDataStore(private val context: Context) {
             appIcon = p[APP_ICON] ?: "DEFAULT",
             trashRetentionDays = p[TRASH_RETENTION] ?: 30,
             debugForceAdFree = BuildConfig.DEBUG && (p[DEBUG_FORCE_AD_FREE] ?: false),
+            skin = p[SKIN] ?: "LEATHER",
+            paperPattern = p[PAPER_PATTERN] ?: "PLAIN",
+            // Ohne Store-Kauf gibt es keine Freischaltung; der Test-Schalter wirkt nur in Debug-Builds.
+            unlocked = if (BuildConfig.DEBUG && (p[DEBUG_UNLOCK_ALL] ?: false)) setOf("all") else emptySet(),
         )
     }
 
@@ -97,5 +104,8 @@ class SettingsDataStore(private val context: Context) {
      * Wird bei jedem Start durch die Abfrage bei Google Play bestätigt oder widerrufen.
      */
     val adFreeCacheFlow: Flow<Boolean> = context.dataStore.data.map { it[AD_FREE_CACHE] ?: false }
+    suspend fun setSkin(value: String) = context.dataStore.edit { it[SKIN] = value }
+    suspend fun setPaperPattern(value: String) = context.dataStore.edit { it[PAPER_PATTERN] = value }
+    suspend fun setDebugUnlockAll(value: Boolean) = context.dataStore.edit { it[DEBUG_UNLOCK_ALL] = value }
     suspend fun setAdFreeCache(value: Boolean) = context.dataStore.edit { it[AD_FREE_CACHE] = value }
 }

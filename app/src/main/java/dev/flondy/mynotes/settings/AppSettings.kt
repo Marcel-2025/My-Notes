@@ -30,5 +30,10 @@ data class AppSettings(
     val showAdFreeBadge: Boolean = true,
     val appIcon: String = "DEFAULT",
     val trashRetentionDays: Int = 30,
+    /** 2.4: gewähltes Design (Skin.name) und Papiermuster (PaperPattern.name). */
+    val skin: String = "LEATHER",
+    val paperPattern: String = "PLAIN",
+    /** 2.4: freigeschaltete Premium-Inhalte (z. B. „skin:MIDNIGHT“). Ohne Kauf leer; „all“ nur zum Testen. */
+    val unlocked: Set<String> = emptySet(),
     val debugForceAdFree: Boolean = false,
 )
