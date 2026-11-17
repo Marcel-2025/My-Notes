@@ -67,6 +67,7 @@ import dev.flondy.mynotes.ui.theme.LocalAppExtras
 import dev.flondy.mynotes.ui.theme.isAppInDarkTheme
 import dev.flondy.mynotes.ui.trash.TrashScreen
 import dev.flondy.mynotes.ui.shop.ShopActions
+import dev.flondy.mynotes.ui.shop.ShopOffers
 import dev.flondy.mynotes.ui.shop.ShopScreen
 import dev.flondy.mynotes.ui.shop.TemplatePickerDialog
 import dev.flondy.mynotes.ui.stats.StatsScreen
@@ -165,6 +166,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
         settingsVm.billingEvents.collect { event ->
             val msg = when (event) {
                 BillingManager.Event.PurchaseSuccess -> R.string.billing_success
+                BillingManager.Event.ShopPurchaseSuccess -> R.string.billing_shop_success
                 BillingManager.Event.PurchasePending -> R.string.premium_pending
                 BillingManager.Event.PurchaseCanceled -> R.string.billing_canceled
                 BillingManager.Event.AlreadyOwned -> R.string.billing_already_owned
@@ -265,6 +267,18 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                         onUsePattern = settingsVm::setPaperPattern,
                         onTemplate = { t -> notesVm.openTemplate(t) },
                         onDebugUnlock = if (BuildConfig.DEBUG) { on -> settingsVm.setDebugUnlockAll(on) } else null,
+                        offers = ShopOffers(
+                            designPackPrice = premium.designPackPrice,
+                            plusMonthlyPrice = premium.plusMonthlyPrice,
+                            plusYearlyPrice = premium.plusYearlyPrice,
+                            designPack = premium.designPack,
+                            plusActive = premium.plusActive,
+                            plusIncludesNoAds = true,
+                            onBuyPack = { settingsVm.purchaseDesignPack(activity) },
+                            onBuyPlus = { yearly -> settingsVm.purchasePlus(activity, yearly) },
+                            onRestore = settingsVm::restorePurchases,
+                            onManageSubs = { context.openUrl("https://play.google.com/store/account/subscriptions?sku=premium_plus&package=dev.flondy.mynotes") },
+                        ),
                     ),
                 )
                 Route.TRASH -> TrashScreen(

@@ -341,4 +341,24 @@
     <string name="settings_design">Design &amp; paper</string>
     <string name="settings_design_desc">Open the design shop</string>
     <string name="debug_unlock_all">Unlock all premium content (test only)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Design pack</string>
+    <string name="shop_pack_desc">All premium designs and paper styles – yours forever with a one-time purchase.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">All premium designs and paper styles for as long as your subscription runs.</string>
+    <string name="shop_plus_desc_ads">All premium designs and paper styles plus no ads, for as long as your subscription runs.</string>
+    <string name="shop_buy_once">Buy once · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / month</string>
+    <string name="shop_plus_yearly">%1$s / year</string>
+    <string name="shop_not_available">Coming soon</string>
+    <string name="shop_owned">Unlocked</string>
+    <string name="shop_plus_active">Subscription active</string>
+    <string name="shop_unlock">Unlock</string>
+    <string name="shop_restore">Restore purchases</string>
+    <string name="shop_manage_subs">Manage subscription</string>
+    <string name="shop_sub_terms">Renews automatically. Cancel anytime in the store’s subscription settings. Prices come from the store.</string>
+    <string name="shop_premium_info_25">Unlock premium designs with the design pack (one-time) or Premium Plus (subscription). Your ad-free purchase stays as it is.</string>
+    <string name="billing_shop_success">Thank you! All designs are unlocked.</string>
+    <string name="shop_store_unavailable">Purchases only work in the Microsoft Store version.</string>
 </resources>

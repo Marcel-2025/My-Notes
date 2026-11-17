@@ -340,4 +340,24 @@
     <string name="settings_design">Tema ve kâğıt</string>
     <string name="settings_design_desc">Tema mağazasını aç</string>
     <string name="debug_unlock_all">Tüm Premium içeriği aç (yalnızca test)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Tema paketi</string>
+    <string name="shop_pack_desc">Tüm Premium temalar ve kâğıtlar – tek seferlik satın almayla kalıcı.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">Aboneliğin sürdüğü sürece tüm Premium temalar ve kâğıtlar.</string>
+    <string name="shop_plus_desc_ads">Aboneliğin sürdüğü sürece tüm Premium temalar, kâğıtlar ve reklamsız kullanım.</string>
+    <string name="shop_buy_once">Tek seferlik al · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / ay</string>
+    <string name="shop_plus_yearly">%1$s / yıl</string>
+    <string name="shop_not_available">Yakında</string>
+    <string name="shop_owned">Açıldı</string>
+    <string name="shop_plus_active">Abonelik etkin</string>
+    <string name="shop_unlock">Kilidi aç</string>
+    <string name="shop_restore">Satın alımları geri yükle</string>
+    <string name="shop_manage_subs">Aboneliği yönet</string>
+    <string name="shop_sub_terms">Otomatik olarak yenilenir. Mağazanın abonelik ayarlarından istediğin zaman iptal edebilirsin. Fiyatlar mağazadan gelir.</string>
+    <string name="shop_premium_info_25">Premium temaları tema paketiyle (tek seferlik) veya Premium Plus ile (abonelik) aç. Reklamsız satın alımın aynen kalır.</string>
+    <string name="billing_shop_success">Teşekkürler! Tüm temalar açıldı.</string>
+    <string name="shop_store_unavailable">Satın alımlar yalnızca Microsoft Store sürümünde çalışır.</string>
 </resources>

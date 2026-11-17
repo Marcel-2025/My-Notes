@@ -342,4 +342,24 @@
     <string name="settings_design">Tema e carta</string>
     <string name="settings_design_desc">Apri il negozio temi</string>
     <string name="debug_unlock_all">Sblocca tutti i contenuti Premium (solo test)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Pacchetto temi</string>
+    <string name="shop_pack_desc">Tutti i temi e le carte Premium, per sempre con un acquisto singolo.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">Tutti i temi e le carte Premium finché l’abbonamento è attivo.</string>
+    <string name="shop_plus_desc_ads">Tutti i temi e le carte Premium e niente pubblicità finché l’abbonamento è attivo.</string>
+    <string name="shop_buy_once">Acquista una volta · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / mese</string>
+    <string name="shop_plus_yearly">%1$s / anno</string>
+    <string name="shop_not_available">Presto disponibile</string>
+    <string name="shop_owned">Sbloccato</string>
+    <string name="shop_plus_active">Abbonamento attivo</string>
+    <string name="shop_unlock">Sblocca</string>
+    <string name="shop_restore">Ripristina acquisti</string>
+    <string name="shop_manage_subs">Gestisci abbonamento</string>
+    <string name="shop_sub_terms">Si rinnova automaticamente. Puoi annullare in qualsiasi momento nelle impostazioni abbonamenti dello store. I prezzi provengono dallo store.</string>
+    <string name="shop_premium_info_25">Sblocca i temi Premium con il pacchetto temi (acquisto singolo) o Premium Plus (abbonamento). Il tuo acquisto senza pubblicità resta invariato.</string>
+    <string name="billing_shop_success">Grazie! Tutti i temi sono sbloccati.</string>
+    <string name="shop_store_unavailable">Gli acquisti funzionano solo nella versione del Microsoft Store.</string>
 </resources>

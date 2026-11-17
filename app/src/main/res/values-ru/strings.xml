@@ -346,4 +346,24 @@
     <string name="settings_design">Тема и бумага</string>
     <string name="settings_design_desc">Открыть магазин тем</string>
     <string name="debug_unlock_all">Открыть весь премиум-контент (только тест)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Премиум</string>
+    <string name="shop_pack_title">Пакет тем</string>
+    <string name="shop_pack_desc">Все премиум-темы и виды бумаги – навсегда, разовая покупка.</string>
+    <string name="shop_plus_title">Премиум Плюс</string>
+    <string name="shop_plus_desc">Все премиум-темы и бумага, пока действует подписка.</string>
+    <string name="shop_plus_desc_ads">Все премиум-темы и бумага и без рекламы, пока действует подписка.</string>
+    <string name="shop_buy_once">Купить один раз · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / месяц</string>
+    <string name="shop_plus_yearly">%1$s / год</string>
+    <string name="shop_not_available">Скоро</string>
+    <string name="shop_owned">Открыто</string>
+    <string name="shop_plus_active">Подписка активна</string>
+    <string name="shop_unlock">Открыть</string>
+    <string name="shop_restore">Восстановить покупки</string>
+    <string name="shop_manage_subs">Управлять подпиской</string>
+    <string name="shop_sub_terms">Продлевается автоматически. Отменить можно в любое время в настройках подписок магазина. Цены – из магазина.</string>
+    <string name="shop_premium_info_25">Открой премиум-темы пакетом тем (разово) или Премиум Плюс (подписка). Покупка без рекламы остаётся в силе.</string>
+    <string name="billing_shop_success">Спасибо! Все темы открыты.</string>
+    <string name="shop_store_unavailable">Покупки работают только в версии из Microsoft Store.</string>
 </resources>

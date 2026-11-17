@@ -343,4 +343,24 @@
     <string name="settings_design">Thème &amp; papier</string>
     <string name="settings_design_desc">Ouvrir la boutique de thèmes</string>
     <string name="debug_unlock_all">Débloquer tout le contenu Premium (test uniquement)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Pack de thèmes</string>
+    <string name="shop_pack_desc">Tous les thèmes et papiers Premium – pour toujours avec un achat unique.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">Tous les thèmes et papiers Premium tant que ton abonnement est actif.</string>
+    <string name="shop_plus_desc_ads">Tous les thèmes et papiers Premium et sans pub tant que ton abonnement est actif.</string>
+    <string name="shop_buy_once">Acheter une fois · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / mois</string>
+    <string name="shop_plus_yearly">%1$s / an</string>
+    <string name="shop_not_available">Bientôt disponible</string>
+    <string name="shop_owned">Débloqué</string>
+    <string name="shop_plus_active">Abonnement actif</string>
+    <string name="shop_unlock">Débloquer</string>
+    <string name="shop_restore">Restaurer les achats</string>
+    <string name="shop_manage_subs">Gérer l’abonnement</string>
+    <string name="shop_sub_terms">Renouvellement automatique. Résiliable à tout moment dans les réglages d’abonnement de la boutique. Les prix viennent de la boutique.</string>
+    <string name="shop_premium_info_25">Débloque les thèmes Premium avec le pack de thèmes (achat unique) ou Premium Plus (abonnement). Ton achat sans pub reste inchangé.</string>
+    <string name="billing_shop_success">Merci ! Tous les thèmes sont débloqués.</string>
+    <string name="shop_store_unavailable">Les achats ne fonctionnent que dans la version du Microsoft Store.</string>
 </resources>

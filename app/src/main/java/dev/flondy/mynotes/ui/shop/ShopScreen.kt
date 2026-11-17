@@ -92,6 +92,25 @@ data class ShopActions(
     val onTemplate: (NoteTemplate) -> Unit,
     /** Nur in Test-Builds gesetzt: alle Premium-Inhalte freischalten. */
     val onDebugUnlock: ((Boolean) -> Unit)? = null,
+    /** 2.5: Kaufangebote (null = Plattform ohne Käufe). */
+    val offers: ShopOffers? = null,
+)
+
+/** Kaufangebote im Shop. Preise kommen immer aus dem Store; null = Produkt (noch) nicht angelegt → „Bald verfügbar“. */
+data class ShopOffers(
+    val designPackPrice: String? = null,
+    val plusMonthlyPrice: String? = null,
+    val plusYearlyPrice: String? = null,
+    val designPack: Boolean = false,
+    val plusActive: Boolean = false,
+    /** Android: Premium Plus enthält auch „keine Werbung“. */
+    val plusIncludesNoAds: Boolean = false,
+    /** Windows: nicht aus dem Microsoft Store installiert → keine Käufe möglich. */
+    val storeUnavailable: Boolean = false,
+    val onBuyPack: () -> Unit = {},
+    val onBuyPlus: (yearly: Boolean) -> Unit = {},
+    val onRestore: (() -> Unit)? = null,
+    val onManageSubs: (() -> Unit)? = null,
 )
 
 /**
@@ -128,6 +147,7 @@ fun ShopScreen(settings: AppSettings, actions: ShopActions) {
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 item(span = { GridItemSpan(maxLineSpan) }) { Intro(actions, settings) }
+                actions.offers?.let { o -> item(span = { GridItemSpan(maxLineSpan) }) { PremiumOffers(o) } }
                 item(span = { GridItemSpan(maxLineSpan) }) { SectionTitle(stringResource(R.string.shop_section_skins)) }
                 itemsIndexed(Skin.entries, key = { _, s -> "skin_" + s.name }) { i, skin ->
                     val unlocked = Entitlements.skinUnlocked(skin, settings.unlocked)
@@ -137,6 +157,7 @@ fun ShopScreen(settings: AppSettings, actions: ShopActions) {
                         tag = "shop_skin_" + skin.name.lowercase(),
                         onUse = { ShopPreview.stop(); actions.onUseSkin(skin) },
                         onPreview = { ShopPreview.start(skin = skin) },
+                        onUnlock = actions.offers?.takeIf { it.designPackPrice != null && !it.storeUnavailable }?.onBuyPack,
                     ) { SkinPreview(skin.p) }
                 }
                 item(span = { GridItemSpan(maxLineSpan) }) { SectionTitle(stringResource(R.string.shop_section_paper)) }
@@ -148,6 +169,7 @@ fun ShopScreen(settings: AppSettings, actions: ShopActions) {
                         tag = "shop_paper_" + p.name.lowercase(),
                         onUse = { ShopPreview.stop(); actions.onUsePattern(p) },
                         onPreview = { ShopPreview.start(pattern = p) },
+                        onUnlock = actions.offers?.takeIf { it.designPackPrice != null && !it.storeUnavailable }?.onBuyPack,
                     ) { PaperPreview(p) }
                 }
                 item(span = { GridItemSpan(maxLineSpan) }) { SectionTitle(stringResource(R.string.shop_section_templates)) }
@@ -170,7 +192,7 @@ private fun Intro(actions: ShopActions, settings: AppSettings) {
         ) {
             Icon(Icons.Outlined.WorkspacePremium, null, tint = if (extras.isDark) extras.accent else extras.leather)
             Spacer(Modifier.width(12.dp))
-            Text(stringResource(R.string.shop_premium_info), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+            Text(stringResource(if (actions.offers != null) R.string.shop_premium_info_25 else R.string.shop_premium_info), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
         }
         if (actions.onDebugUnlock != null) {
             Row(Modifier.fillMaxWidth().padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -208,7 +230,7 @@ private fun PreviewBanner(now: Long) {
 @Composable
 private fun ShopCard(
     index: Int, title: String, premium: Boolean, unlocked: Boolean, active: Boolean, previewing: Boolean, tag: String,
-    onUse: () -> Unit, onPreview: () -> Unit, preview: @Composable () -> Unit,
+    onUse: () -> Unit, onPreview: () -> Unit, onUnlock: (() -> Unit)? = null, preview: @Composable () -> Unit,
 ) {
     val extras = LocalAppExtras.current
     val appear = remember { Animatable(0f) }
@@ -249,9 +271,9 @@ private fun ShopCard(
                             Icon(Icons.Outlined.Visibility, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp)); Text(stringResource(R.string.shop_preview))
                         }
                         Spacer(Modifier.height(6.dp))
-                        OutlinedButton(onClick = {}, enabled = false, modifier = Modifier.fillMaxWidth()) {
+                        OutlinedButton(onClick = { onUnlock?.invoke() }, enabled = onUnlock != null, modifier = Modifier.fillMaxWidth().testTag(tag + "_unlock")) {
                             Icon(Icons.Filled.Lock, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp))
-                            Text(stringResource(R.string.shop_unlock_soon), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            Text(stringResource(if (onUnlock != null) R.string.shop_unlock else R.string.shop_unlock_soon), maxLines = 1, overflow = TextOverflow.Ellipsis)
                         }
                         Text(stringResource(R.string.shop_locked_hint), style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 6.dp))
@@ -351,3 +373,88 @@ private fun TemplateCard(t: NoteTemplate, index: Int, onUse: () -> Unit) {
     }
 }
 
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+/** Premium-Bereich: Design-Paket (Einmalkauf) und Premium Plus (Abo, monatlich/jährlich). */
+@Composable
+private fun PremiumOffers(o: ShopOffers) {
+    val extras = LocalAppExtras.current
+    Column(Modifier.fillMaxWidth()) {
+        SectionTitle(stringResource(R.string.shop_section_premium))
+        Spacer(Modifier.height(10.dp))
+        if (o.storeUnavailable) {
+            Text(stringResource(R.string.shop_store_unavailable), style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(bottom = 10.dp))
+        }
+        androidx.compose.foundation.layout.FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(14.dp), verticalArrangement = Arrangement.spacedBy(14.dp),
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            OfferCard(
+                title = stringResource(R.string.shop_pack_title), desc = stringResource(R.string.shop_pack_desc),
+                tag = "offer_pack", highlight = false, owned = o.designPack, ownedLabel = stringResource(R.string.shop_owned),
+            ) {
+                val price = o.designPackPrice
+                Button(onClick = o.onBuyPack, enabled = price != null && !o.storeUnavailable, modifier = Modifier.fillMaxWidth().testTag("offer_pack_buy"),
+                    colors = ButtonDefaults.buttonColors(containerColor = extras.accent, contentColor = extras.onAccent)) {
+                    Text(if (price != null) stringResource(R.string.shop_buy_once, price) else stringResource(R.string.shop_not_available))
+                }
+            }
+            OfferCard(
+                title = stringResource(R.string.shop_plus_title),
+                desc = stringResource(if (o.plusIncludesNoAds) R.string.shop_plus_desc_ads else R.string.shop_plus_desc),
+                tag = "offer_plus", highlight = true, owned = o.plusActive, ownedLabel = stringResource(R.string.shop_plus_active),
+            ) {
+                val m = o.plusMonthlyPrice; val y = o.plusYearlyPrice
+                Button(onClick = { o.onBuyPlus(false) }, enabled = m != null && !o.storeUnavailable, modifier = Modifier.fillMaxWidth().testTag("offer_plus_monthly"),
+                    colors = ButtonDefaults.buttonColors(containerColor = extras.accent, contentColor = extras.onAccent)) {
+                    Text(if (m != null) stringResource(R.string.shop_plus_monthly, m) else stringResource(R.string.shop_not_available))
+                }
+                if (y != null) {
+                    Spacer(Modifier.height(6.dp))
+                    OutlinedButton(onClick = { o.onBuyPlus(true) }, enabled = !o.storeUnavailable, modifier = Modifier.fillMaxWidth().testTag("offer_plus_yearly")) {
+                        Text(stringResource(R.string.shop_plus_yearly, y))
+                    }
+                }
+                Text(stringResource(R.string.shop_sub_terms), style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 6.dp))
+            }
+        }
+        Row(Modifier.padding(top = 6.dp)) {
+            o.onRestore?.let { TextButton(onClick = it, modifier = Modifier.testTag("offer_restore")) { Text(stringResource(R.string.shop_restore)) } }
+            if (o.plusActive) o.onManageSubs?.let { TextButton(onClick = it) { Text(stringResource(R.string.shop_manage_subs)) } }
+        }
+    }
+}
+
+@Composable
+private fun OfferCard(
+    title: String, desc: String, tag: String, highlight: Boolean, owned: Boolean, ownedLabel: String,
+    buttons: @Composable () -> Unit,
+) {
+    val extras = LocalAppExtras.current
+    Surface(
+        shape = RoundedCornerShape(22.dp), color = extras.card,
+        border = BorderStroke(if (highlight) 2.dp else 1.dp, if (highlight) extras.accent else extras.cardBorder),
+        shadowElevation = if (highlight) 6.dp else 2.dp,
+        modifier = Modifier.widthIn(min = 260.dp, max = 420.dp).testTag(tag),
+    ) {
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Outlined.WorkspacePremium, null, tint = if (extras.isDark) extras.accent else extras.leather)
+                Spacer(Modifier.width(8.dp))
+                Text(title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
+                PriceBadge(true)
+            }
+            Spacer(Modifier.height(6.dp))
+            Text(desc, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(Modifier.height(12.dp))
+            if (owned) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Filled.CheckCircle, null, tint = extras.leaf)
+                    Spacer(Modifier.width(6.dp))
+                    Text(ownedLabel, style = MaterialTheme.typography.labelLarge)
+                }
+            } else buttons()
+        }
+    }
+}

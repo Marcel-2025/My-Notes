@@ -1,5 +1,90 @@
 # Google Play – Store-Texte
 
+## Version 2.5 (versionCode 8) – Release-Name: `2.5 – Premium-Designs`
+
+**de-DE** (415 Zeichen)
+```
+Version 2.5 – Premium-Designs freischalten:
+• Neu: Design-Paket – alle Premium-Designs und Papiermuster dauerhaft mit einem Einmalkauf
+• Neu: Premium Plus (Abo, monatlich oder jährlich) – alle Premium-Designs und Papiere plus keine Werbung, jederzeit kündbar
+• Käufe wiederherstellen direkt im Design-Shop
+• Preise kommen direkt aus Google Play
+Dein Werbefrei-Kauf bleibt unverändert. Alle Notizen bleiben erhalten.
+```
+
+**en-US** (390 Zeichen)
+```
+Version 2.5 – unlock premium designs:
+• New: design pack – all premium designs and paper styles forever with a one-time purchase
+• New: Premium Plus (monthly or yearly subscription) – all premium designs and papers plus no ads, cancel anytime
+• Restore purchases right in the design shop
+• Prices come straight from Google Play
+Your ad-free purchase stays as it is. All your notes are kept.
+```
+
+**es-ES** (381 Zeichen)
+```
+Versión 2.5 – desbloquea diseños Premium:
+• Nuevo: paquete de diseños – todos los diseños y papeles Premium para siempre con una compra única
+• Nuevo: Premium Plus (suscripción mensual o anual) – todos los diseños y papeles Premium y sin anuncios, cancelable cuando quieras
+• Restaurar compras en la tienda de diseños
+Tu compra sin anuncios no cambia. Se conservan todas tus notas.
+```
+
+**fr-FR** (382 Zeichen)
+```
+Version 2.5 – débloque les thèmes Premium :
+• Nouveau : pack de thèmes – tous les thèmes et papiers Premium pour toujours avec un achat unique
+• Nouveau : Premium Plus (abonnement mensuel ou annuel) – tous les thèmes et papiers Premium et sans pub, résiliable à tout moment
+• Restaurer les achats dans la boutique
+Ton achat sans pub reste inchangé. Toutes tes notes sont conservées.
+```
+
+**it-IT** (381 Zeichen)
+```
+Versione 2.5 – sblocca i temi Premium:
+• Novità: pacchetto temi – tutti i temi e le carte Premium per sempre con un acquisto singolo
+• Novità: Premium Plus (abbonamento mensile o annuale) – tutti i temi e le carte Premium e niente pubblicità, annullabile in qualsiasi momento
+• Ripristina acquisti nel negozio temi
+Il tuo acquisto senza pubblicità resta invariato. Le note restano.
+```
+
+**pt-BR** (354 Zeichen)
+```
+Versão 2.5 – desbloqueie temas Premium:
+• Novo: pacote de temas – todos os temas e papéis Premium para sempre com uma compra única
+• Novo: Premium Plus (assinatura mensal ou anual) – todos os temas e papéis Premium e sem anúncios, cancele quando quiser
+• Restaurar compras na loja de temas
+Sua compra sem anúncios continua igual. Suas notas são mantidas.
+```
+
+**pl-PL** (354 Zeichen)
+```
+Wersja 2.5 – odblokuj motywy Premium:
+• Nowość: pakiet motywów – wszystkie motywy i papiery Premium na zawsze, jednorazowy zakup
+• Nowość: Premium Plus (subskrypcja miesięczna lub roczna) – wszystkie motywy i papiery Premium oraz brak reklam, anuluj w każdej chwili
+• Przywracanie zakupów w sklepie z motywami
+Zakup bez reklam bez zmian. Notatki zostają.
+```
+
+**ru-RU** (322 Zeichen)
+```
+Версия 2.5 – открой премиум-темы:
+• Новое: пакет тем – все премиум-темы и бумага навсегда, разовая покупка
+• Новое: Премиум Плюс (подписка на месяц или год) – все премиум-темы и бумага и без рекламы, отмена в любое время
+• Восстановление покупок в магазине тем
+Покупка без рекламы остаётся в силе. Все заметки сохраняются.
+```
+
+**tr-TR** (347 Zeichen)
+```
+Sürüm 2.5 – Premium temaları aç:
+• Yeni: tema paketi – tüm Premium temalar ve kâğıtlar tek seferlik satın almayla kalıcı
+• Yeni: Premium Plus (aylık veya yıllık abonelik) – tüm Premium temalar, kâğıtlar ve reklamsız kullanım, istediğin zaman iptal
+• Satın alımları tema mağazasından geri yükle
+Reklamsız satın alımın aynen kalır. Notların korunur.
+```
+
 ## Version 2.4 (versionCode 7) – Release-Name: `2.4 – Designs & Vorlagen`
 
 **de-DE** (428 Zeichen)

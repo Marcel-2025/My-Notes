@@ -343,4 +343,24 @@
     <string name="settings_design">Tema e papel</string>
     <string name="settings_design_desc">Abrir a loja de temas</string>
     <string name="debug_unlock_all">Desbloquear todo o conteúdo Premium (só teste)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Pacote de temas</string>
+    <string name="shop_pack_desc">Todos os temas e papéis Premium – para sempre com uma compra única.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">Todos os temas e papéis Premium enquanto a assinatura estiver ativa.</string>
+    <string name="shop_plus_desc_ads">Todos os temas e papéis Premium e sem anúncios enquanto a assinatura estiver ativa.</string>
+    <string name="shop_buy_once">Comprar uma vez · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / mês</string>
+    <string name="shop_plus_yearly">%1$s / ano</string>
+    <string name="shop_not_available">Em breve</string>
+    <string name="shop_owned">Desbloqueado</string>
+    <string name="shop_plus_active">Assinatura ativa</string>
+    <string name="shop_unlock">Desbloquear</string>
+    <string name="shop_restore">Restaurar compras</string>
+    <string name="shop_manage_subs">Gerenciar assinatura</string>
+    <string name="shop_sub_terms">Renova automaticamente. Cancele quando quiser nas configurações de assinatura da loja. Os preços vêm da loja.</string>
+    <string name="shop_premium_info_25">Desbloqueie os temas Premium com o pacote de temas (compra única) ou Premium Plus (assinatura). Sua compra sem anúncios continua igual.</string>
+    <string name="billing_shop_success">Obrigado! Todos os temas estão desbloqueados.</string>
+    <string name="shop_store_unavailable">As compras só funcionam na versão da Microsoft Store.</string>
 </resources>

@@ -28,7 +28,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     /** Werbefrei = gültiger Kauf bei Google Play (oder Debug-Simulation, nur in Debug-Builds). */
     val premium: StateFlow<BillingManager.State> = combine(billing.state, store.settingsFlow) { state, s ->
-        if (BuildConfig.DEBUG && s.debugForceAdFree) state.copy(adFree = true, initialized = true) else state
+        // Premium Plus enthält Werbefreiheit, solange das Abo läuft (remove_ads bleibt davon unberührt)
+        val withPlus = if (state.plusActive) state.copy(adFree = true) else state
+        if (BuildConfig.DEBUG && s.debugForceAdFree) withPlus.copy(adFree = true, initialized = true) else withPlus
     }.stateIn(viewModelScope, SharingStarted.Eagerly, BillingManager.State())
 
     val billingEvents = billing.events
@@ -58,6 +60,9 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setDebugUnlockAll(value: Boolean) = viewModelScope.launch { if (BuildConfig.DEBUG) store.setDebugUnlockAll(value) }
 
     fun purchaseAdFree(activity: Activity) = billing.launchPurchase(activity)
+    fun purchaseDesignPack(activity: Activity) = billing.launchShopPurchase(activity, BillingManager.PRODUCT_DESIGN_PACK)
+    fun purchasePlus(activity: Activity, yearly: Boolean) = billing.launchShopPurchase(
+        activity, BillingManager.PRODUCT_PREMIUM_PLUS, if (yearly) BillingManager.BASE_PLAN_YEARLY else BillingManager.BASE_PLAN_MONTHLY)
     fun restorePurchases() = billing.refreshPurchases(userInitiated = true)
     fun refreshBilling() = billing.start()
 

@@ -353,4 +353,24 @@
     <string name="settings_design">Design &amp; Papier</string>
     <string name="settings_design_desc">Design-Shop öffnen</string>
     <string name="debug_unlock_all">Alle Premium-Inhalte freischalten (nur Test)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Design-Paket</string>
+    <string name="shop_pack_desc">Alle Premium-Designs und Papiermuster – dauerhaft mit einem Einmalkauf.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">Alle Premium-Designs und Papiermuster, solange dein Abo läuft.</string>
+    <string name="shop_plus_desc_ads">Alle Premium-Designs und Papiermuster und keine Werbung, solange dein Abo läuft.</string>
+    <string name="shop_buy_once">Einmalig kaufen · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / Monat</string>
+    <string name="shop_plus_yearly">%1$s / Jahr</string>
+    <string name="shop_not_available">Bald verfügbar</string>
+    <string name="shop_owned">Freigeschaltet</string>
+    <string name="shop_plus_active">Abo aktiv</string>
+    <string name="shop_unlock">Freischalten</string>
+    <string name="shop_restore">Käufe wiederherstellen</string>
+    <string name="shop_manage_subs">Abo verwalten</string>
+    <string name="shop_sub_terms">Verlängert sich automatisch. Jederzeit kündbar in den Abo-Einstellungen des Stores. Preise kommen aus dem Store.</string>
+    <string name="shop_premium_info_25">Premium-Designs freischalten mit dem Design-Paket (einmalig) oder Premium Plus (Abo). Dein Werbefrei-Kauf bleibt unverändert.</string>
+    <string name="billing_shop_success">Danke! Alle Designs sind freigeschaltet.</string>
+    <string name="shop_store_unavailable">Käufe funktionieren nur in der Version aus dem Microsoft Store.</string>
 </resources>

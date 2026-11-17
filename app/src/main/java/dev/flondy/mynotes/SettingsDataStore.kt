@@ -42,6 +42,9 @@ class SettingsDataStore(private val context: Context) {
         val DEBUG_FORCE_AD_FREE = booleanPreferencesKey("debug_force_ad_free")
         val CATEGORIES_SEEDED = booleanPreferencesKey("categories_seeded")
         val AD_FREE_CACHE = booleanPreferencesKey("ad_free_entitlement_cache")
+        // 2.5: Zwischenspeicher der Shop-Käufe (Quelle der Wahrheit bleibt Google Play)
+        val DESIGN_PACK_CACHE = booleanPreferencesKey("design_pack_entitlement_cache")
+        val PLUS_CACHE = booleanPreferencesKey("premium_plus_entitlement_cache")
         val SKIN = stringPreferencesKey("skin")
         val PAPER_PATTERN = stringPreferencesKey("paper_pattern")
         val DEBUG_UNLOCK_ALL = booleanPreferencesKey("debug_unlock_all")
@@ -74,7 +77,7 @@ class SettingsDataStore(private val context: Context) {
             skin = p[SKIN] ?: "LEATHER",
             paperPattern = p[PAPER_PATTERN] ?: "PLAIN",
             // Ohne Store-Kauf gibt es keine Freischaltung; der Test-Schalter wirkt nur in Debug-Builds.
-            unlocked = if (BuildConfig.DEBUG && (p[DEBUG_UNLOCK_ALL] ?: false)) setOf("all") else emptySet(),
+            unlocked = if ((BuildConfig.DEBUG && (p[DEBUG_UNLOCK_ALL] ?: false)) || (p[DESIGN_PACK_CACHE] ?: false) || (p[PLUS_CACHE] ?: false)) setOf("all") else emptySet(),
         )
     }
 
@@ -108,4 +111,7 @@ class SettingsDataStore(private val context: Context) {
     suspend fun setPaperPattern(value: String) = context.dataStore.edit { it[PAPER_PATTERN] = value }
     suspend fun setDebugUnlockAll(value: Boolean) = context.dataStore.edit { it[DEBUG_UNLOCK_ALL] = value }
     suspend fun setAdFreeCache(value: Boolean) = context.dataStore.edit { it[AD_FREE_CACHE] = value }
+
+    val premiumCacheFlow: Flow<Pair<Boolean, Boolean>> = context.dataStore.data.map { (it[DESIGN_PACK_CACHE] ?: false) to (it[PLUS_CACHE] ?: false) }
+    suspend fun setPremiumCache(designPack: Boolean, plus: Boolean) = context.dataStore.edit { it[DESIGN_PACK_CACHE] = designPack; it[PLUS_CACHE] = plus }
 }

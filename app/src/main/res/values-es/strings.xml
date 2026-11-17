@@ -342,4 +342,24 @@
     <string name="settings_design">Diseño y papel</string>
     <string name="settings_design_desc">Abrir la tienda de diseños</string>
     <string name="debug_unlock_all">Desbloquear todo el contenido Premium (solo prueba)</string>
+    <!-- 2.5: Käufe im Design-Shop -->
+    <string name="shop_section_premium">Premium</string>
+    <string name="shop_pack_title">Paquete de diseños</string>
+    <string name="shop_pack_desc">Todos los diseños y papeles Premium, para siempre con una sola compra.</string>
+    <string name="shop_plus_title">Premium Plus</string>
+    <string name="shop_plus_desc">Todos los diseños y papeles Premium mientras dure tu suscripción.</string>
+    <string name="shop_plus_desc_ads">Todos los diseños y papeles Premium y sin anuncios mientras dure tu suscripción.</string>
+    <string name="shop_buy_once">Comprar una vez · %1$s</string>
+    <string name="shop_plus_monthly">%1$s / mes</string>
+    <string name="shop_plus_yearly">%1$s / año</string>
+    <string name="shop_not_available">Próximamente</string>
+    <string name="shop_owned">Desbloqueado</string>
+    <string name="shop_plus_active">Suscripción activa</string>
+    <string name="shop_unlock">Desbloquear</string>
+    <string name="shop_restore">Restaurar compras</string>
+    <string name="shop_manage_subs">Gestionar suscripción</string>
+    <string name="shop_sub_terms">Se renueva automáticamente. Cancela cuando quieras en los ajustes de suscripción de la tienda. Los precios vienen de la tienda.</string>
+    <string name="shop_premium_info_25">Desbloquea los diseños Premium con el paquete de diseños (pago único) o Premium Plus (suscripción). Tu compra sin anuncios no cambia.</string>
+    <string name="billing_shop_success">¡Gracias! Todos los diseños están desbloqueados.</string>
+    <string name="shop_store_unavailable">Las compras solo funcionan en la versión de Microsoft Store.</string>
 </resources>
