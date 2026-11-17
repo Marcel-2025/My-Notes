@@ -359,6 +359,7 @@
     <string name="shop_restore">Ripristina acquisti</string>
     <string name="shop_manage_subs">Gestisci abbonamento</string>
     <string name="shop_sub_terms">Si rinnova automaticamente. Puoi annullare in qualsiasi momento nelle impostazioni abbonamenti dello store. I prezzi provengono dallo store.</string>
+    <string name="shop_trial_days">Prova gratis per %1$d giorni</string>
     <string name="shop_premium_info_25">Sblocca i temi Premium con il pacchetto temi (acquisto singolo) o Premium Plus (abbonamento). Il tuo acquisto senza pubblicità resta invariato.</string>
     <string name="billing_shop_success">Grazie! Tutti i temi sono sbloccati.</string>
     <string name="shop_store_unavailable">Gli acquisti funzionano solo nella versione del Microsoft Store.</string>

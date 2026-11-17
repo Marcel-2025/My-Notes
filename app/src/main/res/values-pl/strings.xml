@@ -362,6 +362,7 @@
     <string name="shop_restore">Przywróć zakupy</string>
     <string name="shop_manage_subs">Zarządzaj subskrypcją</string>
     <string name="shop_sub_terms">Odnawia się automatycznie. Anuluj w dowolnej chwili w ustawieniach subskrypcji sklepu. Ceny pochodzą ze sklepu.</string>
+    <string name="shop_trial_days">Wypróbuj za darmo przez %1$d dni</string>
     <string name="shop_premium_info_25">Odblokuj motywy Premium pakietem motywów (jednorazowo) lub Premium Plus (subskrypcja). Twój zakup bez reklam pozostaje bez zmian.</string>
     <string name="billing_shop_success">Dziękujemy! Wszystkie motywy są odblokowane.</string>
     <string name="shop_store_unavailable">Zakupy działają tylko w wersji z Microsoft Store.</string>

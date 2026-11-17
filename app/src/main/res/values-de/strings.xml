@@ -370,6 +370,7 @@
     <string name="shop_restore">Käufe wiederherstellen</string>
     <string name="shop_manage_subs">Abo verwalten</string>
     <string name="shop_sub_terms">Verlängert sich automatisch. Jederzeit kündbar in den Abo-Einstellungen des Stores. Preise kommen aus dem Store.</string>
+    <string name="shop_trial_days">%1$d Tage gratis testen</string>
     <string name="shop_premium_info_25">Premium-Designs freischalten mit dem Design-Paket (einmalig) oder Premium Plus (Abo). Dein Werbefrei-Kauf bleibt unverändert.</string>
     <string name="billing_shop_success">Danke! Alle Designs sind freigeschaltet.</string>
     <string name="shop_store_unavailable">Käufe funktionieren nur in der Version aus dem Microsoft Store.</string>

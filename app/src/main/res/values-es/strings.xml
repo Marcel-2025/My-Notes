@@ -359,6 +359,7 @@
     <string name="shop_restore">Restaurar compras</string>
     <string name="shop_manage_subs">Gestionar suscripción</string>
     <string name="shop_sub_terms">Se renueva automáticamente. Cancela cuando quieras en los ajustes de suscripción de la tienda. Los precios vienen de la tienda.</string>
+    <string name="shop_trial_days">Prueba %1$d días gratis</string>
     <string name="shop_premium_info_25">Desbloquea los diseños Premium con el paquete de diseños (pago único) o Premium Plus (suscripción). Tu compra sin anuncios no cambia.</string>
     <string name="billing_shop_success">¡Gracias! Todos los diseños están desbloqueados.</string>
     <string name="shop_store_unavailable">Las compras solo funcionan en la versión de Microsoft Store.</string>

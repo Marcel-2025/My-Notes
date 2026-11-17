@@ -363,6 +363,7 @@
     <string name="shop_restore">Восстановить покупки</string>
     <string name="shop_manage_subs">Управлять подпиской</string>
     <string name="shop_sub_terms">Продлевается автоматически. Отменить можно в любое время в настройках подписок магазина. Цены – из магазина.</string>
+    <string name="shop_trial_days">%1$d дней бесплатно</string>
     <string name="shop_premium_info_25">Открой премиум-темы пакетом тем (разово) или Премиум Плюс (подписка). Покупка без рекламы остаётся в силе.</string>
     <string name="billing_shop_success">Спасибо! Все темы открыты.</string>
     <string name="shop_store_unavailable">Покупки работают только в версии из Microsoft Store.</string>

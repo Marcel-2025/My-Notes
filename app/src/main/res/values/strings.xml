@@ -358,6 +358,7 @@
     <string name="shop_restore">Restore purchases</string>
     <string name="shop_manage_subs">Manage subscription</string>
     <string name="shop_sub_terms">Renews automatically. Cancel anytime in the store’s subscription settings. Prices come from the store.</string>
+    <string name="shop_trial_days">Try %1$d days free</string>
     <string name="shop_premium_info_25">Unlock premium designs with the design pack (one-time) or Premium Plus (subscription). Your ad-free purchase stays as it is.</string>
     <string name="billing_shop_success">Thank you! All designs are unlocked.</string>
     <string name="shop_store_unavailable">Purchases only work in the Microsoft Store version.</string>

@@ -357,6 +357,7 @@
     <string name="shop_restore">Satın alımları geri yükle</string>
     <string name="shop_manage_subs">Aboneliği yönet</string>
     <string name="shop_sub_terms">Otomatik olarak yenilenir. Mağazanın abonelik ayarlarından istediğin zaman iptal edebilirsin. Fiyatlar mağazadan gelir.</string>
+    <string name="shop_trial_days">%1$d gün ücretsiz dene</string>
     <string name="shop_premium_info_25">Premium temaları tema paketiyle (tek seferlik) veya Premium Plus ile (abonelik) aç. Reklamsız satın alımın aynen kalır.</string>
     <string name="billing_shop_success">Teşekkürler! Tüm temalar açıldı.</string>
     <string name="shop_store_unavailable">Satın alımlar yalnızca Microsoft Store sürümünde çalışır.</string>

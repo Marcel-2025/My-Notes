@@ -360,6 +360,7 @@
     <string name="shop_restore">Restaurar compras</string>
     <string name="shop_manage_subs">Gerenciar assinatura</string>
     <string name="shop_sub_terms">Renova automaticamente. Cancele quando quiser nas configurações de assinatura da loja. Os preços vêm da loja.</string>
+    <string name="shop_trial_days">Teste grátis por %1$d dias</string>
     <string name="shop_premium_info_25">Desbloqueie os temas Premium com o pacote de temas (compra única) ou Premium Plus (assinatura). Sua compra sem anúncios continua igual.</string>
     <string name="billing_shop_success">Obrigado! Todos os temas estão desbloqueados.</string>
     <string name="shop_store_unavailable">As compras só funcionam na versão da Microsoft Store.</string>

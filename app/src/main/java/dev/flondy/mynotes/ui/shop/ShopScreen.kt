@@ -101,6 +101,8 @@ data class ShopOffers(
     val designPackPrice: String? = null,
     val plusMonthlyPrice: String? = null,
     val plusYearlyPrice: String? = null,
+    /** Gratis-Testphase in Tagen (nur wenn der Store sie diesem Nutzer anbietet). */
+    val plusTrialDays: Int? = null,
     val designPack: Boolean = false,
     val plusActive: Boolean = false,
     /** Android: Premium Plus enthält auch „keine Werbung“. */
@@ -413,6 +415,11 @@ private fun PremiumOffers(o: ShopOffers) {
                 tag = "offer_plus", highlight = true, owned = o.plusActive, ownedLabel = stringResource(R.string.shop_plus_active),
             ) {
                 val m = o.plusMonthlyPrice; val y = o.plusYearlyPrice
+                val trial = o.plusTrialDays
+                if (trial != null && m != null && !o.storeUnavailable) {
+                    Text(stringResource(R.string.shop_trial_days, trial), style = MaterialTheme.typography.labelLarge,
+                        color = extras.accent, modifier = Modifier.padding(bottom = 6.dp).testTag("offer_plus_trial"))
+                }
                 Button(onClick = { o.onBuyPlus(false) }, enabled = m != null && !o.storeUnavailable, modifier = Modifier.fillMaxWidth().testTag("offer_plus_monthly"),
                     colors = ButtonDefaults.buttonColors(containerColor = extras.accent, contentColor = extras.onAccent)) {
                     Text(if (m != null) stringResource(R.string.shop_plus_monthly, m) else stringResource(R.string.shop_not_available))

@@ -66,6 +66,8 @@ class BillingManager(
         val designPackPrice: String? = null,
         val plusMonthlyPrice: String? = null,
         val plusYearlyPrice: String? = null,
+        /** Länge der kostenlosen Testphase in Tagen, wenn Play dem Nutzer ein Probe-Angebot anbietet. */
+        val plusTrialDays: Int? = null,
         val shopQueried: Boolean = false,
     ) {
         val designPackAvailable: Boolean get() = designPackPrice != null
@@ -211,8 +213,28 @@ class BillingManager(
             plusDetails = d
             fun price(plan: String) = d?.subscriptionOfferDetails?.firstOrNull { it.basePlanId == plan && it.offerId == null }
                 ?.pricingPhases?.pricingPhaseList?.lastOrNull()?.formattedPrice
-            _state.update { it.copy(plusMonthlyPrice = price(BASE_PLAN_MONTHLY), plusYearlyPrice = price(BASE_PLAN_YEARLY), shopQueried = true) }
+            val trialDays = d?.subscriptionOfferDetails?.firstNotNullOfOrNull { trialDays(it) }
+            _state.update { it.copy(plusMonthlyPrice = price(BASE_PLAN_MONTHLY), plusYearlyPrice = price(BASE_PLAN_YEARLY),
+                plusTrialDays = trialDays, shopQueried = true) }
         }
+    }
+
+    /**
+     * Tage der Gratisphase eines Angebots (z. B. „trial-7-days“), sonst null.
+     * Play liefert nur Angebote, für die der Nutzer berechtigt ist – wer schon getestet hat, bekommt keins.
+     */
+    private fun trialDays(offer: ProductDetails.SubscriptionOfferDetails): Int? {
+        if (offer.offerId == null) return null
+        val free = offer.pricingPhases.pricingPhaseList.firstOrNull { it.priceAmountMicros == 0L } ?: return null
+        return periodDays(free.billingPeriod)
+    }
+
+    /** Angebot für den Kauf wählen: erst ein Gratis-Angebot für den Basisplan, dann den Basisplan selbst. */
+    private fun pickOffer(details: ProductDetails, basePlanId: String?): ProductDetails.SubscriptionOfferDetails? {
+        val offers = details.subscriptionOfferDetails?.filter { it.basePlanId == basePlanId }.orEmpty()
+        return offers.firstOrNull { trialDays(it) != null }
+            ?: offers.firstOrNull { it.offerId == null }
+            ?: offers.firstOrNull()
     }
 
     /** Kauf im Design-Shop: Design-Paket oder Premium Plus (monatlich/jährlich). */
@@ -225,8 +247,7 @@ class BillingManager(
         }
         val builder = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(details)
         if (productId == PRODUCT_PREMIUM_PLUS) {
-            val offer = details.subscriptionOfferDetails?.firstOrNull { it.basePlanId == basePlanId && it.offerId == null }
-                ?: details.subscriptionOfferDetails?.firstOrNull { it.basePlanId == basePlanId }
+            val offer = pickOffer(details, basePlanId)
             if (offer == null) { _events.trySend(Event.Error(BillingResponseCode.ITEM_UNAVAILABLE)); return }
             builder.setOfferToken(offer.offerToken)
         }
@@ -354,4 +375,12 @@ class BillingManager(
             }
         }
     }
+}
+
+/** ISO-8601-Zeitraum aus Play (z. B. „P1W“, „P7D“, „P1M“) in Tage; unbekannt → null. */
+internal fun periodDays(period: String): Int? {
+    val m = Regex("^P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)W)?(?:(\\d+)D)?$").matchEntire(period) ?: return null
+    val (y, mo, w, d) = m.destructured
+    val days = (y.toIntOrNull() ?: 0) * 365 + (mo.toIntOrNull() ?: 0) * 30 + (w.toIntOrNull() ?: 0) * 7 + (d.toIntOrNull() ?: 0)
+    return days.takeIf { it > 0 }
 }

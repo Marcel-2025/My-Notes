@@ -87,4 +87,12 @@ class ShopLogicTest {
         assertEquals(3, NoteStats.of(notes, emptyList(), noon).streak)
         assertEquals(0, NoteStats.of(emptyList(), emptyList(), noon).streak)
     }
+
+    @Test fun trialPeriodInDays() {
+        assertEquals(7, dev.flondy.mynotes.billing.periodDays("P1W"))
+        assertEquals(7, dev.flondy.mynotes.billing.periodDays("P7D"))
+        assertEquals(30, dev.flondy.mynotes.billing.periodDays("P1M"))
+        assertEquals(null, dev.flondy.mynotes.billing.periodDays("P0D"))
+        assertEquals(null, dev.flondy.mynotes.billing.periodDays("x"))
+    }
 }

@@ -360,6 +360,7 @@
     <string name="shop_restore">Restaurer les achats</string>
     <string name="shop_manage_subs">Gérer l’abonnement</string>
     <string name="shop_sub_terms">Renouvellement automatique. Résiliable à tout moment dans les réglages d’abonnement de la boutique. Les prix viennent de la boutique.</string>
+    <string name="shop_trial_days">Essai gratuit de %1$d jours</string>
     <string name="shop_premium_info_25">Débloque les thèmes Premium avec le pack de thèmes (achat unique) ou Premium Plus (abonnement). Ton achat sans pub reste inchangé.</string>
     <string name="billing_shop_success">Merci ! Tous les thèmes sont débloqués.</string>
     <string name="shop_store_unavailable">Les achats ne fonctionnent que dans la version du Microsoft Store.</string>

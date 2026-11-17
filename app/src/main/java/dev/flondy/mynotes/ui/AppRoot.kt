@@ -272,6 +272,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                             designPackPrice = premium.designPackPrice,
                             plusMonthlyPrice = premium.plusMonthlyPrice,
                             plusYearlyPrice = premium.plusYearlyPrice,
+                            plusTrialDays = premium.plusTrialDays,
                             designPack = premium.designPack,
                             plusActive = premium.plusActive,
                             plusIncludesNoAds = true,
