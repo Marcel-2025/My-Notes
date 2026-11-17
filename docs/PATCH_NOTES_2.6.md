@@ -44,9 +44,30 @@ Baut auf 2.5 / 1.2.0 auf (Design-Paket und Premium Plus). Store-Texte in 9 Sprac
 | Schriftgröße | Einstellung `editor_font_scale`. Der Editor-Inhalt nutzt dafür einen eigenen `LocalDensity.fontScale`. |
 | Konfetti | `ui/components/ConfettiBurst` mit 70 Schnipseln, ca. 1,8 s. Es wird nur ausgelöst, wenn die Liste von „offen“ zu „alles erledigt“ wechselt. |
 | Texte | 17 neue Texte × 9 Sprachen |
-| Tests | Android 73 grün, Windows 61 grün. Neu sind Tests für die Vorlagen (hin und zurück), die Vorlagen-Grenze und die Tage-Serie.<br>Bildschirmfotos 21–23 (Herbstlaub/Notizbuch, AMOLED/Statistik, Hoher Kontrast) wurden angesehen. |
+| Tests | Android 74 grün, Windows 61 grün. Neu sind Tests für die Vorlagen (hin und zurück), die Vorlagen-Grenze und die Tage-Serie.<br>Bildschirmfotos 21–23 (Herbstlaub/Notizbuch, AMOLED/Statistik, Hoher Kontrast) wurden angesehen. |
 | Nicht getestet | Käufe (dafür müssen die Produkte in den Stores angelegt sein) und die Installation unter Windows bzw. auf dem Handy |
 
+## Nachtrag 17.11.2026: Testphase
+- Beim Kauf von Premium Plus nimmt die App jetzt zuerst das Gratis-Angebot `trial-7-days`, wenn Google Play es dem Nutzer anbietet. Vorher wäre der Basisplan ohne Testphase gewählt worden.
+- Im Shop steht dann über den Abo-Knöpfen „7 Tage gratis testen“ (9 Sprachen, Text `shop_trial_days`). Wer schon getestet hat, sieht den Hinweis nicht, weil Play ihm das Angebot nicht mehr liefert.
+- Tests: Android 74 grün.
+
+## Store-Produkte (angelegt am 17.11.2026)
+| Store | Produkt | Typ | Preis (DE) | Testphase | Status |
+|---|---|---|---|---|---|
+| Google Play | `personalization_pack` | Einmalkauf | 4,99 € | – | aktiv |
+| Google Play | `premium_plus` / Basisplan `monthly` | Abo | 1,99 €/Monat | Angebot `trial-7-days` | aktiv |
+| Google Play | `premium_plus` / Basisplan `yearly` | Abo | 14,99 €/Jahr | Angebot `trial-7-days` | aktiv |
+| Microsoft Store | `personalization_pack` (9NMXHN2J1NV6) | Dauerhaft | 4,99 € | – | Entwurf fertig |
+| Microsoft Store | `premium_plus_monthly` (9P6F48PVDQH3) | Abo, 1 Monat | 1,99 € | 1 Woche | Entwurf fertig |
+| Microsoft Store | `premium_plus_yearly` (9P570D5M5H1S) | Abo, 1 Jahr | 14,99 € | 1 Woche | Entwurf fertig |
+
+In Play sind die Preise netto eingetragen (4,19 / 1,67 / 12,60 €), damit Kunden in Deutschland 4,99 / 1,99 / 14,99 € zahlen.
+Die Microsoft-Add-ons lassen sich erst einreichen, wenn die App selbst veröffentlicht ist und die Steuer- und Auszahlungsdaten im Partner Center hinterlegt sind.
+
 ## Release
-Wie in `PATCH_NOTES_2.5.md` beschrieben: Produkte anlegen, signiertes AAB (versionCode 9) bzw. MSIX `Notizen-und-Listen-Store-1.3.0.0.msix` hochladen.
+1. Google Play: signiertes AAB 2.6 (versionCode 9) hochladen. Die Produkte sind schon aktiv.
+2. Partner Center: Steuer- und Auszahlungsdaten eintragen, dann die App-Einreichung mit `Notizen-und-Listen-Store-1.3.0.0.msix` und den Texten aus `Store-Texte.md`.
+3. Nach der Veröffentlichung der App die drei Add-ons „An den Store übermitteln“.
+
 Wenn 2.5 noch nicht veröffentlicht ist, reicht es, direkt 2.6 hochzuladen.
