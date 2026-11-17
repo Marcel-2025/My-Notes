@@ -1,6 +1,6 @@
 # Notizen & Listen – Ideenliste: Designs, Shop, Premium, Animationen
 
-Stand 15.11.2026 · gilt für **Android (dev.flondy.mynotes)** und das **Windows-Studio**.
+Stand 17.11.2026 (Status bis Version 2.6 / Windows 1.3.0) · gilt für **Android (dev.flondy.mynotes)** und das **Windows-Studio**.
 Status: ✅ in 2.4 gebaut · 🟡 vorbereitet (fehlt nur Store/Preis) · ⏳ später
 
 Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau, was es ist. Daten bleiben lokal.
@@ -30,8 +30,8 @@ Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau,
 | 6 | Kirschblüte (Beere, Rosa) | Premium | ✅ Vorschau |
 | 7 | Ozean (Petrol, Türkis) | Premium | ✅ Vorschau |
 | 8 | Saisonal: Herbst/Winter/Frühling, automatisch nach Datum | Premium | ⏳ |
-| 9 | Hoher Kontrast (Barrierefreiheit) | **kostenlos** | ⏳ |
-| 10 | AMOLED-Schwarz für den Abend | Premium | ⏳ |
+| 9 | Hoher Kontrast (Barrierefreiheit) | **kostenlos** | ✅ 2.6 |
+| 10 | AMOLED-Schwarz für den Abend | Premium | ✅ 2.6 |
 | 11 | Eigene Farbe (Farbrad, Vorschau live) | Premium | ⏳ |
 | 12 | Material You (Systemfarben ab Android 12) | kostenlos | ⏳ |
 
@@ -41,10 +41,10 @@ Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau,
 |---|---|
 | Papiermuster im Editor (liniert mit Randlinie, kariert, Punktraster) | ✅ |
 | Muster auch auf Notizkarten der Startseite (dezent) | ⏳ |
-| Notizbuch-Papier mit Lochrand | ⏳ |
+| Notizbuch-Papier mit Lochrand | ✅ 2.6 (dazu Millimeterpapier) |
 | Washi-Tape/Büroklammer-Sticker für angeheftete Notizen | ⏳ |
 | Handschrift-Schrift für Titel (lizenzfreie Schrift, z. B. Caveat) | ⏳ |
-| Schriftgröße im Editor (S/M/L) | ⏳ |
+| Schriftgröße im Editor (S/M/L) | ✅ 2.6 (4 Stufen) |
 | Eigene Kartenfarben-Paletten je Design | ⏳ |
 | App-Symbole passend zu den Designs (Activity-Aliase gibt es schon) | ⏳ |
 
@@ -60,8 +60,8 @@ Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau,
 | Einstieg: Menü → Design-Shop, Einstellungen → Design & Papier, Windows: Navigationsleiste/Befehlspalette | ✅ |
 | Vorher/Nachher-Schieber im Shop | ⏳ |
 | Paket-Karte „Alle Designs“ mit Preis **aus dem Store** (`ProductDetails.formattedPrice`) | 🟡 |
-| „Kauf wiederherstellen“ auch im Shop | ⏳ |
-| Neu-Markierung für neue Designs (Version merken) | ⏳ |
+| „Kauf wiederherstellen“ auch im Shop | ✅ 2.5 |
+| Neu-Markierung für neue Designs (Version merken) | ✅ 2.6 |
 
 ## 5. Monetarisierung (nur Vorschläge – nichts angelegt)
 
@@ -80,9 +80,9 @@ Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau,
 | Idee | Status |
 |---|---|
 | Vorlagen: Einkauf, Besprechung, Packliste, Wochenplan, Rezept, Tagebuch | ✅ |
-| Eigene Vorlagen speichern („Als Vorlage sichern“) | ⏳ |
+| Eigene Vorlagen speichern („Als Vorlage sichern“) | ✅ 2.6 (3 kostenlos, unbegrenzt mit Premium Plus) |
 | Statistik: Notizen, Checklisten, erledigt, Wörter, Fortschritt, Kategorien, 14 Tage | ✅ |
-| Serien/Streak („5 Tage in Folge notiert“) – freundlich, ohne Druck | ⏳ |
+| Serien/Streak („5 Tage in Folge notiert“) – freundlich, ohne Druck | ✅ 2.6 |
 | Erinnerungen an Notizen (Benachrichtigung) | ⏳ |
 | Widget: Checkliste auf dem Startbildschirm | ⏳ |
 | Wiederkehrende Checklisten (wöchentlich zurücksetzen) | ⏳ |
@@ -103,7 +103,7 @@ Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau,
 | Vorschau-Banner klappt auf, Countdown-Balken schrumpft | ✅ |
 | Statistik: Zahlen zählen hoch, Balken wachsen, Ring zeichnet sich | ✅ |
 | „Animationen aus“ in den Einstellungen schaltet alles ab | ✅ |
-| Konfetti, wenn eine Checkliste komplett erledigt ist | ⏳ |
+| Konfetti, wenn eine Checkliste komplett erledigt ist | ✅ 2.6 |
 | Seite umblättern beim Öffnen einer Notiz | ⏳ |
 | Häkchen zeichnet sich beim Abhaken | ⏳ |
 
@@ -124,3 +124,16 @@ Grundsätze: kein Abo-Zwang, keine erfundenen Preise, `remove_ads` bleibt genau,
 1. In Android Studio auf dem Handy testen (Shop, Vorschau, Vorlagen, Statistik, Designs hell/dunkel).
 2. Entscheiden, ob Premium-Designs verkauft werden sollen → dann Produkt (z. B. `personalization_pack`) in der Play Console anlegen und Preis festlegen. Danach den Kauf im `BillingManager` anschließen (ca. 1 Stunde Arbeit).
 3. Bis dahin ist 2.4 voll nutzbar: kostenlose Designs/Papiere, Vorlagen und Statistik sind fertig; Premium lässt sich nur ansehen.
+
+
+## 10. Neu seit 2.5 / 2.6 (17.11.2026)
+| Idee | Status |
+|---|---|
+| Design-Paket `personalization_pack` (Einmalkauf) – Android + Microsoft Store | ✅ 2.5 eingebaut · Produkt in Play Console/Partner Center anlegen |
+| Premium Plus `premium_plus` (Abo monatlich/jährlich; Windows: `premium_plus_monthly`/`_yearly`) | ✅ 2.5 eingebaut · Produkte anlegen |
+| Microsoft Store: MSIX mit Store-Käufen (Helfer `MyNotesStore.exe`) | ✅ 1.2.0 · Einreichung offen |
+| Weitere Designs: Herbstlaub (Premium) | ✅ 2.6 |
+| Saisonale Designs automatisch nach Datum | ⏳ |
+| Material You / eigene Farbe | ⏳ |
+| Vorher/Nachher-Schieber im Shop | ⏳ |
+| Erinnerungen, Widget, wiederkehrende Checklisten | ⏳ (nächster großer Funktionsblock) |

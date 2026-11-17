@@ -373,4 +373,21 @@
     <string name="shop_premium_info_25">Premium-Designs freischalten mit dem Design-Paket (einmalig) oder Premium Plus (Abo). Dein Werbefrei-Kauf bleibt unverändert.</string>
     <string name="billing_shop_success">Danke! Alle Designs sind freigeschaltet.</string>
     <string name="shop_store_unavailable">Käufe funktionieren nur in der Version aus dem Microsoft Store.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Hoher Kontrast</string>
+    <string name="skin_amoled">AMOLED Schwarz</string>
+    <string name="skin_autumn">Herbstlaub</string>
+    <string name="paper_notebook">Notizbuch</string>
+    <string name="paper_millimeter">Millimeterpapier</string>
+    <string name="shop_new">Neu</string>
+    <string name="editor_font_size">Schriftgröße im Editor</string>
+    <string name="template_save">Als Vorlage speichern</string>
+    <string name="template_saved">Als Vorlage gespeichert</string>
+    <string name="template_limit">Bis zu 3 eigene Vorlagen kostenlos – unbegrenzt mit Premium Plus</string>
+    <string name="templates_mine">Meine Vorlagen</string>
+    <string name="template_delete">Vorlage löschen</string>
+    <string name="stats_streak">Tage in Folge</string>
+    <string name="checklist_all_done">Alles erledigt! 🎉</string>
+    <string name="shop_plus_desc2">Alle Premium-Designs und Papiermuster plus unbegrenzt eigene Vorlagen, solange dein Abo läuft.</string>
+    <string name="shop_plus_desc_ads2">Alle Premium-Designs und Papiermuster, unbegrenzt eigene Vorlagen und keine Werbung, solange dein Abo läuft.</string>
 </resources>

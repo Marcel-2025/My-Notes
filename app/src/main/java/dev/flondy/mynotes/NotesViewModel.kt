@@ -587,6 +587,14 @@ class NotesViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /** Aktueller Editor-Inhalt als Note (z. B. zum Teilen oder TXT-Export). */
+    /** 2.6: aktuelle Notiz als Vorlage (Titel, Text, Checklisten-Einträge ohne Haken). */
+    fun editorAsTemplate(): dev.flondy.mynotes.data.NoteTemplate? = editor?.takeIf { !it.isBlank }?.let { e ->
+        dev.flondy.mynotes.data.NoteTemplate(
+            id = "custom_" + System.currentTimeMillis(), icon = "folder", title = e.title.ifBlank { "…" }, text = e.content,
+            items = if (e.showChecklist) e.items.map { it.text }.filter { it.isNotBlank() } else emptyList(),
+        )
+    }
+
     fun editorAsNote(): Note? = editor?.let {
         Note(id = session?.noteId ?: 0, title = it.title, content = it.content, checklist = it.encodedChecklist, noteType = it.type)
     }

@@ -362,4 +362,21 @@
     <string name="shop_premium_info_25">Desbloquea los diseños Premium con el paquete de diseños (pago único) o Premium Plus (suscripción). Tu compra sin anuncios no cambia.</string>
     <string name="billing_shop_success">¡Gracias! Todos los diseños están desbloqueados.</string>
     <string name="shop_store_unavailable">Las compras solo funcionan en la versión de Microsoft Store.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Alto contraste</string>
+    <string name="skin_amoled">Negro AMOLED</string>
+    <string name="skin_autumn">Hojas de otoño</string>
+    <string name="paper_notebook">Cuaderno</string>
+    <string name="paper_millimeter">Papel milimetrado</string>
+    <string name="shop_new">Nuevo</string>
+    <string name="editor_font_size">Tamaño de letra en el editor</string>
+    <string name="template_save">Guardar como plantilla</string>
+    <string name="template_saved">Guardada como plantilla</string>
+    <string name="template_limit">Hasta 3 plantillas propias gratis – ilimitadas con Premium Plus</string>
+    <string name="templates_mine">Mis plantillas</string>
+    <string name="template_delete">Eliminar plantilla</string>
+    <string name="stats_streak">Días seguidos</string>
+    <string name="checklist_all_done">¡Todo hecho! 🎉</string>
+    <string name="shop_plus_desc2">Todos los diseños y papeles Premium y plantillas propias ilimitadas mientras dure tu suscripción.</string>
+    <string name="shop_plus_desc_ads2">Todos los diseños y papeles Premium, plantillas propias ilimitadas y sin anuncios mientras dure tu suscripción.</string>
 </resources>

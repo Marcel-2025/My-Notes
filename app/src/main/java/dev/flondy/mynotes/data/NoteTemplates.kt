@@ -105,3 +105,24 @@ object NoteTemplates {
         ),
     )
 }
+
+
+/** 2.6: Eigene Vorlagen (lokal gespeichert als JSON in den Einstellungen). */
+object CustomTemplates {
+    fun decode(json: String): List<NoteTemplate> = runCatching {
+        if (json.isBlank()) return emptyList()
+        val a = org.json.JSONArray(json)
+        List(a.length()) { i ->
+            val o = a.getJSONObject(i)
+            val items = o.optJSONArray("items")?.let { arr -> List(arr.length()) { arr.getString(it) } } ?: emptyList()
+            NoteTemplate(o.getString("id"), o.optString("icon", "folder"), o.optString("title"), o.optString("text"), items)
+        }
+    }.getOrDefault(emptyList())
+
+    fun encode(list: List<NoteTemplate>): String = org.json.JSONArray().apply {
+        list.forEach { t ->
+            put(org.json.JSONObject().put("id", t.id).put("icon", t.icon).put("title", t.title).put("text", t.text)
+                .put("items", org.json.JSONArray().apply { t.items.forEach { put(it) } }))
+        }
+    }.toString()
+}

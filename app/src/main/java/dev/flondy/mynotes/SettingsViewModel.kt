@@ -57,6 +57,19 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun setPaperPattern(p: dev.flondy.mynotes.ui.theme.PaperPattern) = viewModelScope.launch {
         if (dev.flondy.mynotes.ui.theme.Entitlements.patternUnlocked(p, settings.value.unlocked)) store.setPaperPattern(p.name)
     }
+    // 2.6: Schriftgröße im Editor und eigene Vorlagen (3 kostenlos, unbegrenzt mit Premium Plus)
+    fun setEditorFontScale(value: Float) = viewModelScope.launch { store.setEditorFontScale(value) }
+    /** false = Grenze erreicht (dann im Shop Premium Plus anbieten). */
+    fun addCustomTemplate(t: dev.flondy.mynotes.data.NoteTemplate): Boolean {
+        val list = dev.flondy.mynotes.data.CustomTemplates.decode(settings.value.customTemplates)
+        if (!dev.flondy.mynotes.ui.theme.Entitlements.canSaveTemplate(list.size, settings.value.unlocked)) return false
+        viewModelScope.launch { store.setCustomTemplates(dev.flondy.mynotes.data.CustomTemplates.encode(listOf(t) + list)) }
+        return true
+    }
+    fun deleteCustomTemplate(id: String) = viewModelScope.launch {
+        val list = dev.flondy.mynotes.data.CustomTemplates.decode(settings.value.customTemplates)
+        store.setCustomTemplates(dev.flondy.mynotes.data.CustomTemplates.encode(list.filterNot { it.id == id }))
+    }
     fun setDebugUnlockAll(value: Boolean) = viewModelScope.launch { if (BuildConfig.DEBUG) store.setDebugUnlockAll(value) }
 
     fun purchaseAdFree(activity: Activity) = billing.launchPurchase(activity)

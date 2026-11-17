@@ -1,5 +1,115 @@
 # Google Play – Store-Texte
 
+## Version 2.6 (versionCode 9) – Release-Name: `2.6 – Designs & eigene Vorlagen`
+
+**de-DE** (434 Zeichen)
+```
+Version 2.6 – mehr Designs und eigene Vorlagen:
+• Neu: Designs Hoher Kontrast (kostenlos), AMOLED Schwarz und Herbstlaub (Premium)
+• Neu: Papiere Notizbuch und Millimeterpapier (Premium)
+• Eigene Vorlagen speichern – 3 kostenlos, unbegrenzt mit Premium Plus
+• Schriftgröße im Editor einstellbar
+• Konfetti, wenn eine Checkliste komplett erledigt ist
+• Statistik zeigt jetzt deine Tage in Folge
+Alle Notizen und Käufe bleiben erhalten.
+```
+
+**en-US** (398 Zeichen)
+```
+Version 2.6 – more designs and your own templates:
+• New designs: High contrast (free), AMOLED black and Autumn leaves (premium)
+• New papers: Notebook and Graph paper (premium)
+• Save your own templates – 3 free, unlimited with Premium Plus
+• Adjustable font size in the editor
+• Confetti when a checklist is all done
+• Statistics now show your days in a row
+All your notes and purchases are kept.
+```
+
+**es-ES** (413 Zeichen)
+```
+Versión 2.6 – más diseños y plantillas propias:
+• Nuevos diseños: Alto contraste (gratis), Negro AMOLED y Hojas de otoño (Premium)
+• Nuevos papeles: Cuaderno y Papel milimetrado (Premium)
+• Guarda tus propias plantillas – 3 gratis, ilimitadas con Premium Plus
+• Tamaño de letra ajustable en el editor
+• Confeti al completar una lista
+• Las estadísticas muestran tus días seguidos
+Se conservan tus notas y compras.
+```
+
+**fr-FR** (441 Zeichen)
+```
+Version 2.6 – plus de thèmes et tes propres modèles :
+• Nouveaux thèmes : Contraste élevé (gratuit), Noir AMOLED et Feuilles d’automne (Premium)
+• Nouveaux papiers : Cahier et Papier millimétré (Premium)
+• Enregistre tes modèles – 3 gratuits, illimités avec Premium Plus
+• Taille du texte réglable dans l’éditeur
+• Des confettis quand une liste est terminée
+• Les statistiques montrent tes jours d’affilée
+Tes notes et achats sont conservés.
+```
+
+**it-IT** (399 Zeichen)
+```
+Versione 2.6 – più temi e modelli personali:
+• Nuovi temi: Alto contrasto (gratis), Nero AMOLED e Foglie d’autunno (Premium)
+• Nuove carte: Quaderno e Carta millimetrata (Premium)
+• Salva i tuoi modelli – 3 gratis, illimitati con Premium Plus
+• Dimensione del testo regolabile nell’editor
+• Coriandoli quando una lista è completata
+• Le statistiche mostrano i giorni di fila
+Note e acquisti restano.
+```
+
+**pt-BR** (399 Zeichen)
+```
+Versão 2.6 – mais temas e modelos próprios:
+• Novos temas: Alto contraste (grátis), Preto AMOLED e Folhas de outono (Premium)
+• Novos papéis: Caderno e Papel milimetrado (Premium)
+• Salve seus próprios modelos – 3 grátis, ilimitados com Premium Plus
+• Tamanho da letra ajustável no editor
+• Confete quando uma lista é concluída
+• Estatísticas mostram seus dias seguidos
+Notas e compras são mantidas.
+```
+
+**pl-PL** (380 Zeichen)
+```
+Wersja 2.6 – więcej motywów i własne szablony:
+• Nowe motywy: Wysoki kontrast (za darmo), Czerń AMOLED i Jesienne liście (Premium)
+• Nowe papiery: Zeszyt i Papier milimetrowy (Premium)
+• Zapisuj własne szablony – 3 za darmo, bez limitu z Premium Plus
+• Regulowany rozmiar tekstu w edytorze
+• Konfetti po ukończeniu listy
+• Statystyki pokazują dni z rzędu
+Notatki i zakupy zostają.
+```
+
+**ru-RU** (372 Zeichen)
+```
+Версия 2.6 – больше тем и свои шаблоны:
+• Новые темы: Высокий контраст (бесплатно), Чёрный AMOLED и Осенние листья (Премиум)
+• Новая бумага: Тетрадь и Миллиметровка (Премиум)
+• Сохраняй свои шаблоны – 3 бесплатно, без ограничений с Премиум Плюс
+• Размер шрифта в редакторе
+• Конфетти, когда список выполнен
+• Статистика показывает дни подряд
+Заметки и покупки сохраняются.
+```
+
+**tr-TR** (389 Zeichen)
+```
+Sürüm 2.6 – daha fazla tema ve kendi şablonların:
+• Yeni temalar: Yüksek kontrast (ücretsiz), AMOLED siyah ve Sonbahar yaprakları (Premium)
+• Yeni kâğıtlar: Defter ve Milimetrik kâğıt (Premium)
+• Kendi şablonlarını kaydet – 3 ücretsiz, Premium Plus ile sınırsız
+• Düzenleyicide yazı boyutu ayarı
+• Liste bitince konfeti
+• İstatistikte art arda günlerin
+Notların ve satın alımların korunur.
+```
+
 ## Version 2.5 (versionCode 8) – Release-Name: `2.5 – Premium-Designs`
 
 **de-DE** (415 Zeichen)

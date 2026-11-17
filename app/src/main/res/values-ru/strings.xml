@@ -366,4 +366,21 @@
     <string name="shop_premium_info_25">Открой премиум-темы пакетом тем (разово) или Премиум Плюс (подписка). Покупка без рекламы остаётся в силе.</string>
     <string name="billing_shop_success">Спасибо! Все темы открыты.</string>
     <string name="shop_store_unavailable">Покупки работают только в версии из Microsoft Store.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Высокий контраст</string>
+    <string name="skin_amoled">Чёрный AMOLED</string>
+    <string name="skin_autumn">Осенние листья</string>
+    <string name="paper_notebook">Тетрадь</string>
+    <string name="paper_millimeter">Миллиметровка</string>
+    <string name="shop_new">Новое</string>
+    <string name="editor_font_size">Размер шрифта в редакторе</string>
+    <string name="template_save">Сохранить как шаблон</string>
+    <string name="template_saved">Сохранено как шаблон</string>
+    <string name="template_limit">До 3 своих шаблонов бесплатно – без ограничений с Премиум Плюс</string>
+    <string name="templates_mine">Мои шаблоны</string>
+    <string name="template_delete">Удалить шаблон</string>
+    <string name="stats_streak">Дней подряд</string>
+    <string name="checklist_all_done">Всё сделано! 🎉</string>
+    <string name="shop_plus_desc2">Все премиум-темы и бумага и неограниченно своих шаблонов, пока действует подписка.</string>
+    <string name="shop_plus_desc_ads2">Все премиум-темы и бумага, неограниченно своих шаблонов и без рекламы, пока действует подписка.</string>
 </resources>

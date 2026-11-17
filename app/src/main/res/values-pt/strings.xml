@@ -363,4 +363,21 @@
     <string name="shop_premium_info_25">Desbloqueie os temas Premium com o pacote de temas (compra única) ou Premium Plus (assinatura). Sua compra sem anúncios continua igual.</string>
     <string name="billing_shop_success">Obrigado! Todos os temas estão desbloqueados.</string>
     <string name="shop_store_unavailable">As compras só funcionam na versão da Microsoft Store.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Alto contraste</string>
+    <string name="skin_amoled">Preto AMOLED</string>
+    <string name="skin_autumn">Folhas de outono</string>
+    <string name="paper_notebook">Caderno</string>
+    <string name="paper_millimeter">Papel milimetrado</string>
+    <string name="shop_new">Novo</string>
+    <string name="editor_font_size">Tamanho da letra no editor</string>
+    <string name="template_save">Salvar como modelo</string>
+    <string name="template_saved">Salvo como modelo</string>
+    <string name="template_limit">Até 3 modelos próprios grátis – ilimitados com Premium Plus</string>
+    <string name="templates_mine">Meus modelos</string>
+    <string name="template_delete">Excluir modelo</string>
+    <string name="stats_streak">Dias seguidos</string>
+    <string name="checklist_all_done">Tudo feito! 🎉</string>
+    <string name="shop_plus_desc2">Todos os temas e papéis Premium e modelos próprios ilimitados enquanto a assinatura estiver ativa.</string>
+    <string name="shop_plus_desc_ads2">Todos os temas e papéis Premium, modelos próprios ilimitados e sem anúncios enquanto a assinatura estiver ativa.</string>
 </resources>

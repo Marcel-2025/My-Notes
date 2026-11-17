@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Notes
 import androidx.compose.material.icons.outlined.Checklist
+import androidx.compose.material.icons.outlined.LocalFireDepartment
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.TextFields
 import androidx.compose.material3.Icon
@@ -64,6 +65,8 @@ data class NoteStats(
     val notes: Int, val lists: Int, val done: Int, val open: Int, val words: Int,
     val byCategory: List<Triple<Category?, Int, Float>>, // Kategorie (null = ohne), Anzahl, Anteil 0..1 am Maximum
     val activity: List<Int>, // bearbeitete Notizen je Tag, ältester zuerst (14 Tage)
+    /** 2.6: Tage in Folge mit mindestens einer angelegten oder bearbeiteten Notiz (bis heute bzw. gestern). */
+    val streak: Int = 0,
 ) {
     val progress: Float get() = if (done + open == 0) 0f else done / (done + open).toFloat()
 
@@ -90,7 +93,13 @@ data class NoteStats(
                 val idx = if (n.updatedAt >= todayStart) days - 1 else days - 1 - (((todayStart - n.updatedAt - 1) / dayMs) + 1).toInt()
                 if (idx in 0 until days) act[idx]++
             }
-            return NoteStats(live.size, live.count { it.isChecklist }, done, open, words, byCat, act.toList())
+            // Serie: Tage mit Aktivität (angelegt oder zuletzt bearbeitet), rückwärts ab heute – heute darf noch fehlen
+            val activeDays = live.flatMap { listOf(it.createdAt, it.updatedAt) }.filter { it > 0 }
+                .map { Math.floorDiv(it - todayStart, dayMs) }.toSet()
+            var streak = 0
+            var d = if (0L in activeDays) 0L else -1L
+            while (d in activeDays) { streak++; d-- }
+            return NoteStats(live.size, live.count { it.isChecklist }, done, open, words, byCat, act.toList(), streak)
         }
     }
 }
@@ -114,6 +123,7 @@ fun StatsScreen(notes: List<Note>, categories: List<Category>, onBack: () -> Uni
             item { Tile(Icons.Outlined.Checklist, stringResource(R.string.stats_lists), (stats.lists * g).toInt()) }
             item { Tile(Icons.Outlined.TaskAlt, stringResource(R.string.stats_done), (stats.done * g).toInt()) }
             item { Tile(Icons.Outlined.TextFields, stringResource(R.string.stats_words), (stats.words * g).toInt()) }
+            item { Tile(Icons.Outlined.LocalFireDepartment, stringResource(R.string.stats_streak), (stats.streak * g).toInt()) }
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Card {
                     Row(verticalAlignment = Alignment.CenterVertically) {

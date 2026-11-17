@@ -360,4 +360,21 @@
     <string name="shop_premium_info_25">Premium temaları tema paketiyle (tek seferlik) veya Premium Plus ile (abonelik) aç. Reklamsız satın alımın aynen kalır.</string>
     <string name="billing_shop_success">Teşekkürler! Tüm temalar açıldı.</string>
     <string name="shop_store_unavailable">Satın alımlar yalnızca Microsoft Store sürümünde çalışır.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Yüksek kontrast</string>
+    <string name="skin_amoled">AMOLED siyah</string>
+    <string name="skin_autumn">Sonbahar yaprakları</string>
+    <string name="paper_notebook">Defter</string>
+    <string name="paper_millimeter">Milimetrik kâğıt</string>
+    <string name="shop_new">Yeni</string>
+    <string name="editor_font_size">Düzenleyicide yazı boyutu</string>
+    <string name="template_save">Şablon olarak kaydet</string>
+    <string name="template_saved">Şablon olarak kaydedildi</string>
+    <string name="template_limit">3 kendi şablonun ücretsiz – Premium Plus ile sınırsız</string>
+    <string name="templates_mine">Şablonlarım</string>
+    <string name="template_delete">Şablonu sil</string>
+    <string name="stats_streak">Art arda gün</string>
+    <string name="checklist_all_done">Hepsi tamam! 🎉</string>
+    <string name="shop_plus_desc2">Aboneliğin sürdüğü sürece tüm Premium temalar, kâğıtlar ve sınırsız kendi şablonun.</string>
+    <string name="shop_plus_desc_ads2">Aboneliğin sürdüğü sürece tüm Premium temalar, kâğıtlar, sınırsız kendi şablonun ve reklamsız kullanım.</string>
 </resources>

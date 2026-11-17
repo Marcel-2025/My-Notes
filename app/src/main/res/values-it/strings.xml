@@ -362,4 +362,21 @@
     <string name="shop_premium_info_25">Sblocca i temi Premium con il pacchetto temi (acquisto singolo) o Premium Plus (abbonamento). Il tuo acquisto senza pubblicità resta invariato.</string>
     <string name="billing_shop_success">Grazie! Tutti i temi sono sbloccati.</string>
     <string name="shop_store_unavailable">Gli acquisti funzionano solo nella versione del Microsoft Store.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Alto contrasto</string>
+    <string name="skin_amoled">Nero AMOLED</string>
+    <string name="skin_autumn">Foglie d’autunno</string>
+    <string name="paper_notebook">Quaderno</string>
+    <string name="paper_millimeter">Carta millimetrata</string>
+    <string name="shop_new">Nuovo</string>
+    <string name="editor_font_size">Dimensione del testo nell’editor</string>
+    <string name="template_save">Salva come modello</string>
+    <string name="template_saved">Salvato come modello</string>
+    <string name="template_limit">Fino a 3 modelli personali gratis – illimitati con Premium Plus</string>
+    <string name="templates_mine">I miei modelli</string>
+    <string name="template_delete">Elimina modello</string>
+    <string name="stats_streak">Giorni di fila</string>
+    <string name="checklist_all_done">Tutto fatto! 🎉</string>
+    <string name="shop_plus_desc2">Tutti i temi e le carte Premium e modelli personali illimitati finché l’abbonamento è attivo.</string>
+    <string name="shop_plus_desc_ads2">Tutti i temi e le carte Premium, modelli personali illimitati e niente pubblicità finché l’abbonamento è attivo.</string>
 </resources>

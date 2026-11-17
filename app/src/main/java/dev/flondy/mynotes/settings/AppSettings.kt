@@ -33,6 +33,10 @@ data class AppSettings(
     /** 2.4: gewähltes Design (Skin.name) und Papiermuster (PaperPattern.name). */
     val skin: String = "LEATHER",
     val paperPattern: String = "PLAIN",
+    /** 2.6: Schriftgröße im Editor (0.9 / 1.0 / 1.15 / 1.3). */
+    val editorFontScale: Float = 1f,
+    /** 2.6: eigene Vorlagen als JSON-Liste. */
+    val customTemplates: String = "",
     /** 2.4: freigeschaltete Premium-Inhalte (z. B. „skin:MIDNIGHT“). Ohne Kauf leer; „all“ nur zum Testen. */
     val unlocked: Set<String> = emptySet(),
     val debugForceAdFree: Boolean = false,

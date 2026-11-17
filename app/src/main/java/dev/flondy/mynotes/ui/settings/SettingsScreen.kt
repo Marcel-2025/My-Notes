@@ -105,6 +105,7 @@ import dev.flondy.mynotes.ui.theme.LocalAppExtras
 data class SettingsActions(
     val onBack: () -> Unit,
     val onOpenShop: () -> Unit = {},
+    val onEditorFontScale: (Float) -> Unit = {},
     val onThemeMode: (ThemeMode) -> Unit,
     val onAccent: (AccentColor) -> Unit,
     val onCardDensity: (CardDensity) -> Unit,
@@ -210,6 +211,19 @@ fun SettingsScreen(
                     }
                     Divider()
                     NavItem(Icons.Outlined.Palette, stringResource(R.string.settings_design), stringResource(R.string.settings_design_desc), actions.onOpenShop)
+                    // 2.6: Schriftgröße im Editor
+                    Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp)) {
+                        Text(stringResource(R.string.editor_font_size), style = MaterialTheme.typography.titleSmall)
+                        Spacer(Modifier.height(8.dp))
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            listOf(0.9f to "A−", 1f to "A", 1.15f to "A+", 1.3f to "A++").forEach { (v, label) ->
+                                androidx.compose.material3.FilterChip(
+                                    selected = settings.editorFontScale == v, onClick = { actions.onEditorFontScale(v) },
+                                    label = { Text(label) }, modifier = Modifier.testTag("font_scale_$v"),
+                                )
+                            }
+                        }
+                    }
                     SwitchItem(Icons.Outlined.ViewAgenda, stringResource(R.string.setting_compact), stringResource(R.string.setting_compact_desc),
                         settings.cardDensity == CardDensity.COMPACT) { actions.onCardDensity(if (it) CardDensity.COMPACT else CardDensity.COMFORTABLE) }
                     SwitchItem(Icons.Outlined.Animation, stringResource(R.string.setting_animations), stringResource(R.string.setting_animations_desc),

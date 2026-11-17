@@ -47,6 +47,8 @@ class SettingsDataStore(private val context: Context) {
         val PLUS_CACHE = booleanPreferencesKey("premium_plus_entitlement_cache")
         val SKIN = stringPreferencesKey("skin")
         val PAPER_PATTERN = stringPreferencesKey("paper_pattern")
+        val EDITOR_FONT_SCALE = androidx.datastore.preferences.core.floatPreferencesKey("editor_font_scale")
+        val CUSTOM_TEMPLATES = stringPreferencesKey("custom_templates")
         val DEBUG_UNLOCK_ALL = booleanPreferencesKey("debug_unlock_all")
 
         private inline fun <reified T : Enum<T>> parse(value: String?, default: T): T =
@@ -76,8 +78,14 @@ class SettingsDataStore(private val context: Context) {
             debugForceAdFree = BuildConfig.DEBUG && (p[DEBUG_FORCE_AD_FREE] ?: false),
             skin = p[SKIN] ?: "LEATHER",
             paperPattern = p[PAPER_PATTERN] ?: "PLAIN",
+            editorFontScale = p[EDITOR_FONT_SCALE] ?: 1f,
+            customTemplates = p[CUSTOM_TEMPLATES] ?: "",
             // Ohne Store-Kauf gibt es keine Freischaltung; der Test-Schalter wirkt nur in Debug-Builds.
-            unlocked = if ((BuildConfig.DEBUG && (p[DEBUG_UNLOCK_ALL] ?: false)) || (p[DESIGN_PACK_CACHE] ?: false) || (p[PLUS_CACHE] ?: false)) setOf("all") else emptySet(),
+            unlocked = buildSet {
+                val debug = BuildConfig.DEBUG && (p[DEBUG_UNLOCK_ALL] ?: false)
+                if (debug || (p[DESIGN_PACK_CACHE] ?: false) || (p[PLUS_CACHE] ?: false)) add("all")
+                if (debug || (p[PLUS_CACHE] ?: false)) add("plus")
+            },
         )
     }
 
@@ -109,6 +117,8 @@ class SettingsDataStore(private val context: Context) {
     val adFreeCacheFlow: Flow<Boolean> = context.dataStore.data.map { it[AD_FREE_CACHE] ?: false }
     suspend fun setSkin(value: String) = context.dataStore.edit { it[SKIN] = value }
     suspend fun setPaperPattern(value: String) = context.dataStore.edit { it[PAPER_PATTERN] = value }
+    suspend fun setEditorFontScale(value: Float) = context.dataStore.edit { it[EDITOR_FONT_SCALE] = value }
+    suspend fun setCustomTemplates(json: String) = context.dataStore.edit { it[CUSTOM_TEMPLATES] = json }
     suspend fun setDebugUnlockAll(value: Boolean) = context.dataStore.edit { it[DEBUG_UNLOCK_ALL] = value }
     suspend fun setAdFreeCache(value: Boolean) = context.dataStore.edit { it[AD_FREE_CACHE] = value }
 

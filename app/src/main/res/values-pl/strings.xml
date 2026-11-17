@@ -365,4 +365,21 @@
     <string name="shop_premium_info_25">Odblokuj motywy Premium pakietem motywów (jednorazowo) lub Premium Plus (subskrypcja). Twój zakup bez reklam pozostaje bez zmian.</string>
     <string name="billing_shop_success">Dziękujemy! Wszystkie motywy są odblokowane.</string>
     <string name="shop_store_unavailable">Zakupy działają tylko w wersji z Microsoft Store.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">Wysoki kontrast</string>
+    <string name="skin_amoled">Czerń AMOLED</string>
+    <string name="skin_autumn">Jesienne liście</string>
+    <string name="paper_notebook">Zeszyt</string>
+    <string name="paper_millimeter">Papier milimetrowy</string>
+    <string name="shop_new">Nowość</string>
+    <string name="editor_font_size">Rozmiar tekstu w edytorze</string>
+    <string name="template_save">Zapisz jako szablon</string>
+    <string name="template_saved">Zapisano jako szablon</string>
+    <string name="template_limit">Do 3 własnych szablonów za darmo – bez limitu z Premium Plus</string>
+    <string name="templates_mine">Moje szablony</string>
+    <string name="template_delete">Usuń szablon</string>
+    <string name="stats_streak">Dni z rzędu</string>
+    <string name="checklist_all_done">Wszystko zrobione! 🎉</string>
+    <string name="shop_plus_desc2">Wszystkie motywy i papiery Premium oraz nielimitowane własne szablony, dopóki trwa subskrypcja.</string>
+    <string name="shop_plus_desc_ads2">Wszystkie motywy i papiery Premium, nielimitowane własne szablony i brak reklam, dopóki trwa subskrypcja.</string>
 </resources>

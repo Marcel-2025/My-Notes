@@ -361,4 +361,21 @@
     <string name="shop_premium_info_25">Unlock premium designs with the design pack (one-time) or Premium Plus (subscription). Your ad-free purchase stays as it is.</string>
     <string name="billing_shop_success">Thank you! All designs are unlocked.</string>
     <string name="shop_store_unavailable">Purchases only work in the Microsoft Store version.</string>
+    <!-- 2.6: Designs, Vorlagen, Statistik -->
+    <string name="skin_contrast">High contrast</string>
+    <string name="skin_amoled">AMOLED black</string>
+    <string name="skin_autumn">Autumn leaves</string>
+    <string name="paper_notebook">Notebook</string>
+    <string name="paper_millimeter">Graph paper</string>
+    <string name="shop_new">New</string>
+    <string name="editor_font_size">Font size in the editor</string>
+    <string name="template_save">Save as template</string>
+    <string name="template_saved">Saved as template</string>
+    <string name="template_limit">Up to 3 own templates for free – unlimited with Premium Plus</string>
+    <string name="templates_mine">My templates</string>
+    <string name="template_delete">Delete template</string>
+    <string name="stats_streak">Days in a row</string>
+    <string name="checklist_all_done">All done! 🎉</string>
+    <string name="shop_plus_desc2">All premium designs and paper styles plus unlimited own templates, for as long as your subscription runs.</string>
+    <string name="shop_plus_desc_ads2">All premium designs and paper styles, unlimited own templates and no ads, for as long as your subscription runs.</string>
 </resources>

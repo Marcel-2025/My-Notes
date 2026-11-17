@@ -14,6 +14,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
+@org.junit.runner.RunWith(org.robolectric.RobolectricTestRunner::class)
+@org.robolectric.annotation.Config(sdk = [34], application = android.app.Application::class)
 /** 2.4: Freischaltung, Vorschau, Vorlagen und Statistik. */
 class ShopLogicTest {
     @After fun tearDown() = ShopPreview.stop()
@@ -64,5 +66,25 @@ class ShopLogicTest {
         assertEquals(0.5f, s.progress)
         assertEquals(14, s.activity.size); assertEquals(2, s.activity.sum())
         assertEquals(2, s.byCategory.size)
+    }
+
+    @Test fun customTemplatesRoundTripAndLimit() {
+        val t = listOf(dev.flondy.mynotes.data.NoteTemplate("custom_1", "folder", "Wocheneinkauf", "Notiz", listOf("Brot", "Milch")))
+        val back = dev.flondy.mynotes.data.CustomTemplates.decode(dev.flondy.mynotes.data.CustomTemplates.encode(t))
+        assertEquals(t, back)
+        assertEquals(emptyList<Any>(), dev.flondy.mynotes.data.CustomTemplates.decode("kaputt"))
+        assertTrue(Entitlements.canSaveTemplate(2, emptySet()))
+        assertFalse(Entitlements.canSaveTemplate(3, setOf(Entitlements.ALL)))
+        assertTrue(Entitlements.canSaveTemplate(30, setOf(Entitlements.PLUS)))
+    }
+
+    @Test fun streakCountsConsecutiveDays() {
+        val day = 24L * 60 * 60 * 1000
+        val now = 100L * day + 10 * 60 * 60 * 1000 // 10 Uhr UTC
+        val cal = java.util.Calendar.getInstance().apply { timeInMillis = now; set(java.util.Calendar.HOUR_OF_DAY, 12) }
+        val noon = cal.timeInMillis
+        val notes = listOf(0, 1, 2, 4).mapIndexed { i, d -> Note(id = i + 1, title = "n$i", content = "", createdAt = noon - d * day, updatedAt = noon - d * day) }
+        assertEquals(3, NoteStats.of(notes, emptyList(), noon).streak)
+        assertEquals(0, NoteStats.of(emptyList(), emptyList(), noon).streak)
     }
 }

@@ -14,8 +14,8 @@ android {
         applicationId = "dev.flondy.mynotes" // NIEMALS ändern – Play-Store-Identität
         minSdk = 24
         targetSdk = 36
-        versionCode = 8
-        versionName = "2.5"
+        versionCode = 9
+        versionName = "2.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -63,6 +63,7 @@ import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.outlined.RemoveDone
 import androidx.compose.material.icons.outlined.Share
@@ -144,6 +145,7 @@ import dev.flondy.mynotes.ui.components.SheetLabel
 import dev.flondy.mynotes.ui.components.TextInputDialog
 import dev.flondy.mynotes.ui.components.leather
 import dev.flondy.mynotes.ui.components.noteContainerColor
+import dev.flondy.mynotes.ui.components.ConfettiBurst
 import dev.flondy.mynotes.ui.theme.LocalAppExtras
 import dev.flondy.mynotes.ui.theme.paperPattern
 import dev.flondy.mynotes.ui.theme.Motion
@@ -165,6 +167,8 @@ data class EditorActions(
     val onClose: () -> Unit,
     val onDiscard: () -> Unit,
     val onDelete: () -> Unit,
+    /** 2.6: Notiz als eigene Vorlage speichern (null = nicht verfügbar). */
+    val onSaveTemplate: (() -> Unit)? = null,
 )
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -174,6 +178,8 @@ fun EditorScreen(
     categories: List<Category>,
     hideCheckedItems: Boolean,
     actions: EditorActions,
+    /** 2.6: Schriftgröße im Editor. */
+    fontScale: Float = 1f,
 ) {
     BackHandler(onBack = actions.onClose)
     val extras = LocalAppExtras.current
@@ -189,6 +195,13 @@ fun EditorScreen(
     val window = dev.flondy.mynotes.ui.components.rememberWindowLayout()
 
     LaunchedEffect(Unit) { if (state.focusTitle) runCatching { titleFocus.requestFocus() } }
+
+    // 2.6: Konfetti, sobald alle Punkte der Checkliste abgehakt sind (nicht beim Öffnen einer fertigen Liste)
+    val filled = state.items.filter { it.text.isNotBlank() }
+    val allDone = state.showChecklist && filled.isNotEmpty() && filled.all { it.checked }
+    var confetti by remember { mutableStateOf(0) }
+    var wasDone by remember { mutableStateOf(allDone) }
+    LaunchedEffect(allDone) { if (allDone && !wasDone) confetti++; wasDone = allDone }
 
     Box(Modifier.fillMaxSize().leather(stitch = false)) {
         Scaffold(
@@ -225,7 +238,11 @@ fun EditorScreen(
                     .imePadding(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                androidx.compose.runtime.CompositionLocalProvider(androidx.compose.material3.LocalContentColor provides MaterialTheme.colorScheme.onBackground) {
+                val baseDensity = androidx.compose.ui.platform.LocalDensity.current
+                androidx.compose.runtime.CompositionLocalProvider(
+                    androidx.compose.material3.LocalContentColor provides MaterialTheme.colorScheme.onBackground,
+                    androidx.compose.ui.platform.LocalDensity provides androidx.compose.ui.unit.Density(baseDensity.density, baseDensity.fontScale * fontScale),
+                ) {
                 Column(
                     Modifier
                         .widthIn(max = window.readingMaxWidth)
@@ -285,6 +302,7 @@ fun EditorScreen(
                 }
             }
         }
+        ConfettiBurst(confetti, stringResource(R.string.checklist_all_done))
     }
 
     if (showStyleSheet) {
@@ -361,6 +379,7 @@ private fun EditorTopBar(
                 else if (state.content.isNotBlank()) entry(Icons.Outlined.Checklist, R.string.action_to_checklist, onClick = actions.onTextToChecklist)
                 entry(Icons.Outlined.Share, R.string.action_share, enabled = !state.isBlank, onClick = actions.onShare)
                 entry(Icons.AutoMirrored.Outlined.InsertDriveFile, R.string.action_export_txt, enabled = !state.isBlank, onClick = actions.onExportTxt)
+                actions.onSaveTemplate?.let { entry(Icons.Outlined.BookmarkAdd, R.string.template_save, enabled = !state.isBlank, onClick = it) }
                 entry(Icons.AutoMirrored.Outlined.Undo, R.string.action_discard, onClick = onDiscard)
             }
         }

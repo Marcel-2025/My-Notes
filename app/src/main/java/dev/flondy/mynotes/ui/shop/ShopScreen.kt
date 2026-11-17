@@ -154,7 +154,7 @@ fun ShopScreen(settings: AppSettings, actions: ShopActions) {
                     ShopCard(
                         index = i, title = stringResource(skin.title), premium = skin.premium, unlocked = unlocked,
                         active = currentSkin == skin && ShopPreview.skin == null, previewing = ShopPreview.skin == skin,
-                        tag = "shop_skin_" + skin.name.lowercase(),
+                        tag = "shop_skin_" + skin.name.lowercase(), isNew = skin.isNew,
                         onUse = { ShopPreview.stop(); actions.onUseSkin(skin) },
                         onPreview = { ShopPreview.start(skin = skin) },
                         onUnlock = actions.offers?.takeIf { it.designPackPrice != null && !it.storeUnavailable }?.onBuyPack,
@@ -166,7 +166,7 @@ fun ShopScreen(settings: AppSettings, actions: ShopActions) {
                     ShopCard(
                         index = i, title = stringResource(p.title), premium = p.premium, unlocked = unlocked,
                         active = currentPattern == p && ShopPreview.pattern == null, previewing = ShopPreview.pattern == p,
-                        tag = "shop_paper_" + p.name.lowercase(),
+                        tag = "shop_paper_" + p.name.lowercase(), isNew = p.isNew,
                         onUse = { ShopPreview.stop(); actions.onUsePattern(p) },
                         onPreview = { ShopPreview.start(pattern = p) },
                         onUnlock = actions.offers?.takeIf { it.designPackPrice != null && !it.storeUnavailable }?.onBuyPack,
@@ -229,7 +229,7 @@ private fun PreviewBanner(now: Long) {
 /** Karte im Shop: gestaffeltes Einblenden, Premium-Abzeichen mit Glanz, Auswahlrahmen animiert. */
 @Composable
 private fun ShopCard(
-    index: Int, title: String, premium: Boolean, unlocked: Boolean, active: Boolean, previewing: Boolean, tag: String,
+    index: Int, title: String, premium: Boolean, unlocked: Boolean, active: Boolean, previewing: Boolean, tag: String, isNew: Boolean = false,
     onUse: () -> Unit, onPreview: () -> Unit, onUnlock: (() -> Unit)? = null, preview: @Composable () -> Unit,
 ) {
     val extras = LocalAppExtras.current
@@ -250,7 +250,15 @@ private fun ShopCard(
         Column {
             Box(Modifier.fillMaxWidth().height(150.dp)) {
                 preview()
-                Row(Modifier.align(Alignment.BottomStart).padding(10.dp)) { PriceBadge(premium) }
+                Row(Modifier.align(Alignment.BottomStart).padding(10.dp)) {
+                    PriceBadge(premium)
+                    if (isNew) {
+                        Spacer(Modifier.width(6.dp))
+                        Box(Modifier.clip(RoundedCornerShape(10.dp)).background(Color(0xFFE85D75)).padding(horizontal = 9.dp, vertical = 3.dp)) {
+                            Text(stringResource(R.string.shop_new), style = MaterialTheme.typography.labelMedium, color = Color.White)
+                        }
+                    }
+                }
                 if (premium && !unlocked) {
                     Icon(Icons.Filled.Lock, null, tint = Color.White, modifier = Modifier.align(Alignment.TopEnd).padding(10.dp)
                         .size(28.dp).clip(CircleShape).background(Color.Black.copy(alpha = 0.45f)).padding(5.dp))
@@ -401,7 +409,7 @@ private fun PremiumOffers(o: ShopOffers) {
             }
             OfferCard(
                 title = stringResource(R.string.shop_plus_title),
-                desc = stringResource(if (o.plusIncludesNoAds) R.string.shop_plus_desc_ads else R.string.shop_plus_desc),
+                desc = stringResource(if (o.plusIncludesNoAds) R.string.shop_plus_desc_ads2 else R.string.shop_plus_desc2),
                 tag = "offer_plus", highlight = true, owned = o.plusActive, ownedLabel = stringResource(R.string.shop_plus_active),
             ) {
                 val m = o.plusMonthlyPrice; val y = o.plusYearlyPrice

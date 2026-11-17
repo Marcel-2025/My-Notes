@@ -223,6 +223,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     actions = SettingsActions(
                         onBack = ::back,
                         onOpenShop = { navigate(Route.SHOP) },
+                        onEditorFontScale = settingsVm::setEditorFontScale,
                         onThemeMode = settingsVm::setThemeMode,
                         onAccent = settingsVm::setAccent,
                         onCardDensity = settingsVm::setCardDensity,
@@ -313,6 +314,7 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                 state = state,
                 categories = categories,
                 hideCheckedItems = settings.hideCheckedItems,
+                fontScale = settings.editorFontScale,
                 actions = EditorActions(
                     onTitle = notesVm::onEditorTitleChange,
                     onContent = notesVm::onEditorContentChange,
@@ -330,12 +332,24 @@ fun AppRoot(notesVm: NotesViewModel, settingsVm: SettingsViewModel) {
                     onClose = notesVm::closeEditor,
                     onDiscard = notesVm::discardEditorChanges,
                     onDelete = notesVm::deleteFromEditor,
+                    onSaveTemplate = {
+                        notesVm.editorAsTemplate()?.let { t ->
+                            val ok = settingsVm.addCustomTemplate(t)
+                            val msg = context.getString(if (ok) R.string.template_saved else R.string.template_limit)
+                            // Der Editor liegt über der Startseite – deshalb ein Toast statt der Snackbar
+                            android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                    },
                 ),
             )
         }
     }
 
-    if (showTemplates) TemplatePickerDialog(onPick = { t -> showTemplates = false; notesVm.openTemplate(t) }, onDismiss = { showTemplates = false })
+    if (showTemplates) TemplatePickerDialog(
+        onPick = { t -> showTemplates = false; notesVm.openTemplate(t) }, onDismiss = { showTemplates = false },
+        custom = remember(settings.customTemplates) { dev.flondy.mynotes.data.CustomTemplates.decode(settings.customTemplates) },
+        onDelete = settingsVm::deleteCustomTemplate,
+    )
 
     importPreview?.let { preview ->
         AlertDialog(

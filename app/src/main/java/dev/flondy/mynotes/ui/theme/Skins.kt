@@ -25,7 +25,7 @@ data class SkinPalette(
  * Designs (Version 2.4). „Leder & Papier“ und „Graphit“ sind kostenlos, die übrigen Premium.
  * Premium-Designs lassen sich 30 Sekunden ansehen ([ShopPreview]); Kauf folgt später über den Store.
  */
-enum class Skin(val title: StrRes, val premium: Boolean, val p: SkinPalette) {
+enum class Skin(val title: StrRes, val premium: Boolean, val p: SkinPalette, val isNew: Boolean = false) {
     LEATHER(R.string.skin_leather, false, SkinPalette(
         Leather, LeatherLight, LeatherDark, LeatherDeep, OnLeather,
         PaperBackground, PaperCard, PaperCardHigh, PaperLine, PaperSunken, InkBrown, InkBrownSoft,
@@ -60,7 +60,23 @@ enum class Skin(val title: StrRes, val premium: Boolean, val p: SkinPalette) {
         Color(0xFF1D5D73), Color(0xFF266F88), Color(0xFF154656), Color(0xFF0E303B), Color(0xFFE9F7FB),
         Color(0xFFEAF4F6), Color(0xFFF8FCFD), Color(0xFFFFFFFF), Color(0xFFCFE3E8), Color(0xFFDEECEF), Color(0xFF173640), Color(0xFF557883),
         Color(0xFF3FC1C9), Color(0xFF082A30), Color(0xFF4FAE7C),
-        Color(0xFF0B171B), Color(0xFF102127), Color(0xFF152A31), Color(0xFF1B343C), Color(0xFF23434D), Color(0xFFE3F3F7), Color(0xFF9EC0C9), Color(0xFF123D4B)));
+        Color(0xFF0B171B), Color(0xFF102127), Color(0xFF152A31), Color(0xFF1B343C), Color(0xFF23434D), Color(0xFFE3F3F7), Color(0xFF9EC0C9), Color(0xFF123D4B))),
+    // 2.6: Hoher Kontrast (kostenlos, Barrierefreiheit), AMOLED Schwarz und Herbstlaub (Premium)
+    CONTRAST(R.string.skin_contrast, false, SkinPalette(
+        Color(0xFF000000), Color(0xFF1A1A1A), Color(0xFF000000), Color(0xFF000000), Color(0xFFFFFFFF),
+        Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFF000000), Color(0xFFEDEDED), Color(0xFF000000), Color(0xFF1F1F1F),
+        Color(0xFFFFD400), Color(0xFF000000), Color(0xFF00873C),
+        Color(0xFF000000), Color(0xFF000000), Color(0xFF0D0D0D), Color(0xFF1A1A1A), Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFFE0E0E0), Color(0xFF000000)), isNew = true),
+    AMOLED(R.string.skin_amoled, true, SkinPalette(
+        Color(0xFF141414), Color(0xFF222222), Color(0xFF0A0A0A), Color(0xFF000000), Color(0xFFF5F5F5),
+        Color(0xFFF0F0F0), Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFFDADADA), Color(0xFFE6E6E6), Color(0xFF141414), Color(0xFF5C5C5C),
+        Color(0xFFFDEE51), Color(0xFF141414), Color(0xFF4CC38A),
+        Color(0xFF000000), Color(0xFF050505), Color(0xFF0E0E0E), Color(0xFF161616), Color(0xFF242424), Color(0xFFF2F2F2), Color(0xFFA0A0A0), Color(0xFF000000)), isNew = true),
+    AUTUMN(R.string.skin_autumn, true, SkinPalette(
+        Color(0xFF8A3B12), Color(0xFFA24A1C), Color(0xFF6B2D0D), Color(0xFF4A1F08), Color(0xFFFFF1E3),
+        Color(0xFFF7EBDD), Color(0xFFFDF5EB), Color(0xFFFFFAF3), Color(0xFFE8D2BA), Color(0xFFEFDFCB), Color(0xFF3F2414), Color(0xFF7D5A43),
+        Color(0xFFE8772E), Color(0xFF2E1406), Color(0xFF9C8A1E),
+        Color(0xFF1C110A), Color(0xFF26170E), Color(0xFF301E13), Color(0xFF3A2519), Color(0xFF4C3122), Color(0xFFF6E7D8), Color(0xFFCDAE93), Color(0xFF52230C)), isNew = true);
 
     companion object {
         fun of(name: String?): Skin = entries.firstOrNull { it.name == name } ?: LEATHER
@@ -68,11 +84,14 @@ enum class Skin(val title: StrRes, val premium: Boolean, val p: SkinPalette) {
 }
 
 /** Papiermuster für Editor und Karten (Version 2.4). */
-enum class PaperPattern(val title: StrRes, val premium: Boolean) {
+enum class PaperPattern(val title: StrRes, val premium: Boolean, val isNew: Boolean = false) {
     PLAIN(R.string.paper_plain, false),
     LINED(R.string.paper_lined, false),
     GRID(R.string.paper_grid, true),
-    DOTS(R.string.paper_dots, true);
+    DOTS(R.string.paper_dots, true),
+    // 2.6
+    NOTEBOOK(R.string.paper_notebook, true, isNew = true),
+    MILLIMETER(R.string.paper_millimeter, true, isNew = true);
 
     companion object {
         fun of(name: String?): PaperPattern = entries.firstOrNull { it.name == name } ?: PLAIN
@@ -108,6 +127,11 @@ object Entitlements {
     fun skinUnlocked(skin: Skin, unlocked: Set<String>): Boolean = !skin.premium || "skin:${skin.name}" in unlocked || ALL in unlocked
     fun patternUnlocked(p: PaperPattern, unlocked: Set<String>): Boolean = !p.premium || "paper:${p.name}" in unlocked || ALL in unlocked
     const val ALL = "all"
+    /** 2.6: Premium Plus aktiv (unbegrenzt eigene Vorlagen). */
+    const val PLUS = "plus"
+    const val FREE_CUSTOM_TEMPLATES = 3
+    fun plusActive(unlocked: Set<String>): Boolean = PLUS in unlocked
+    fun canSaveTemplate(existing: Int, unlocked: Set<String>): Boolean = existing < FREE_CUSTOM_TEMPLATES || plusActive(unlocked)
 
     /** Was gerade zu sehen ist: Vorschau > gespeicherte Wahl (nur wenn freigeschaltet) > Standard. */
     fun effectiveSkin(saved: String, unlocked: Set<String>): Skin =
@@ -137,6 +161,20 @@ fun androidx.compose.ui.Modifier.paperPattern(p: PaperPattern, line: Color, acce
                 val s = step * 0.8f
                 var y = s
                 while (y < size.height) { var x = s; while (x < size.width) { drawCircle(c, 1.4.dp.toPx(), Offset(x, y)); x += s }; y += s }
+            }
+            PaperPattern.NOTEBOOK -> {
+                // Liniert wie ein Collegeblock, dazu gestanzte Löcher am linken Rand
+                var y = step * 2
+                while (y < size.height) { drawLine(c, Offset(step * 1.6f, y), Offset(size.width, y), 1.dp.toPx()); y += step }
+                drawLine(accent.copy(alpha = 0.45f), Offset(step * 1.6f, 0f), Offset(step * 1.6f, size.height), 1.5.dp.toPx())
+                val r = 4.dp.toPx(); var hy = step * 1.5f
+                while (hy < size.height) { drawCircle(line.copy(alpha = 0.9f), r, Offset(step * 0.32f, hy)); hy += step * 3 }
+            }
+            PaperPattern.MILLIMETER -> {
+                val s = 6.dp.toPx(); var i = 0
+                var y = s; while (y < size.height) { i++; drawLine(c.copy(alpha = if (i % 5 == 0) 0.6f else 0.22f), Offset(0f, y), Offset(size.width, y), if (i % 5 == 0) 1.2f else 0.8f); y += s }
+                i = 0
+                var x = s; while (x < size.width) { i++; drawLine(c.copy(alpha = if (i % 5 == 0) 0.6f else 0.22f), Offset(x, 0f), Offset(x, size.height), if (i % 5 == 0) 1.2f else 0.8f); x += s }
             }
             PaperPattern.PLAIN -> Unit
         }
